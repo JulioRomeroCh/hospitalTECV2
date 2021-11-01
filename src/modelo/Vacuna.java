@@ -58,4 +58,13 @@ public class Vacuna {
     public void setFarmaceutica(String pFarmaceutica) {
         this.farmaceutica = pFarmaceutica;
     }
+
+    public String toString(){
+        String mensaje="";
+        mensaje+="Número de lote: "+getNumeroLote()+"\n";
+        mensaje+="Nombre: "+getNombre()+"\n";
+        mensaje+="Farmaceutica: "+getFarmaceutica()+"\n";
+        return mensaje;
+    }
 }
+  

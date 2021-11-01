@@ -51,4 +51,14 @@ public class Diagnostico {
     public void reemplazarListaObservaciones(Lista<String> pObservaciones){
       observaciones = pObservaciones;
     }
+    
+    public String toString(){
+        String mensaje="";
+        mensaje="Nombre"+getNombreDiagnostico()+"\n";
+        mensaje+="Nivel: "+getNivel()+"\n";
+        for (int indice=0;indice!=observaciones.getSize();indice++){
+            mensaje+=observaciones.get(indice).toString()+"\n";
+        }
+        return mensaje;
+    }
 }

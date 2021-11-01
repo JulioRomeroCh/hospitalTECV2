@@ -56,6 +56,13 @@ public class Tratamiento {
     public void setDosis(int pDosis) {
         this.dosis = pDosis;
     }
-  
+
+    public String toString(){
+        String mensaje="";
+        mensaje="Nombre: "+getNombreTratamiento()+"\n";
+        mensaje+="Tipo: "+getTipo()+"\n";
+        mensaje+="Dosis: "+getDosis()+"\n";
+        return mensaje;
+    }
   
 }

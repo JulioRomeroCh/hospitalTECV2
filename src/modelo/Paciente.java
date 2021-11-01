@@ -98,6 +98,10 @@ public class Paciente extends Usuario{
         return tipoSangre;
     }
 
+    public Cita getCita() {
+        return cita;
+    }
+
     /**
      * @param tipoSangre the tipoSangre to set
      */
@@ -137,6 +141,30 @@ public class Paciente extends Usuario{
       cita = nuevaCita;
     }
   
-  
+    public String toString(){
+        String mensaje="";
+        mensaje="Identificador: "+getIdentificadorPaciente()+"\n";
+        mensaje+=super.toString()+"\n";
+        mensaje+=super.toString()+"\n";
+        mensaje+="Nacionalidad: "+getNacionalidad()+"\n";
+        mensaje+="Residencia: "+getResidencia()+"\n";
+        mensaje+="Fecha Nacimiento: "+getFechaNacimiento().getDay()+"/"+getFechaNacimiento().getMonth()+"/"+getFechaNacimiento().getYear()+"\n";
+        mensaje+="Tipo Sangre: "+getTipoSangre()+"\n";
+        mensaje+="Teléfonos: ";
+        for (int indice=0; indice!=telefonos.getSize();indice++){
+            mensaje+=telefonos.get(indice)+"\n";
+        }
+        mensaje+="Hospitalizaciones: "+"\n";
+        for (int indice=0; indice!=hospitalizaciones.getSize();indice++){
+            mensaje+=hospitalizaciones.get(indice).toString()+"\n";
+        }
+        mensaje+="Encargados: ";
+        for (int indice=0; indice!=encargados.getSize();indice++){
+            mensaje+=encargados.get(indice).toString()+"\n";
+        }
+        mensaje+="Cita asociada: ";
+        mensaje +="Cita: "+getCita().toString()+"\n";
+        return mensaje;
+    }
   
 }

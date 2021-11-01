@@ -123,6 +123,14 @@ public class Usuario {
     public void setContraseña(String pContraseña) {
         this.contraseña = pContraseña;
     }
-  
+
+    public String toString(){
+        String mensaje="Cédula: "+getCedula()+"\n";
+        mensaje+="Nombre: "+getNombre()+" "+getApellido1()+" "+getApellido2()+"\n";
+        mensaje+="Rol: "+getRol()+"\n";
+        mensaje+="Usuario: "+getNombreUsuario()+"\n";
+        mensaje+="Contraseña: **********"+"\n";
+        return mensaje;
+    }
   
 }

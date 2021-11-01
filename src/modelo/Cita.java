@@ -101,6 +101,20 @@ public class Cita {
      nuevoDiagnostico.reemplazarListaObservaciones(pObservaciones);
      diagnosticos.add(nuevoDiagnostico);
     }
+    
+    public String toString(){
+       String mensaje="";
+       mensaje="Identificador: "+getIdentificadorCita()+"\n";
+       mensaje+="Fecha: "+getFecha()+"\n";
+       mensaje+="Hora: "+getHora()+"\n";
+       mensaje+="Área: "+getArea()+"\n";
+       mensaje+="Observación: "+getObservacion()+"\n";
+       
+       for (int indice=0;indice!=diagnosticos.getSize();indice++){
+           mensaje+=diagnosticos.get(indice).getNombreDiagnostico()+"\n";
+       }
+       return mensaje;
+    }
   
   
 }

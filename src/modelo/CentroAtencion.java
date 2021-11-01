@@ -154,4 +154,21 @@ public class CentroAtencion {
      pacientes.add(nuevoPaciente);
     }
     
+    public String toString(){
+        String mensaje="";
+        mensaje="Código"+getCodigo()+"\n";
+        mensaje+="Nombre: "+getNombre()+"\n";
+        mensaje+="Lugar: "+getLugar()+"\n";
+        mensaje+="Capacidad: "+getCapacidad()+"\n";
+        mensaje+="Tipo: "+getTipo()+"\n";
+        for (int indice=0;indice!=empleados.getSize();indice++){
+            mensaje+=empleados.get(indice).toString()+"\n";
+        }
+        
+        for (int indice=0;indice!=pacientes.getSize();indice++){
+            mensaje+=pacientes.get(indice).toString()+"\n";
+        }
+        return mensaje;
+    }
+    
 }

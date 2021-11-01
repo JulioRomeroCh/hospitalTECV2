@@ -42,4 +42,14 @@ public class Doctor extends Funcionario {
     public void reemplazarListaEspecialidades(Lista<String> pEspecialidades){
         especialidades = pEspecialidades;
     }
+    
+    public String toString (){
+       String mensaje=""; 
+       mensaje="Código: "+getCodigoDoctor()+"\n";
+       mensaje+=super.toString()+"\n";
+       for (int indice=0;indice!=especialidades.getSize();indice++){
+           mensaje+=especialidades.get(indice)+"\n";
+       }
+       return mensaje;
+    }
 }

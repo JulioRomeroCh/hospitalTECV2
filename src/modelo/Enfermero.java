@@ -62,4 +62,13 @@ public class Enfermero extends Funcionario {
     public void setIndicadorExperienciaCapacitaciones(boolean pIndicadorExperienciaCapacitaciones) {
         this.indicadorExperienciaCapacitaciones = pIndicadorExperienciaCapacitaciones;
     }
+    
+    public String toString (){
+       String mensaje=""; 
+       mensaje="Código: "+getCodigoEnfermero()+"\n";
+       mensaje+="Personas a cargo: "+getIndicadorPersonasACargo()+"\n";
+       mensaje+="Experiencia en capacitaciones"+getIndicadorExperienciaCapacitaciones()+"\n";
+       mensaje+=super.toString()+"\n";
+       return mensaje;
+    }
 }

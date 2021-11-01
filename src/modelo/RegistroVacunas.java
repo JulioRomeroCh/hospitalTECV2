@@ -47,4 +47,9 @@ public class RegistroVacunas {
     private SimpleDateFormat SimpleDateFormat(String yyymmdd) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+    //revisar el array
+    public String toString(){
+        String mensaje="";
+        return mensaje;
+    }
 }

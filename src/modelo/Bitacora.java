@@ -30,6 +30,19 @@ public class Bitacora {
     public void setIdentificador(int pIdentificador) {
         this.identificador = pIdentificador;
     }
-  
-  
+    public String toString(){
+        String mensaje="";
+        mensaje="Indentificador: "+getIdentificador()+"\n";
+        for (int indice=0; indice!=fechasModificacion.getSize();indice++){
+          mensaje+=fechasModificacion.get(indice).getDay()+"/"+fechasModificacion.get(indice).getMonth()+"/"+fechasModificacion.get(indice).getYear()
+          +"\n";   
+        }
+        for (int indice=0; indice!=horasModificacion.getSize();indice++){
+          mensaje+=horasModificacion.get(indice).getHours()+":"+horasModificacion.get(indice).getMinutes()+"\n";
+        }
+        return mensaje;
+    }
 }
+  
+  
+

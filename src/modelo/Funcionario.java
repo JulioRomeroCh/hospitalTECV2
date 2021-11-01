@@ -96,6 +96,19 @@ public class Funcionario extends Usuario {
       citasMedicas.add(pCita);
     }
     
-  
-  
+    public String toString(){
+      String mensaje="";
+      mensaje="Identificador: "+getIdentificadorFuncionario()+"\n";
+      mensaje+="Tipo: "+getTipo()+"\n";
+      mensaje+="Fecha de ingreso: "+getFechaIngreso()+"\n";
+      mensaje+=super.toString()+"\n";
+      mensaje+="Area"+getArea()+"\n";
+      for (int indice=0;indice!=pacientes.getSize();indice++){
+          mensaje+=pacientes.get(indice).toString()+"\n";
+      }
+      for (int indice=0;indice!=citasMedicas.getSize();indice++){
+          mensaje+=citasMedicas.get(indice).toString()+"\n";
+      }
+      return mensaje;
+    }  
 }

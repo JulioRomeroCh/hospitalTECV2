@@ -60,6 +60,14 @@ public class Hospitalizacion {
       SimpleDateFormat formatoFecha = SimpleDateFormat("yyy/mm/dd");
       return formatoFecha.format(this.fechaFin);
     }
+    
+    public Seguimiento getSeguimiento() {
+      return seguimiento;
+    }
+    
+    public Doctor getDoctorEncargado() {
+      return doctorEncargado;
+    }
 
     /**
      * @param pFechaFin the fechaFin to set
@@ -98,4 +106,16 @@ public class Hospitalizacion {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     
+    public String toString(){
+      String mensaje="";
+      mensaje="Identificador: "+getIdentificadorHospitalizacion()+"\n";
+      mensaje+="Fecha Inicio: "+getFechaInicio()+"\n";
+      mensaje+="Fecha Fin: "+getFechaFin()+"\n";
+      mensaje+="Seguimiento: "+getSeguimiento().toString()+"\n";
+      mensaje+="Doctor Encargado: "+getDoctorEncargado().toString()+"\n";
+      for (int indice=0;indice!=diagnosticos.getSize();indice++){
+          mensaje+=diagnosticos.get(indice).toString()+"\n";
+      }
+      return mensaje;
+    }    
 }

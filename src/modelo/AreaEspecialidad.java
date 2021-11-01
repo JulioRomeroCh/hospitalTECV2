@@ -37,4 +37,15 @@ public class AreaEspecialidad {
     public void añadirHospitalizaciones (Hospitalizacion pHospitalizacion){
       hospitalizaciones.add(pHospitalizacion);
     }
+    
+    public String toString(){
+        String mensaje="";
+        mensaje="Área: "+getArea()+"\n";
+        mensaje+="Centro Médico: " +centroMedico.getNombre()+"\n";
+        for (int indice=0;indice!=hospitalizaciones.getSize();indice++){
+          mensaje+=hospitalizaciones.get(indice).toString()+"\n";
+        }
+     
+        return mensaje;
+    }
 }

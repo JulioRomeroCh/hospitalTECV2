@@ -26,6 +26,14 @@ public Monitoreo(Date pFechaAplicacion){
         SimpleDateFormat formatoFecha = new SimpleDateFormat("yyy/mm/dd");
         return formatoFecha.format(this.fechaAplicacion);
     }
+    
+    public Cita getCitaMedica() {
+        return citaMedica;
+    }
+    
+    public Bitacora getRegistro() {
+        return registro;
+    }
 
     /**
      * @param pFechaAplicacion the fechaAplicacion to set
@@ -41,6 +49,13 @@ public Monitoreo(Date pFechaAplicacion){
     public void setRegistro(Bitacora pRegistro){
       registro = pRegistro;
     }
-
+    
+    public String toString(){
+        String mensaje="";
+        mensaje="Fecha: "+getFechaAplicacion()+"\n";
+        mensaje+="Cita: "+getCitaMedica().toString()+"\n";
+        mensaje+="Bitácora: "+getRegistro().toString()+"\n";
+        return mensaje;
+    }
 
 }

@@ -33,4 +33,11 @@ public class Secretario extends Funcionario {
     public void setCodigoSecretario(int pCodigoSecretario){
       this.codigoSecretario = pCodigoSecretario;
     }
+    
+    public String toString(){
+        String mensaje="";
+        mensaje="Código: "+getCodigoSecretario()+"\n";
+        mensaje+=super.toString()+"\n";
+        return mensaje;
+    }
 }

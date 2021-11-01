@@ -54,9 +54,31 @@ public class Seguimiento {
     public void setEncargado(Funcionario pEncargado){
       encargado = pEncargado;
     }
+ 
+   public Funcionario getEncargado(){
+      return encargado;
+    }
+   
+   public Tratamiento getTratamiento(){
+      return tratamiento;
+    }
     
     public void setTratamiento(Tratamiento pTratamiento){
       tratamiento = pTratamiento;
     }
-  
+    public String toString(){
+        String mensaje="";
+        mensaje="Identificador: "+getIdentificadorSeguimiento()+"\n";
+        mensaje+="Encargado: "+getEncargado().toString()+"\n";
+        mensaje+="Tratamiento: "+getTratamiento().toString()+"\n";
+        for (int indice=0;indice!=fechasSeguimiento.getSize();indice++){
+            mensaje+=fechasSeguimiento.get(indice).getDay()+"/"+fechasSeguimiento.get(indice).getMonth()+"/"+
+                    fechasSeguimiento.get(indice).getYear()+"\n";
+        }
+        for (int indice=0;indice!=observaciones.getSize();indice++){
+            mensaje+=observaciones.get(indice)+"\n";
+        }
+       
+        return mensaje;
+    }
 }
