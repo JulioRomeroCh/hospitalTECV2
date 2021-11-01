@@ -10,6 +10,9 @@ public class Funcionario extends Usuario {
   protected TipoFuncionario tipo;
   protected Date fechaIngreso;
   protected String area;
+  protected Lista<Paciente> pacientes;
+  protected Lista<Cita> citasMedicas;
+  
   
   public Funcionario(){
   }
@@ -19,7 +22,7 @@ public class Funcionario extends Usuario {
       Date pFechaIngreso, String pArea){
     
     super (pCedula, pNombre, pApellido1, pApellido2, pRol, pNombreUsuario, pContraseña);
-    
+    pacientes = new Lista<Paciente>();
     setIdentificadorFuncionario(pIdentificadorFuncionario);
     setTipo(pTipo);
     setFechaIngreso(pFechaIngreso);
@@ -84,6 +87,15 @@ public class Funcionario extends Usuario {
     public void setArea(String pArea) {
         this.area = pArea;
     }
+    
+    public void añadirPacienteACargo(Paciente pPaciente){
+      pacientes.add(pPaciente);
+    }
+    
+    public void añadirCita(Cita pCita){
+      citasMedicas.add(pCita);
+    }
+    
   
   
 }

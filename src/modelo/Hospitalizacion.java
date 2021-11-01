@@ -9,6 +9,12 @@ public class Hospitalizacion {
   private Date fechaInicio;
   private Date fechaFin;
   
+  private Seguimiento seguimiento;
+  
+  private Doctor doctorEncargado;
+  
+  private Lista<Diagnostico> diagnosticos;
+  
   public Hospitalizacion(){
   }
   
@@ -62,7 +68,34 @@ public class Hospitalizacion {
         this.fechaFin = pFechaFin;
     }
 
+    
+    public void setSeguimiento(int pIdentificadorSeguimiento, Lista<Date> pFechasSeguimiento,
+        Lista<String> observaciones){
+    
+      Seguimiento nuevoSeguimiento = new Seguimiento(pIdentificadorSeguimiento);
+      nuevoSeguimiento.reemplazarListaFechas(pFechasSeguimiento);
+      nuevoSeguimiento.reemplazarListaObservaciones(observaciones);
+      this.seguimiento = nuevoSeguimiento;
+    }
+    
+    public void setDoctorEncargado(Doctor pDoctorEncargado){
+      doctorEncargado = pDoctorEncargado;
+    }
+    
+    public void añadirDiagnosticos(Diagnostico pDiagnostico){
+      diagnosticos.add(pDiagnostico);
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
     private SimpleDateFormat SimpleDateFormat(String yyymmdd) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
+    
 }

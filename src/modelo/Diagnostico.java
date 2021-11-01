@@ -43,4 +43,12 @@ public class Diagnostico {
     public void setNivel(NivelDiagnostico pNivel) {
         this.nivel = pNivel;
     }
+    
+    public void añadirObservacion (String pObservacion){
+      observaciones.add(pObservacion);
+    }
+    
+    public void reemplazarListaObservaciones(Lista<String> pObservaciones){
+      observaciones = pObservaciones;
+    }
 }

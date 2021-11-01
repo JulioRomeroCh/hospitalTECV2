@@ -5,7 +5,11 @@ public class AreaEspecialidad {
 
   private String area;
   
+  private CentroAtencion centroMedico;
+  private Lista<Hospitalizacion> hospitalizaciones;
+  
   public AreaEspecialidad(){
+    hospitalizaciones = new Lista<Hospitalizacion>();
   }
   
   public AreaEspecialidad(String pArea){
@@ -24,5 +28,13 @@ public class AreaEspecialidad {
      */
     public void setArea(String pArea) {
         this.area = pArea;
+    }
+    
+    public void setCentroMedico(CentroAtencion pCentroMedico){
+      centroMedico = pCentroMedico;
+    }
+    
+    public void añadirHospitalizaciones (Hospitalizacion pHospitalizacion){
+      hospitalizaciones.add(pHospitalizacion);
     }
 }

@@ -34,4 +34,12 @@ public class Doctor extends Funcionario {
     public void setCodigoDoctor(int pCodigoDoctor) {
         this.codigoDoctor = pCodigoDoctor;
     }
+    
+    public void añadirEspecialidad(String pEspecialidad){
+      especialidades.add(pEspecialidad);
+    }
+    
+    public void reemplazarListaEspecialidades(Lista<String> pEspecialidades){
+        especialidades = pEspecialidades;
+    }
 }

@@ -8,6 +8,10 @@ public class RegistroVacunas {
  
   private Date fechaAplicacion;
   
+  private Paciente paciente;
+  
+  private Lista<Vacuna> listaVacunas;
+  
   public RegistroVacunas(){
   }
   
@@ -29,7 +33,15 @@ public class RegistroVacunas {
     public void setFechaAplicacion(Date pFechaAplicacion) {
         this.fechaAplicacion = pFechaAplicacion;
     }
-
+    
+    
+    public void setPaciente(Paciente pPaciente){
+      paciente = pPaciente;
+    }
+    
+    public void añadirVacuna(Vacuna pVacuna){
+      listaVacunas.add(pVacuna);
+    }
     
     
     private SimpleDateFormat SimpleDateFormat(String yyymmdd) {

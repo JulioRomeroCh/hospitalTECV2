@@ -7,6 +7,9 @@ import java.util.Date;
 public class Monitoreo {
 
 private Date fechaAplicacion;
+
+private Cita citaMedica;
+private Bitacora registro;
     
 public Monitoreo(){
 }
@@ -29,6 +32,14 @@ public Monitoreo(Date pFechaAplicacion){
      */
     public void setFechaAplicacion(Date pFechaAplicacion) {
         this.fechaAplicacion = pFechaAplicacion;
+    }
+    
+    public void setCita(Cita pCita){
+      citaMedica = pCita;
+    }
+    
+    public void setRegistro(Bitacora pRegistro){
+      registro = pRegistro;
     }
 
 

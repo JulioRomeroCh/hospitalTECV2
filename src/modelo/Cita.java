@@ -10,6 +10,8 @@ public class Cita {
   private String area;
   private String observacion;
   
+  private Lista<Diagnostico> diagnosticos;
+  
   public Cita(){
   }
   
@@ -90,6 +92,14 @@ public class Cita {
      */
     public void setObservacion(String pObservacion) {
         this.observacion = pObservacion;
+    }
+    
+    public void añadirDiagnostico(String pNombreDiagnostico, NivelDiagnostico pNivel, 
+        Lista<String> pObservaciones){
+    
+     Diagnostico nuevoDiagnostico = new Diagnostico(pNombreDiagnostico, pNivel);
+     nuevoDiagnostico.reemplazarListaObservaciones(pObservaciones);
+     diagnosticos.add(nuevoDiagnostico);
     }
   
   

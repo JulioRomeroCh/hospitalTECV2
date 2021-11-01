@@ -11,6 +11,12 @@ public class Paciente extends Usuario{
   private TipoSangre tipoSangre;
   private Lista<String> telefonos;
   
+  private Lista<Funcionario> encargados;
+  
+  private Lista<Hospitalizacion> hospitalizaciones;
+  
+  private Cita cita;
+  
   public Paciente(){
   }
   
@@ -104,6 +110,31 @@ public class Paciente extends Usuario{
      */
     public void setTelefono(String pTelefono) {
         telefonos.add(pTelefono);
+    }
+    
+    public void reemplazarListaTelefonos(Lista<String> pTelefonos){
+      telefonos = pTelefonos;
+    }
+    
+    public void añadirEncargados(Funcionario pEncargado){
+      encargados.add(pEncargado);
+    }
+    
+    public void añadirHospitalizacion (int pIdentificadorHospitalizacion, Date pFechaInicio,
+        Date pFechaFin){
+    
+      Hospitalizacion nuevaHospitalizacion = new Hospitalizacion(pIdentificadorHospitalizacion, 
+          pFechaInicio, pFechaFin);
+      
+      hospitalizaciones.add(nuevaHospitalizacion);
+    }
+    
+    public void setCita(int pIdentificadorCita, Date pFecha, Date pHora, String pArea,
+        String pObservacion){
+        
+      Cita nuevaCita = new Cita(pIdentificadorCita, pFecha, pHora, pObservacion);
+      
+      cita = nuevaCita;
     }
   
   

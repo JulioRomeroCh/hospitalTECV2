@@ -1,6 +1,8 @@
 
 package modelo;
 
+import java.util.Date;
+
 
 public class CentroAtencion {
    
@@ -11,10 +13,16 @@ public class CentroAtencion {
   private String tipo;
   private static int numeroCentros = 0;
   
+  private Lista<Funcionario> empleados;
+  
+  private Lista<Paciente> pacientes;
+  
   public CentroAtencion(){
   }
   
   public CentroAtencion(String pNombre, String pLugar, int pCapacidad, String pTipo){
+    empleados = new Lista<Funcionario>();
+    pacientes = new Lista<Paciente>();
     numeroCentros++;
     setCodigo();
     setNombre(pNombre);
@@ -93,4 +101,57 @@ public class CentroAtencion {
     public void setTipo(String pTipo) {
         this.tipo = pTipo;
     }
+    
+    public void añadirDoctor (String pCedula, String pNombre, String pApellido1, String pApellido2, String pRol, 
+      String pNombreUsuario, String pContraseña, int pIdentificadorFuncionario, TipoFuncionario pTipo,
+      Date pFechaIngreso, String pArea, int pCodigoDoctor, Lista<String> pEspecialidades){
+        
+      Doctor nuevoDoctor = new Doctor(pCedula, pNombre, pApellido1, pApellido2, pRol, pNombreUsuario, 
+          pContraseña, pIdentificadorFuncionario, pTipo, pFechaIngreso, pArea, pCodigoDoctor);
+      
+      nuevoDoctor.reemplazarListaEspecialidades(pEspecialidades);
+      
+      empleados.add(nuevoDoctor);
+    }
+    
+    public void añadirSecretario(String pCedula, String pNombre, String pApellido1, String pApellido2,
+        String pRol, String pNombreUsuario, String pContraseña, int pIdentificadorFuncionario,
+        TipoFuncionario pTipo, Date pFechaIngreso, String pArea, int pCodigoSecretario){
+    
+      Secretario nuevoSecretario = new Secretario(pCedula, pNombre, pApellido1, pApellido2, pRol,
+          pNombreUsuario, pContraseña, pIdentificadorFuncionario, pTipo, pFechaIngreso, pArea,
+          pCodigoSecretario);
+      
+      empleados.add(nuevoSecretario);
+    }
+    
+    
+    public void añadirEnfermero(String pCedula, String pNombre, String pApellido1, String pApellido2,
+        String pRol, String pNombreUsuario, String pContraseña, int pIdentificadorFuncionario,
+        TipoFuncionario pTipo, Date pFechaIngreso, String pArea, int pCodigoEnfermero,
+        boolean pIndicadorPersonasACargo, boolean pIndicadorExperienciaCapacitaciones){
+    
+      Enfermero nuevoEnfermero = new Enfermero(pCedula, pNombre, pApellido1, pApellido2, pRol,
+          pNombreUsuario, pContraseña, pIdentificadorFuncionario, pTipo, pFechaIngreso, pArea,
+          pCodigoEnfermero);
+      
+      nuevoEnfermero.setIndicadorPersonasACargo(pIndicadorPersonasACargo);
+      nuevoEnfermero.setIndicadorExperienciaCapacitaciones(pIndicadorExperienciaCapacitaciones);
+      
+      empleados.add(nuevoEnfermero);
+    }
+    
+    public void añadirPacientes(String pCedula, String pNombre, String pApellido1, String pApellido2,
+        String pRol, String pNombreUsuario, String pContraseña, int pIdentificadorPaciente, 
+        String pNacionalidad, String pResidencia, Date pFechaNacimiento, TipoSangre pTipoSangre,
+        Lista<String> pTelefonos){
+    
+     Paciente nuevoPaciente = new Paciente(pCedula, pNombre, pApellido1, pApellido2, pRol, pNombreUsuario,
+         pContraseña, pIdentificadorPaciente, pNacionalidad, pResidencia, pFechaNacimiento, pTipoSangre);
+     
+     nuevoPaciente.reemplazarListaTelefonos(pTelefonos);
+     
+     pacientes.add(nuevoPaciente);
+    }
+    
 }
