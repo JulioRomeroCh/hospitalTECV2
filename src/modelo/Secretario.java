@@ -12,10 +12,10 @@ public class Secretario extends Funcionario {
   
   public Secretario(String pCedula, String pNombre, String pApellido1, String pApellido2, String pRol, 
       String pNombreUsuario, String pContraseña, int pIdentificadorFuncionario, TipoFuncionario pTipo,
-      Date pFechaIngreso, String pArea, int pCodigoSecretario){
+      Date pFechaIngreso, int pIndice, int pCodigoSecretario){
     
     super (pCedula, pNombre, pApellido1, pApellido2, pRol, pNombreUsuario, pContraseña,
-           pIdentificadorFuncionario, pTipo, pFechaIngreso, pArea);
+           pIdentificadorFuncionario, pTipo, pFechaIngreso, pIndice);
     
     setCodigoSecretario(pCodigoSecretario);
   }

@@ -7,6 +7,8 @@ public class Diagnostico {
   private NivelDiagnostico nivel;
   private Lista<String> observaciones;
   
+  private Lista<Tratamiento> tratamientos;
+  
   public Diagnostico(){
   }
   
@@ -50,6 +52,11 @@ public class Diagnostico {
     
     public void reemplazarListaObservaciones(Lista<String> pObservaciones){
       observaciones = pObservaciones;
+    }
+    
+    public void añadirTratamiento (String pNombre, String pTipo, int pDosis){
+      Tratamiento nuevoTratamiento = new Tratamiento(nombreDiagnostico, pTipo, pDosis);
+      tratamientos.add(nuevoTratamiento);
     }
     
     public String toString(){

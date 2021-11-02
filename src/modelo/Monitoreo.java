@@ -2,29 +2,34 @@
 package modelo;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
 
 public class Monitoreo {
 
-private Date fechaAplicacion;
+private EstadoCita estadoActual;
+
+private Lista<EstadoCita> estadosCita;
 
 private Cita citaMedica;
 private Bitacora registro;
+
+public Usuario usuario;
     
 public Monitoreo(){
 }
 
-public Monitoreo(Date pFechaAplicacion){
+public Monitoreo(EstadoCita pEstado){
+    
+  estadosCita = new Lista<EstadoCita>();
+  estadosCita.add(EstadoCita.REGISTRADA);
  
-  setFechaAplicacion(pFechaAplicacion);
+  setEstado(EstadoCita.REGISTRADA);
 }
 
     /**
      * @return the fechaAplicacion
      */
-    public String getFechaAplicacion() {
-        SimpleDateFormat formatoFecha = new SimpleDateFormat("yyy/mm/dd");
-        return formatoFecha.format(this.fechaAplicacion);
+    public EstadoCita getEstado() {
+       return estadoActual;
     }
     
     public Cita getCitaMedica() {
@@ -36,10 +41,10 @@ public Monitoreo(Date pFechaAplicacion){
     }
 
     /**
-     * @param pFechaAplicacion the fechaAplicacion to set
+     * @param pEstado the fechaAplicacion to set
      */
-    public void setFechaAplicacion(Date pFechaAplicacion) {
-        this.fechaAplicacion = pFechaAplicacion;
+    public void setEstado(EstadoCita pEstado) {
+        estadoActual = pEstado;
     }
     
     public void setCita(Cita pCita){
@@ -50,9 +55,41 @@ public Monitoreo(Date pFechaAplicacion){
       registro = pRegistro;
     }
     
+    public void setUsuario (Usuario pUsuario){
+      usuario = pUsuario;
+    }
+    
+    public Usuario getUsuario(){
+      return usuario;
+    }
+    
+    
+    public void cambiarEstadoCita(boolean pFueAtendido){
+      if (usuario instanceof Funcionario && pFueAtendido == false){
+        estadoActual = EstadoCita.CANCELADA_POR_CENTRO_MEDICO;
+      }
+      
+      else if (usuario instanceof Paciente && pFueAtendido == false){
+        estadoActual = EstadoCita.CANCELADA_POR_PACIENTE;
+      }
+      
+      else if (usuario instanceof Funcionario && pFueAtendido == true){
+        estadoActual = EstadoCita.REALIZADA;
+      }
+      
+      else if (estadoActual.equals(EstadoCita.CANCELADA_POR_CENTRO_MEDICO)){
+        estadoActual = EstadoCita.ASIGNADA;
+      }
+      
+      estadosCita.add(estadoActual);
+      registro.registrarNuevaFecha();
+    }
+    
+    
+@Override
     public String toString(){
         String mensaje="";
-        mensaje="Fecha: "+getFechaAplicacion()+"\n";
+        mensaje="Estado: "+getEstado()+"\n";
         mensaje+="Cita: "+getCitaMedica().toString()+"\n";
         mensaje+="Bitácora: "+getRegistro().toString()+"\n";
         return mensaje;

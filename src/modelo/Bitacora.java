@@ -30,6 +30,13 @@ public class Bitacora {
     public void setIdentificador(int pIdentificador) {
         this.identificador = pIdentificador;
     }
+    
+    public void registrarNuevaFecha(){
+      fechasModificacion.add(new Date());
+      horasModificacion.add(new Date());
+    }
+    
+  @Override
     public String toString(){
         String mensaje="";
         mensaje="Indentificador: "+getIdentificador()+"\n";

@@ -5,7 +5,8 @@ import java.util.Date;
 
 
 public class CentroAtencion {
-   
+  
+  private static Lista<String> tiposCentro = new Lista<String>();
   private int codigo;
   private String nombre;
   private String lugar;
@@ -20,15 +21,20 @@ public class CentroAtencion {
   public CentroAtencion(){
   }
   
-  public CentroAtencion(String pNombre, String pLugar, int pCapacidad, String pTipo){
+  public CentroAtencion(String pNombre, String pLugar, int pCapacidad, int pIndice){
     empleados = new Lista<Funcionario>();
     pacientes = new Lista<Paciente>();
+    tiposCentro.clear();
+    tiposCentro.add("Hospital");
+    tiposCentro.add("Clínica");
+    tiposCentro.add("EBAIS");
+
     numeroCentros++;
     setCodigo();
     setNombre(pNombre);
     setLugar(pLugar);
     setCapacidad(pCapacidad);
-    setTipo(pTipo);
+    setTipo(pIndice);
    
 }
 
@@ -96,18 +102,23 @@ public class CentroAtencion {
     }
 
     /**
-     * @param pTipo the tipo to set
+     * @param pIndice the tipo to set
      */
-    public void setTipo(String pTipo) {
-        this.tipo = pTipo;
+    public void setTipo(int pIndice) {
+        for (int indice = 0; indice != tiposCentro.getSize(); indice++){
+          if (indice == pIndice){
+            this.tipo = tiposCentro.get(pIndice);
+            break;
+          }
+        }
     }
     
     public void añadirDoctor (String pCedula, String pNombre, String pApellido1, String pApellido2, String pRol, 
       String pNombreUsuario, String pContraseña, int pIdentificadorFuncionario, TipoFuncionario pTipo,
-      Date pFechaIngreso, String pArea, int pCodigoDoctor, Lista<String> pEspecialidades){
+      Date pFechaIngreso, int pIndice, int pCodigoDoctor, Lista<String> pEspecialidades){
         
       Doctor nuevoDoctor = new Doctor(pCedula, pNombre, pApellido1, pApellido2, pRol, pNombreUsuario, 
-          pContraseña, pIdentificadorFuncionario, pTipo, pFechaIngreso, pArea, pCodigoDoctor);
+          pContraseña, pIdentificadorFuncionario, pTipo, pFechaIngreso, pIndice, pCodigoDoctor);
       
       nuevoDoctor.reemplazarListaEspecialidades(pEspecialidades);
       
@@ -116,10 +127,10 @@ public class CentroAtencion {
     
     public void añadirSecretario(String pCedula, String pNombre, String pApellido1, String pApellido2,
         String pRol, String pNombreUsuario, String pContraseña, int pIdentificadorFuncionario,
-        TipoFuncionario pTipo, Date pFechaIngreso, String pArea, int pCodigoSecretario){
+        TipoFuncionario pTipo, Date pFechaIngreso, int pIndice, int pCodigoSecretario){
     
       Secretario nuevoSecretario = new Secretario(pCedula, pNombre, pApellido1, pApellido2, pRol,
-          pNombreUsuario, pContraseña, pIdentificadorFuncionario, pTipo, pFechaIngreso, pArea,
+          pNombreUsuario, pContraseña, pIdentificadorFuncionario, pTipo, pFechaIngreso, pIndice,
           pCodigoSecretario);
       
       empleados.add(nuevoSecretario);
@@ -128,11 +139,11 @@ public class CentroAtencion {
     
     public void añadirEnfermero(String pCedula, String pNombre, String pApellido1, String pApellido2,
         String pRol, String pNombreUsuario, String pContraseña, int pIdentificadorFuncionario,
-        TipoFuncionario pTipo, Date pFechaIngreso, String pArea, int pCodigoEnfermero,
+        TipoFuncionario pTipo, Date pFechaIngreso, int pIndice, int pCodigoEnfermero,
         boolean pIndicadorPersonasACargo, boolean pIndicadorExperienciaCapacitaciones){
     
       Enfermero nuevoEnfermero = new Enfermero(pCedula, pNombre, pApellido1, pApellido2, pRol,
-          pNombreUsuario, pContraseña, pIdentificadorFuncionario, pTipo, pFechaIngreso, pArea,
+          pNombreUsuario, pContraseña, pIdentificadorFuncionario, pTipo, pFechaIngreso, pIndice,
           pCodigoEnfermero);
       
       nuevoEnfermero.setIndicadorPersonasACargo(pIndicadorPersonasACargo);
@@ -154,6 +165,11 @@ public class CentroAtencion {
      pacientes.add(nuevoPaciente);
     }
     
+    public void añadirTipoCentro(String pTipo){
+      tiposCentro.add(pTipo);
+    }
+    
+  @Override
     public String toString(){
         String mensaje="";
         mensaje="Código"+getCodigo()+"\n";

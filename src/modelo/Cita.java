@@ -10,6 +10,8 @@ public class Cita {
   private String area;
   private String observacion;
   
+  private Funcionario encargadoCita;
+  
   private Lista<Diagnostico> diagnosticos;
   
   public Cita(){
@@ -102,6 +104,35 @@ public class Cita {
      diagnosticos.add(nuevoDiagnostico);
     }
     
+    public void setEncargadoCita(Funcionario pFuncionario){
+      encargadoCita = pFuncionario;
+    }
+    
+    public Funcionario getEncargadoCita(){
+      return encargadoCita;
+    }
+    
+    public void registrarDiagnostico(String pNombre, NivelDiagnostico pNivel, Lista<String> pObservaciones){
+      Diagnostico nuevoDiagnostico = new Diagnostico(pNombre, pNivel);
+      nuevoDiagnostico.reemplazarListaObservaciones(pObservaciones);
+      diagnosticos.add(nuevoDiagnostico);
+    }
+    
+    
+    public void registrarTratamientos(String pNombreDiagnostico, String pNombreTratamiento, String pTipo,
+            int pDosis){
+      
+        for (int indice = 0; indice != diagnosticos.getSize(); indice++){
+          if (diagnosticos.get(indice).getNombreDiagnostico().equals(pNombreDiagnostico)){
+              diagnosticos.get(indice).añadirTratamiento(pNombreTratamiento, pTipo, pDosis);
+          }
+        }
+    }
+    
+    
+    
+    
+  @Override
     public String toString(){
        String mensaje="";
        mensaje="Identificador: "+getIdentificadorCita()+"\n";

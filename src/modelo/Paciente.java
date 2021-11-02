@@ -140,6 +140,10 @@ public class Paciente extends Usuario{
       
       cita = nuevaCita;
     }
+    
+    public void cancelarCita(){
+      cita = null;
+    }
   
     public String toString(){
         String mensaje="";

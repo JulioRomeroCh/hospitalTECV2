@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.Calendar;
 public class Funcionario extends Usuario {
  
+  protected static Lista<String> areaTrabajo = new Lista<String>();
   protected int identificadorFuncionario;
   protected TipoFuncionario tipo;
   protected Date fechaIngreso;
@@ -19,14 +20,22 @@ public class Funcionario extends Usuario {
   
   public Funcionario (String pCedula, String pNombre, String pApellido1, String pApellido2, String pRol, 
       String pNombreUsuario, String pContraseña, int pIdentificadorFuncionario, TipoFuncionario pTipo,
-      Date pFechaIngreso, String pArea){
+      Date pFechaIngreso, int pIndice){
     
     super (pCedula, pNombre, pApellido1, pApellido2, pRol, pNombreUsuario, pContraseña);
+    areaTrabajo.clear();
+    areaTrabajo.add("Administrativa");
+    areaTrabajo.add("Emergencias");
+    areaTrabajo.add("Ginecología");
+    areaTrabajo.add("Oncología");
+    areaTrabajo.add("Dermatología");
+    areaTrabajo.add("Ortopedia");
+    
     pacientes = new Lista<Paciente>();
     setIdentificadorFuncionario(pIdentificadorFuncionario);
     setTipo(pTipo);
     setFechaIngreso(pFechaIngreso);
-    setArea(pArea);
+    setArea(pIndice);
   }
 
     /**
@@ -66,9 +75,6 @@ public class Funcionario extends Usuario {
     }
 
     /**
-     * @param pDia
-     * @param pMes
-     * @param pAño
      */
     public void setFechaIngreso(Date pFechaIngreso) {
         this.fechaIngreso = pFechaIngreso;
@@ -82,10 +88,19 @@ public class Funcionario extends Usuario {
     }
 
     /**
-     * @param pArea the area to set
+     * @param pIndice the area to set
      */
-    public void setArea(String pArea) {
-        this.area = pArea;
+    public void setArea(int pIndice) {
+      for (int indice = 0; indice != areaTrabajo.getSize(); indice++){
+        if (indice == pIndice){
+          this.area = areaTrabajo.get(pIndice);
+          break;
+        }
+      } 
+    }
+    
+    public void setArea (String pArea){
+      areaTrabajo.add(pArea);
     }
     
     public void añadirPacienteACargo(Paciente pPaciente){
@@ -96,6 +111,21 @@ public class Funcionario extends Usuario {
       citasMedicas.add(pCita);
     }
     
+    public void añadirAreaTrabajo(String pArea){
+      areaTrabajo.add(pArea);
+    }
+    
+    public void modificarAreaTrabajo (int pIndice, String pNuevaArea){
+      areaTrabajo.remove(pIndice);
+      setArea(pNuevaArea);
+    }
+    
+    public void eliminarAreaTrabajo (int pIndice){
+      areaTrabajo.remove(pIndice);
+    }
+    
+    
+  @Override
     public String toString(){
       String mensaje="";
       mensaje="Identificador: "+getIdentificadorFuncionario()+"\n";

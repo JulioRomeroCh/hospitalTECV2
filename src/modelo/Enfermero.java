@@ -13,10 +13,10 @@ public class Enfermero extends Funcionario {
   
   public Enfermero(String pCedula, String pNombre, String pApellido1, String pApellido2, String pRol, 
       String pNombreUsuario, String pContraseña, int pIdentificadorFuncionario, TipoFuncionario pTipo,
-      Date pFechaIngreso, String pArea, int pCodigoEnfermero){
+      Date pFechaIngreso, int pIndice, int pCodigoEnfermero){
     
    super (pCedula, pNombre, pApellido1, pApellido2, pRol, pNombreUsuario, pContraseña,
-           pIdentificadorFuncionario, pTipo, pFechaIngreso, pArea);
+           pIdentificadorFuncionario, pTipo, pFechaIngreso, pIndice);
    
    setCodigoEnfermero(pCodigoEnfermero);
   }

@@ -1,0 +1,5 @@
+package modelo;
+
+public enum EstadoCita {
+  REGISTRADA, CANCELADA_POR_PACIENTE, CANCELADA_POR_CENTRO_MEDICO, ASIGNADA, REALIZADA;  
+}

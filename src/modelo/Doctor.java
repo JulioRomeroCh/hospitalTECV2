@@ -12,10 +12,10 @@ public class Doctor extends Funcionario {
   
   public Doctor(String pCedula, String pNombre, String pApellido1, String pApellido2, String pRol, 
       String pNombreUsuario, String pContraseña, int pIdentificadorFuncionario, TipoFuncionario pTipo,
-      Date pFechaIngreso, String pArea, int pCodigoDoctor){
+      Date pFechaIngreso, int pIndice, int pCodigoDoctor){
       
        super (pCedula, pNombre, pApellido1, pApellido2, pRol, pNombreUsuario, pContraseña,
-           pIdentificadorFuncionario, pTipo, pFechaIngreso, pArea);
+           pIdentificadorFuncionario, pTipo, pFechaIngreso, pIndice);
        
        especialidades = new Lista<String>();
        setCodigoDoctor(pCodigoDoctor);

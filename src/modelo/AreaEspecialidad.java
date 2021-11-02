@@ -38,6 +38,7 @@ public class AreaEspecialidad {
       hospitalizaciones.add(pHospitalizacion);
     }
     
+  @Override
     public String toString(){
         String mensaje="";
         mensaje="Área: "+getArea()+"\n";
