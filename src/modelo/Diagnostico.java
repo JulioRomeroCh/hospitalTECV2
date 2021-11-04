@@ -54,9 +54,8 @@ public class Diagnostico {
       observaciones = pObservaciones;
     }
     
-    public void añadirTratamiento (String pNombre, String pTipo, int pDosis){
-      Tratamiento nuevoTratamiento = new Tratamiento(nombreDiagnostico, pTipo, pDosis);
-      tratamientos.add(nuevoTratamiento);
+    public void añadirTratamiento (Tratamiento pTratamiento){
+      tratamientos.add(pTratamiento);
     }
     
     public String toString(){

@@ -14,16 +14,13 @@ public class CentroAtencion {
   private String tipo;
   private static int numeroCentros = 0;
   
-  private Lista<Funcionario> empleados;
-  
-  private Lista<Paciente> pacientes;
+ private Lista<Usuario> usuarios;
   
   public CentroAtencion(){
   }
   
   public CentroAtencion(String pNombre, String pLugar, int pCapacidad, int pIndice){
-    empleados = new Lista<Funcionario>();
-    pacientes = new Lista<Paciente>();
+
     tiposCentro.clear();
     tiposCentro.add("Hospital");
     tiposCentro.add("Clínica");
@@ -122,7 +119,7 @@ public class CentroAtencion {
       
       nuevoDoctor.reemplazarListaEspecialidades(pEspecialidades);
       
-      empleados.add(nuevoDoctor);
+      usuarios.add(nuevoDoctor);
     }
     
     public void añadirSecretario(String pCedula, String pNombre, String pApellido1, String pApellido2,
@@ -133,7 +130,7 @@ public class CentroAtencion {
           pNombreUsuario, pContraseña, pIdentificadorFuncionario, pTipo, pFechaIngreso, pIndice,
           pCodigoSecretario);
       
-      empleados.add(nuevoSecretario);
+      usuarios.add(nuevoSecretario);
     }
     
     
@@ -149,7 +146,7 @@ public class CentroAtencion {
       nuevoEnfermero.setIndicadorPersonasACargo(pIndicadorPersonasACargo);
       nuevoEnfermero.setIndicadorExperienciaCapacitaciones(pIndicadorExperienciaCapacitaciones);
       
-      empleados.add(nuevoEnfermero);
+      usuarios.add(nuevoEnfermero);
     }
     
     public void añadirPacientes(String pCedula, String pNombre, String pApellido1, String pApellido2,
@@ -162,7 +159,7 @@ public class CentroAtencion {
      
      nuevoPaciente.reemplazarListaTelefonos(pTelefonos);
      
-     pacientes.add(nuevoPaciente);
+     usuarios.add(nuevoPaciente);
     }
     
     public void añadirTipoCentro(String pTipo){
@@ -177,12 +174,8 @@ public class CentroAtencion {
         mensaje+="Lugar: "+getLugar()+"\n";
         mensaje+="Capacidad: "+getCapacidad()+"\n";
         mensaje+="Tipo: "+getTipo()+"\n";
-        for (int indice=0;indice!=empleados.getSize();indice++){
-            mensaje+=empleados.get(indice).toString()+"\n";
-        }
-        
-        for (int indice=0;indice!=pacientes.getSize();indice++){
-            mensaje+=pacientes.get(indice).toString()+"\n";
+        for (int indice=0;indice!=usuarios.getSize();indice++){
+            mensaje+=usuarios.get(indice).toString()+"\n";
         }
         return mensaje;
     }

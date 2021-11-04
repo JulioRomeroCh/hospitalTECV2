@@ -10,10 +10,9 @@ public class Hospitalizacion {
   private Date fechaFin;
   
   private Seguimiento seguimiento;
+  private Cita motivo;
+  private CentroAtencion centroHospitalizacion;
   
-  private Doctor doctorEncargado;
-  
-  private Lista<Diagnostico> diagnosticos;
   
   public Hospitalizacion(){
   }
@@ -65,9 +64,6 @@ public class Hospitalizacion {
       return seguimiento;
     }
     
-    public Doctor getDoctorEncargado() {
-      return doctorEncargado;
-    }
 
     /**
      * @param pFechaFin the fechaFin to set
@@ -86,21 +82,22 @@ public class Hospitalizacion {
       this.seguimiento = nuevoSeguimiento;
     }
     
-    public void setDoctorEncargado(Doctor pDoctorEncargado){
-      doctorEncargado = pDoctorEncargado;
+    public void setMotivo (Cita pCita){
+      this.motivo = pCita;
     }
     
-    public void añadirDiagnosticos(Diagnostico pDiagnostico){
-      diagnosticos.add(pDiagnostico);
+    public Cita getMotivo(){
+      return this.motivo;
     }
     
+    public void setCentroHospitalizacion(CentroAtencion pCentro){
+      this.centroHospitalizacion = pCentro;
+    }
     
-    
-    
-    
-    
-    
-    
+    public CentroAtencion getCentroHospitalizacion(){
+      return this.centroHospitalizacion;
+    }
+
     
     private SimpleDateFormat SimpleDateFormat(String yyymmdd) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -112,10 +109,6 @@ public class Hospitalizacion {
       mensaje+="Fecha Inicio: "+getFechaInicio()+"\n";
       mensaje+="Fecha Fin: "+getFechaFin()+"\n";
       mensaje+="Seguimiento: "+getSeguimiento().toString()+"\n";
-      mensaje+="Doctor Encargado: "+getDoctorEncargado().toString()+"\n";
-      for (int indice=0;indice!=diagnosticos.getSize();indice++){
-          mensaje+=diagnosticos.get(indice).toString()+"\n";
-      }
       return mensaje;
     }    
 }

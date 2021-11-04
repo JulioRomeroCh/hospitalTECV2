@@ -9,15 +9,18 @@ public class Cita {
   private Date hora;
   private String area;
   private String observacion;
+  private EstadoCita estado;
   
   private Funcionario encargadoCita;
   
   private Lista<Diagnostico> diagnosticos;
   
+  private Paciente paciente;
+  
   public Cita(){
   }
   
-  public Cita(int pIdentificadorCita, Date pFecha, Date pHora, String pObservacion){
+  public Cita(int pIdentificadorCita, Date pFecha, Date pHora, String pObservacion, EstadoCita pEstado){
     setIdentificadorCita(pIdentificadorCita);
     setFecha(pFecha);
     setHora(pHora);
@@ -119,12 +122,11 @@ public class Cita {
     }
     
     
-    public void registrarTratamientos(String pNombreDiagnostico, String pNombreTratamiento, String pTipo,
-            int pDosis){
+    public void registrarTratamientos(String pNombreDiagnostico, Tratamiento pTratamiento){
       
         for (int indice = 0; indice != diagnosticos.getSize(); indice++){
           if (diagnosticos.get(indice).getNombreDiagnostico().equals(pNombreDiagnostico)){
-              diagnosticos.get(indice).añadirTratamiento(pNombreTratamiento, pTipo, pDosis);
+              diagnosticos.get(indice).añadirTratamiento(pTratamiento);
           }
         }
     }
@@ -146,6 +148,46 @@ public class Cita {
        }
        return mensaje;
     }
+
+    /**
+     * @return the estado
+     */
+    public EstadoCita getEstado() {
+        return estado;
+    }
+
+    /**
+     * @param pEstado the estado to set
+     */
+    public void setEstado(EstadoCita pEstado) {
+        this.estado = pEstado;
+    }
+    
+    public void setPaciente(Paciente pPaciente){
+      this.paciente = pPaciente;
+    }
+    
+    public Paciente getPaciente(){
+      return this.paciente;
+    }
   
-  
+    public EstadoCita cambiarEstadoCita(Usuario usuario, boolean pFueAtendido){
+      if (usuario instanceof Funcionario && pFueAtendido == false){
+        estado = EstadoCita.CANCELADA_POR_CENTRO_MEDICO;
+      }
+      
+      else if (usuario instanceof Paciente && pFueAtendido == false){
+        estado = EstadoCita.CANCELADA_POR_PACIENTE;
+      }
+      
+      else if (usuario instanceof Funcionario && pFueAtendido == true){
+        estado = EstadoCita.REALIZADA;
+      }
+      
+      else if (estado.equals(EstadoCita.CANCELADA_POR_CENTRO_MEDICO)){
+        estado = EstadoCita.ASIGNADA;
+      }
+      return estado;
+    }
+
 }

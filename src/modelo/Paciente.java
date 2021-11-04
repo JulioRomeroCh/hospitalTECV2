@@ -11,11 +11,10 @@ public class Paciente extends Usuario{
   private TipoSangre tipoSangre;
   private Lista<String> telefonos;
   
-  private Lista<Funcionario> encargados;
   
-  private Lista<Hospitalizacion> hospitalizaciones;
+  private Lista<Vacuna> listaVacunas;
+  private Lista<Cita> citas;
   
-  private Cita cita;
   
   public Paciente(){
   }
@@ -98,9 +97,6 @@ public class Paciente extends Usuario{
         return tipoSangre;
     }
 
-    public Cita getCita() {
-        return cita;
-    }
 
     /**
      * @param tipoSangre the tipoSangre to set
@@ -120,31 +116,15 @@ public class Paciente extends Usuario{
       telefonos = pTelefonos;
     }
     
-    public void añadirEncargados(Funcionario pEncargado){
-      encargados.add(pEncargado);
+    public void añadirVacuna(Vacuna pVacuna){
+      listaVacunas.add(pVacuna);
     }
     
-    public void añadirHospitalizacion (int pIdentificadorHospitalizacion, Date pFechaInicio,
-        Date pFechaFin){
-    
-      Hospitalizacion nuevaHospitalizacion = new Hospitalizacion(pIdentificadorHospitalizacion, 
-          pFechaInicio, pFechaFin);
-      
-      hospitalizaciones.add(nuevaHospitalizacion);
+    public void añadirCita(Cita pCita){
+      citas.add(pCita);
     }
-    
-    public void setCita(int pIdentificadorCita, Date pFecha, Date pHora, String pArea,
-        String pObservacion){
-        
-      Cita nuevaCita = new Cita(pIdentificadorCita, pFecha, pHora, pObservacion);
-      
-      cita = nuevaCita;
-    }
-    
-    public void cancelarCita(){
-      cita = null;
-    }
-  
+
+  @Override
     public String toString(){
         String mensaje="";
         mensaje="Identificador: "+getIdentificadorPaciente()+"\n";
@@ -158,16 +138,6 @@ public class Paciente extends Usuario{
         for (int indice=0; indice!=telefonos.getSize();indice++){
             mensaje+=telefonos.get(indice)+"\n";
         }
-        mensaje+="Hospitalizaciones: "+"\n";
-        for (int indice=0; indice!=hospitalizaciones.getSize();indice++){
-            mensaje+=hospitalizaciones.get(indice).toString()+"\n";
-        }
-        mensaje+="Encargados: ";
-        for (int indice=0; indice!=encargados.getSize();indice++){
-            mensaje+=encargados.get(indice).toString()+"\n";
-        }
-        mensaje+="Cita asociada: ";
-        mensaje +="Cita: "+getCita().toString()+"\n";
         return mensaje;
     }
   

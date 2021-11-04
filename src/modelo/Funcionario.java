@@ -11,8 +11,7 @@ public class Funcionario extends Usuario {
   protected TipoFuncionario tipo;
   protected Date fechaIngreso;
   protected String area;
-  protected Lista<Paciente> pacientes;
-  protected Lista<Cita> citasMedicas;
+  protected Lista<Cita> citasAgendadas;
   
   
   public Funcionario(){
@@ -31,7 +30,6 @@ public class Funcionario extends Usuario {
     areaTrabajo.add("Dermatología");
     areaTrabajo.add("Ortopedia");
     
-    pacientes = new Lista<Paciente>();
     setIdentificadorFuncionario(pIdentificadorFuncionario);
     setTipo(pTipo);
     setFechaIngreso(pFechaIngreso);
@@ -103,12 +101,8 @@ public class Funcionario extends Usuario {
       areaTrabajo.add(pArea);
     }
     
-    public void añadirPacienteACargo(Paciente pPaciente){
-      pacientes.add(pPaciente);
-    }
-    
     public void añadirCita(Cita pCita){
-      citasMedicas.add(pCita);
+      citasAgendadas.add(pCita);
     }
     
     public void añadirAreaTrabajo(String pArea){
@@ -133,11 +127,8 @@ public class Funcionario extends Usuario {
       mensaje+="Fecha de ingreso: "+getFechaIngreso()+"\n";
       mensaje+=super.toString()+"\n";
       mensaje+="Area"+getArea()+"\n";
-      for (int indice=0;indice!=pacientes.getSize();indice++){
-          mensaje+=pacientes.get(indice).toString()+"\n";
-      }
-      for (int indice=0;indice!=citasMedicas.getSize();indice++){
-          mensaje+=citasMedicas.get(indice).toString()+"\n";
+      for (int indice=0;indice!=citasAgendadas.getSize();indice++){
+          mensaje+=citasAgendadas.get(indice).toString()+"\n";
       }
       return mensaje;
     }  

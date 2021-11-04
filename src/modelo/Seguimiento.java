@@ -8,7 +8,7 @@ public class Seguimiento {
   private Lista<Date> fechasSeguimiento;
   private Lista<String> observaciones;
   
-  private Funcionario encargado;
+  private Funcionario responsable;
   private Tratamiento tratamiento;
   
   public Seguimiento(){
@@ -52,11 +52,11 @@ public class Seguimiento {
     } 
     
     public void setEncargado(Funcionario pEncargado){
-      encargado = pEncargado;
+      responsable = pEncargado;
     }
  
    public Funcionario getEncargado(){
-      return encargado;
+      return responsable;
     }
    
    public Tratamiento getTratamiento(){

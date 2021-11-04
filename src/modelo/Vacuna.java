@@ -1,20 +1,25 @@
 
 package modelo;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class Vacuna {
  
    private int numeroLote;
    private String nombre;
    private String farmaceutica;
+   private Date fechaAplicacion;
    
    public Vacuna(){
    }
    
-   public Vacuna(int pNumeroLote, String pNombre, String pFarmaceutica){
+   public Vacuna(int pNumeroLote, String pNombre, String pFarmaceutica, Date pFechaAplicacion){
      
      setNumeroLote(pNumeroLote);
      setNombre(pNombre);
      setFarmaceutica(pFarmaceutica);
+     setFechaAplicacion(pFechaAplicacion);
    }
 
     /**
@@ -65,6 +70,21 @@ public class Vacuna {
         mensaje+="Nombre: "+getNombre()+"\n";
         mensaje+="Farmaceutica: "+getFarmaceutica()+"\n";
         return mensaje;
+    }
+
+    /**
+     * @return the fechaAplicacion
+     */
+    public String getFechaAplicacion() {
+      SimpleDateFormat formatoFecha = new SimpleDateFormat("yyy/mm/dd");
+      return formatoFecha.format(fechaAplicacion);
+    }
+
+    /**
+     * @param pFechaAplicacion the fechaAplicacion to set
+     */
+    public void setFechaAplicacion(Date pFechaAplicacion) {
+        this.fechaAplicacion = pFechaAplicacion;
     }
 }
   
