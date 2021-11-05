@@ -1,6 +1,9 @@
 
 package modelo;
 
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.util.Date;
 
 
@@ -39,5 +42,25 @@ public class Secretario extends Funcionario {
         mensaje="Código: "+getCodigoSecretario()+"\n";
         mensaje+=super.toString()+"\n";
         return mensaje;
+    }
+    
+    public boolean insertarSecretario(String pCedula, String pNombre, String pApellido1, String pApellido2, String pRol, 
+        String pNombreUsuario, String pContraseña, int pIdentificadorFuncionario, TipoFuncionario pTipo,
+        Date pFechaIngreso, int pIndice, int pCodigoSecretario){
+      boolean salida = true;
+      Conexion nuevaConexion = new Conexion();
+      Connection conectar = nuevaConexion.conectar();
+      PreparedStatement insercionSecretario;
+      try{
+          super.insertarFuncionario(pCedula, pNombre, pApellido1, pApellido2, pRol, pNombreUsuario, pContraseña, pIdentificadorFuncionario, pTipo, pFechaIngreso, pIndice);
+          
+          insercionSecretario = conectar.prepareStatement("INSERT INTO secretario VALUES (?,?)");
+          insercionSecretario.setInt(1, pCodigoSecretario);
+          insercionSecretario.setInt(2, pIdentificadorFuncionario);
+      }
+      catch(Exception error){
+        salida = false;        
+      }
+      return salida;
     }
 }

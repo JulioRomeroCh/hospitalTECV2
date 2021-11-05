@@ -1,5 +1,7 @@
 
 package modelo;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -190,4 +192,39 @@ public class Cita {
       return estado;
     }
 
+    public boolean insertarCita(int pIdentificadorCita, Date pFecha, Date pHora, String pObservacion, EstadoCita pEstado){
+      boolean salida = true;
+      String estado = pEstado.name();
+      Conexion nuevaConexion = new Conexion();
+      Connection conectar = nuevaConexion.conectar();
+      PreparedStatement insercionCita;
+      try{
+          insercionCita = conectar.prepareStatement("INSERT INTO cita VALUES (?,?,?,?,?)");
+          insercionCita.setInt(1, pIdentificadorCita);
+          insercionCita.setDate(2, (java.sql.Date) pFecha);
+          insercionCita.setTime(3, (java.sql.Time) pHora);
+          insercionCita.setString(4, pObservacion);
+          insercionCita.setString(5, estado);
+      }
+      catch(Exception error){
+        salida = false;        
+      }
+      return salida;
+    }
+    
+    public boolean insertarCitaDiagnostico(String pNombreDiagnostico){
+      boolean salida = true;
+      Conexion nuevaConexion = new Conexion();
+      Connection conectar = nuevaConexion.conectar();
+      PreparedStatement insercionDiagnostico;
+      try{
+          insercionDiagnostico = conectar.prepareStatement("INSERT INTO cita_registra_diagnostico VALUES (?,?)");
+          insercionDiagnostico.setString(1, pNombreDiagnostico);
+          insercionDiagnostico.setInt(2, identificadorCita);
+      }
+      catch(Exception error){
+        salida = false;        
+      }
+      return salida;
+    }
 }

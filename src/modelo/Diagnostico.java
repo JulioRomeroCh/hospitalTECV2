@@ -1,5 +1,9 @@
 package modelo;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.util.Date;
+
 
 public class Diagnostico {
  
@@ -66,5 +70,58 @@ public class Diagnostico {
             mensaje+=observaciones.get(indice).toString()+"\n";
         }
         return mensaje;
+    }
+    
+    public boolean insertarDiagnostico(String pNombreDiagnostico, NivelDiagnostico pNivel){
+      boolean salida = true;
+      String nivel = pNivel.name();
+      Conexion nuevaConexion = new Conexion();
+      Connection conectar = nuevaConexion.conectar();
+      PreparedStatement insercionDiagnostico;
+      try{
+          insercionDiagnostico = conectar.prepareStatement("INSERT INTO diagnostico VALUES (?,?)");
+          insercionDiagnostico.setString(1, pNombreDiagnostico);
+          insercionDiagnostico.setString(2, nivel);
+
+      }
+      catch(Exception error){
+        salida = false;        
+      }
+      return salida;
+    }
+    
+    public boolean insertarDiagnosticoObservaciones(String pObservacion){
+      boolean salida = true;
+      añadirObservacion(pObservacion);
+      Conexion nuevaConexion = new Conexion();
+      Connection conectar = nuevaConexion.conectar();
+      PreparedStatement insercionObservaciones;
+      try{
+          insercionObservaciones = conectar.prepareStatement("INSERT INTO diagnostico_observaciones VALUES (?,?)");
+          insercionObservaciones.setString(1, nombreDiagnostico);
+          insercionObservaciones.setString(2, pObservacion);   
+         
+      }
+      catch(Exception error){
+        salida = false;        
+      }
+      return salida;
+    }
+        
+    public boolean insertarDiagnosticoTratamiento(Tratamiento pTratamiento){
+      boolean salida = true;
+      añadirTratamiento(pTratamiento);
+      Conexion nuevaConexion = new Conexion();
+      Connection conectar = nuevaConexion.conectar();
+      PreparedStatement insercionTratamiento;
+      try{
+          insercionTratamiento = conectar.prepareStatement("INSERT INTO diagnostico_contiene_tratamiento VALUES (?,?)");
+          insercionTratamiento.setString(1, pTratamiento.getNombreTratamiento());
+          insercionTratamiento.setString(2, nombreDiagnostico);   
+      }
+      catch(Exception error){
+        salida = false;        
+      }
+      return salida;
     }
 }

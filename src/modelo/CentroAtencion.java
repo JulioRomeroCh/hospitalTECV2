@@ -1,6 +1,8 @@
 
 package modelo;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.util.Date;
 
 
@@ -178,6 +180,68 @@ public class CentroAtencion {
             mensaje+=usuarios.get(indice).toString()+"\n";
         }
         return mensaje;
+    }
+   
+    public boolean insertarCentro(String pNombre, String pLugar, int pCapacidad, int pIndice){
+      boolean salida = true;
+      setTipo(pIndice);
+      String tipoCentro = getTipo();
+      Conexion nuevaConexion = new Conexion();
+      Connection conectar = nuevaConexion.conectar();
+      PreparedStatement insercionCentro;
+      PreparedStatement insercionCentroTipo;
+
+      try{
+          insercionCentro = conectar.prepareStatement("INSERT INTO centroatencion VALUES (?, ?,?,?)");
+          insercionCentro.setInt(1, getCodigo());
+          insercionCentro.setString(2, pNombre);
+          insercionCentro.setString(3,  pLugar);
+          insercionCentro.setInt(4, pCapacidad);
+
+          insercionCentroTipo = conectar.prepareStatement("INSERT INTO centro_tipo VALUES (?,?)");
+          insercionCentroTipo.setInt(1, getCodigo());
+          insercionCentroTipo.setInt(2, pIndice);
+
+      }
+      catch(Exception error){
+        salida = false;        
+      }
+      return salida;
+    }
+    
+    public boolean insertarTipoCentro(int pIndice){
+      boolean salida = true;
+      setTipo(pIndice);
+      String tipoCentro = getTipo();
+      Conexion nuevaConexion = new Conexion();
+      Connection conectar = nuevaConexion.conectar();
+      PreparedStatement insercionTipoCentro;
+
+      try{
+          insercionTipoCentro = conectar.prepareStatement("INSERT INTO tipocentro VALUES (?,?)");
+          insercionTipoCentro.setString(pIndice, tipoCentro);
+      }
+      catch(Exception error){
+        salida = false;        
+      }
+      return salida;
+    }
+        
+    public boolean insertarUsuarioCentro(String pCedula){
+      boolean salida = true;
+      Conexion nuevaConexion = new Conexion();
+      Connection conectar = nuevaConexion.conectar();
+      PreparedStatement insercionUsuario;
+
+      try{
+          insercionUsuario = conectar.prepareStatement("INSERT INTO centroatencion_tiene_usuario VALUES (?,?)");
+          insercionUsuario.setString(1, pCedula);
+          insercionUsuario.setInt(2, getCodigo());
+      }
+      catch(Exception error){
+        salida = false;        
+      }
+      return salida;
     }
     
 }

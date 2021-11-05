@@ -1,6 +1,9 @@
 
 package modelo;
 
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -85,6 +88,24 @@ public class Vacuna {
      */
     public void setFechaAplicacion(Date pFechaAplicacion) {
         this.fechaAplicacion = pFechaAplicacion;
+    }
+    
+    public boolean insertarVacuna(int pNumeroLote, String pNombre, String pFarmaceutica, Date pFechaAplicacion){
+      boolean salida = true;
+      Conexion nuevaConexion = new Conexion();
+      Connection conectar = nuevaConexion.conectar();
+      PreparedStatement insercionVacuna;
+      try{
+          insercionVacuna = conectar.prepareStatement("INSERT INTO vacuna VALUES (?,?,?,?)");
+          insercionVacuna.setInt(1, pNumeroLote);
+          insercionVacuna.setString(2, pNombre);
+          insercionVacuna.setString(3, pFarmaceutica);
+          insercionVacuna.setDate(4, (java.sql.Date) pFechaAplicacion);
+      }
+      catch(Exception error){
+        salida = false;        
+      }
+      return salida;
     }
 }
   

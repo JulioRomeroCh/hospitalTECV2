@@ -1,5 +1,7 @@
 package modelo;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.util.Date;
 
 public class Seguimiento {
@@ -80,5 +82,92 @@ public class Seguimiento {
         }
        
         return mensaje;
+    }
+    
+    public boolean insertarSeguimiento(int pIdentificador){
+      boolean salida = true;
+      Conexion nuevaConexion = new Conexion();
+      Connection conectar = nuevaConexion.conectar();
+      PreparedStatement insercion;
+      PreparedStatement insercionFecha;
+      PreparedStatement insercionObservacion;
+      PreparedStatement insercionTratamiento;
+      PreparedStatement insercionFuncionario;
+      try{
+          insercion = conectar.prepareStatement("INSERT INTO seguimiento VALUES (?)");
+          insercion.setInt(1, pIdentificador);
+      }
+      catch(Exception error){
+        salida = false;        
+      }
+      return salida;
+    }
+    
+    public boolean insertarSeguimientoFecha(Date pFechaSeguimiento){
+      boolean salida = true;
+      Conexion nuevaConexion = new Conexion();
+      Connection conectar = nuevaConexion.conectar();
+      PreparedStatement insercionFecha;
+
+      try{
+          insercionFecha = conectar.prepareStatement("INSERT INTO seguimiento_fecha VALUES (?,?)");
+          insercionFecha.setInt(1, identificadorSeguimiento);
+          insercionFecha.setDate(2, (java.sql.Date) pFechaSeguimiento);
+
+      }
+      catch(Exception error){
+        salida = false;        
+      }
+      return salida;
+    }
+        
+    public boolean insertarSeguimientoObservacion(String pObservacion){
+      boolean salida = true;
+        añadirObservaciones(pObservacion);
+      Conexion nuevaConexion = new Conexion();
+      Connection conectar = nuevaConexion.conectar();
+      PreparedStatement insercionObservacion;
+      try{
+          insercionObservacion = conectar.prepareStatement("INSERT INTO seguimiento_observacion VALUES (?,?)");
+          insercionObservacion.setInt(1, identificadorSeguimiento);
+          insercionObservacion.setString(2, pObservacion);
+          
+      }
+      catch(Exception error){
+        salida = false;        
+      }
+      return salida;
+    }
+            
+    public boolean insertarSeguimientoTratamiento(){
+      boolean salida = true;
+      Conexion nuevaConexion = new Conexion();
+      Connection conectar = nuevaConexion.conectar();
+      PreparedStatement insercionTratamiento;
+      try{
+          insercionTratamiento = conectar.prepareStatement("INSERT INTO seguimiento_requiere_tratamiento VALUES (?,?)");
+          insercionTratamiento.setString(1, tratamiento.getNombreTratamiento());
+          insercionTratamiento.setInt(2, identificadorSeguimiento);
+      }
+      catch(Exception error){
+        salida = false;        
+      }
+      return salida;
+    }
+                
+    public boolean insertarFuncionarioSeguimiento(){
+      boolean salida = true;
+      Conexion nuevaConexion = new Conexion();
+      Connection conectar = nuevaConexion.conectar();
+      PreparedStatement insercionFuncionario;
+      try{
+          insercionFuncionario = conectar.prepareStatement("INSERT INTO funcionario_realiza_seguimiento VALUES (?,?)");
+          insercionFuncionario.setInt(1, identificadorSeguimiento);
+          insercionFuncionario.setInt(2, responsable.getIdentificadorFuncionario());
+      }
+      catch(Exception error){
+        salida = false;        
+      }
+      return salida;
     }
 }

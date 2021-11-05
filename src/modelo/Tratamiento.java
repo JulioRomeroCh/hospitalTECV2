@@ -1,5 +1,8 @@
 package modelo;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+
 public class Tratamiento {
  
   private String nombreTratamiento;
@@ -63,6 +66,23 @@ public class Tratamiento {
         mensaje+="Tipo: "+getTipo()+"\n";
         mensaje+="Dosis: "+getDosis()+"\n";
         return mensaje;
+    }
+    
+    public boolean insertarTratamiento(String pNombreTratamiento, String pTipo, int pDosis){
+      boolean salida = true;
+      Conexion nuevaConexion = new Conexion();
+      Connection conectar = nuevaConexion.conectar();
+      PreparedStatement insercion;
+      try{
+          insercion = conectar.prepareStatement("INSERT INTO tratamiento VALUES (?,?,?)");
+          insercion.setString(1, pNombreTratamiento);
+          insercion.setString(2, pTipo);
+          insercion.setInt(3, pDosis);
+      }
+      catch(Exception error){
+        salida = false;        
+      }
+      return salida;
     }
   
 }

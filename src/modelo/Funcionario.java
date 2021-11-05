@@ -1,6 +1,9 @@
 
 package modelo;
 
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Calendar;
@@ -132,4 +135,39 @@ public class Funcionario extends Usuario {
       }
       return mensaje;
     }  
+    
+    public boolean insertarFuncionario(String pCedula, String pNombre, String pApellido1, String pApellido2, String pRol, String pNombreUsuario, String pContraseña,
+        int pIdentificadorFuncionario, TipoFuncionario pTipo, Date pFechaIngreso, int pIndice){
+        
+      boolean salida = true;
+      setArea(pIndice);
+      String area = getArea();
+      String tipo = pTipo.name();
+      Conexion nuevaConexion = new Conexion();
+      Connection conectar = nuevaConexion.conectar();
+      PreparedStatement insercion;
+      //PreparedStatement insercionCita;
+      try{
+          super.insertarUsuario(pCedula, pNombre, pApellido1, pApellido2, pRol, pNombreUsuario, pContraseña);
+          CallableStatement insertar = conectar.prepareCall("{CALL insertarFuncionario(?,?,?,?)}");
+          insertar.setInt(1, pIdentificadorFuncionario);
+          insertar.setString(2, tipo);
+          insertar.setDate(3, (java.sql.Date) pFechaIngreso);
+          insertar.setString(4, area);
+          
+          insercion = conectar.prepareStatement("INSERT INTO funcionario_usuario VALUES (?,?)");
+          insercion.setInt(1, pIdentificadorFuncionario);
+          insercion.setString(2, pCedula);
+          
+          /*insercionCita = conectar.prepareStatement("INSERT INTO funcionario_gestiona_cita VALUES (?,?)");
+          for (int indice = 0; indice != citasAgendadas.getSize(); indice++){
+            insercionCita.setInt(1, citasAgendadas.get(indice).getIdentificadorCita());
+            insercionCita.setInt(2, pIdentificadorFuncionario);
+          }*/
+      }
+      catch(Exception error){
+        salida = false;        
+      }
+      return salida;
+    }
 }

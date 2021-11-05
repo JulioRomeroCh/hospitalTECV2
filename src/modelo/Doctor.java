@@ -1,5 +1,7 @@
 package modelo;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.util.Date;
 
 public class Doctor extends Funcionario {
@@ -51,5 +53,47 @@ public class Doctor extends Funcionario {
            mensaje+=especialidades.get(indice)+"\n";
        }
        return mensaje;
+    }
+    
+     public boolean insertarDoctor(String pCedula, String pNombre, String pApellido1, String pApellido2, String pRol, 
+        String pNombreUsuario, String pContraseña, int pIdentificadorFuncionario, TipoFuncionario pTipo,
+        Date pFechaIngreso, int pIndice, int pCodigoDoctor){
+      boolean salida = true;
+
+      Conexion nuevaConexion = new Conexion();
+      Connection conectar = nuevaConexion.conectar();
+      PreparedStatement insercionDoctor;
+      PreparedStatement insercionEspecialidades;
+      try{
+          super.insertarFuncionario(pCedula, pNombre, pApellido1, pApellido2, pRol, pNombreUsuario, pContraseña, pIdentificadorFuncionario, pTipo, pFechaIngreso, pIndice);
+          
+          insercionDoctor = conectar.prepareStatement("INSERT INTO doctor VALUES (?,?)");
+          insercionDoctor.setInt(1, pCodigoDoctor);
+          insercionDoctor.setInt(2, pIdentificadorFuncionario);
+          
+      }
+      catch(Exception error){
+        salida = false;        
+      }
+      return salida;
+    }
+     
+    public boolean insertarEspecialidad(String pEspecialidad){
+      boolean salida = true;
+      añadirEspecialidad(pEspecialidad);
+      
+      Conexion nuevaConexion = new Conexion();
+      Connection conectar = nuevaConexion.conectar();
+      PreparedStatement insercionEspecialidad;
+        
+      try{
+          insercionEspecialidad = conectar.prepareStatement("INSERT INTO doctor_especialidades VALUES (?,?)");  
+          insercionEspecialidad.setInt(1, codigoDoctor);
+          insercionEspecialidad.setString(2, pEspecialidad);
+      }
+      catch(Exception error){
+        salida = false;        
+      }
+      return salida;
     }
 }

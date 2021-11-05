@@ -1,5 +1,8 @@
 package modelo;
 
+import java.sql.CallableStatement;
+import java.sql.Connection;
+
 public class Usuario {
 
   protected String cedula;
@@ -122,6 +125,26 @@ public class Usuario {
      */
     public void setContraseña(String pContraseña) {
         this.contraseña = pContraseña;
+    }
+    
+    public boolean insertarUsuario(String pCedula, String pNombre, String pApellido1, String pApellido2, String pRol, String pNombreUsuario, String pContraseña){
+      boolean salida = true;
+      Conexion nuevaConexion = new Conexion();
+      Connection conectar = nuevaConexion.conectar();
+      try{
+          CallableStatement insertar = conectar.prepareCall("{CALL insertarUsuario(?,?,?,?,?,?,?)}");
+          insertar.setString(1, pCedula);
+          insertar.setString(2, pNombre);
+          insertar.setString(3, pApellido1);
+          insertar.setString(4, pApellido2);
+          insertar.setString(5, pRol);
+          insertar.setString(6, pNombreUsuario);
+          insertar.setString(7, pContraseña);
+      }
+      catch(Exception error){
+        salida = false;        
+      }
+      return salida;
     }
 
     public String toString(){

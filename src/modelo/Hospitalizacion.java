@@ -1,5 +1,7 @@
 package modelo;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -111,4 +113,76 @@ public class Hospitalizacion {
       mensaje+="Seguimiento: "+getSeguimiento().toString()+"\n";
       return mensaje;
     }    
+    
+    public boolean insertarHospitalizacion(int pIdentificadorHospitalizacion, Date pFechaInicio, Date pFechaFin){
+      boolean salida = true;
+      Conexion nuevaConexion = new Conexion();
+      Connection conectar = nuevaConexion.conectar();
+      PreparedStatement insercion;
+      PreparedStatement insercionSeguimiento;
+      PreparedStatement insercionCita;
+      PreparedStatement insercionHospitalización;
+
+      try{
+          insercion = conectar.prepareStatement("INSERT INTO hospitalizacion VALUES (?,?,?)");
+          insercion.setInt(1, pIdentificadorHospitalizacion);
+          insercion.setDate(2, (java.sql.Date) pFechaInicio);
+          insercion.setDate(3, (java.sql.Date) pFechaFin);
+      }
+      catch(Exception error){
+        salida = false;        
+      }
+      return salida;
+    }
+    
+    public boolean insertarHospitalizacionSeguimiento(int pIdentificadorSeguimiento){
+      boolean salida = true;
+      Conexion nuevaConexion = new Conexion();
+      Connection conectar = nuevaConexion.conectar();
+      PreparedStatement insercionSeguimiento;
+
+      try{
+          insercionSeguimiento = conectar.prepareStatement("INSERT INTO hospitalizacion_necesita_seguimiento VALUES (?,?)");
+          insercionSeguimiento.setInt(1, pIdentificadorSeguimiento);
+          insercionSeguimiento.setInt(2, identificadorHospitalizacion);
+      }
+      catch(Exception error){
+        salida = false;        
+      }
+      return salida;
+    }
+        
+    public boolean insertarCitaHospitalizacion(int pIdentificadorCita){
+      boolean salida = true;
+      Conexion nuevaConexion = new Conexion();
+      Connection conectar = nuevaConexion.conectar();
+      PreparedStatement insercionCita;
+
+      try{
+          insercionCita = conectar.prepareStatement("INSERT INTO cita_hospitalizacion VALUES (?,?)");
+          insercionCita.setInt(1, pIdentificadorCita);
+          insercionCita.setInt(2, identificadorHospitalizacion);
+      }
+      catch(Exception error){
+        salida = false;        
+      }
+      return salida;
+    }
+            
+    public boolean insertarCentroHospitalizacion(){
+      boolean salida = true;
+      Conexion nuevaConexion = new Conexion();
+      Connection conectar = nuevaConexion.conectar();
+      PreparedStatement insercionHospitalización;
+
+      try{
+          insercionHospitalización = conectar.prepareStatement("INSERT INTO centroatencion_recibe_hospitalizacion VALUES (?,?)");
+          insercionHospitalización.setInt(1, identificadorHospitalizacion);
+          insercionHospitalización.setInt(2, centroHospitalizacion.getCodigo());
+      }
+      catch(Exception error){
+        salida = false;        
+      }
+      return salida;
+    }
 }

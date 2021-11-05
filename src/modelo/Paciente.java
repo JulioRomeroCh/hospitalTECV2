@@ -1,5 +1,8 @@
 
 package modelo;
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.util.Date;
 
 public class Paciente extends Usuario{
@@ -139,6 +142,91 @@ public class Paciente extends Usuario{
             mensaje+=telefonos.get(indice)+"\n";
         }
         return mensaje;
+    }
+    
+      public boolean insertarPaciente(String pCedula, String pNombre, String pApellido1, String pApellido2, String pRol, 
+          String pNombreUsuario, String pContraseña, int pIdentificadorPaciente, String pNacionalidad,
+          String pResidencia, Date pFechaNacimiento, TipoSangre pTipoSangre){
+        
+      boolean salida = true;
+
+      String tipoSangre = pTipoSangre.name();
+      Conexion nuevaConexion = new Conexion();
+      Connection conectar = nuevaConexion.conectar();
+      PreparedStatement insercion;
+
+      try{
+          super.insertarUsuario(pCedula, pNombre, pApellido1, pApellido2, pRol, pNombreUsuario, pContraseña);
+          CallableStatement insertar = conectar.prepareCall("{CALL insertarPaciente(?,?,?,?,?)}");
+          insertar.setInt(1, pIdentificadorPaciente);
+          insertar.setString(2, pNacionalidad);
+          insertar.setString(3, pResidencia);
+          insertar.setDate(4, (java.sql.Date) pFechaNacimiento);
+          insertar.setString(5, tipoSangre);
+          
+          insercion = conectar.prepareStatement("INSERT INTO paciente_usuario VALUES (?,?)");
+          insercion.setInt(1, pIdentificadorPaciente);
+          insercion.setString(2, pCedula);
+          
+      }
+      catch(Exception error){
+        salida = false;        
+      }
+      return salida;
+    }
+      
+    public boolean insertarTelefono(String pTelefono){
+      boolean salida = true;
+      setTelefono(pTelefono);
+      Conexion nuevaConexion = new Conexion();
+      Connection conectar = nuevaConexion.conectar();
+      PreparedStatement insercionTelefonos;
+        
+      try{
+          insercionTelefonos = conectar.prepareStatement("INSERT INTO paciente_telefono VALUES (?,?)"); 
+          insercionTelefonos.setInt(1, identificadorPaciente);
+          insercionTelefonos.setString(2, pTelefono); 
+      }
+      catch(Exception error){
+        salida = false;        
+      }
+      return salida;
+    }
+    
+    public boolean insertarVacuna(Vacuna pVacuna){
+      boolean salida = true;
+      añadirVacuna(pVacuna);
+      Conexion nuevaConexion = new Conexion();
+      Connection conectar = nuevaConexion.conectar();
+      PreparedStatement insercionVacunas;
+        
+      try{
+          insercionVacunas = conectar.prepareStatement("INSERT INTO paciente_tiene_vacuna VALUES (?,?)"); 
+          insercionVacunas.setInt(1, pVacuna.getNumeroLote());
+          insercionVacunas.setInt(2, identificadorPaciente); 
+      }
+      catch(Exception error){
+        salida = false;        
+      }
+      return salida;
+    }
+    
+    public boolean insertarCita(Cita pCita){
+      boolean salida = true;
+        añadirCita(pCita);
+      Conexion nuevaConexion = new Conexion();
+      Connection conectar = nuevaConexion.conectar();
+      PreparedStatement insercionCitaPaciente;
+        
+      try{
+          insercionCitaPaciente = conectar.prepareStatement("INSERT INTO citas_paciente VALUES (?,?)"); 
+          insercionCitaPaciente.setInt(1, pCita.getIdentificadorCita());
+          insercionCitaPaciente.setInt(2, identificadorPaciente); 
+      }
+      catch(Exception error){
+        salida = false;        
+      }
+      return salida;
     }
   
 }
