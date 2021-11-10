@@ -5,8 +5,15 @@ import java.util.Base64;
 import java.io.*;
 public class SendSMS {
     
-  public void enviarMensaje(String username, String password, String to, String message) throws Exception {
+  public void enviarMensaje(String username, String password, String to, boolean pEstadoCita) throws Exception {
     try{
+      String message;
+      if (pEstadoCita == true){
+        message = "Su cita ha sido registrada";
+      }
+      else{
+        message = "Su cita ha sido cancelada";
+      }
       // This URL is used for sending messages
       String myURI = "https://api.bulksms.com/v1/messages";
       // change these values to match your own account

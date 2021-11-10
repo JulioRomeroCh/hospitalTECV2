@@ -173,13 +173,16 @@ public class Cita {
       return this.paciente;
     }
   
-    public EstadoCita cambiarEstadoCita(Usuario usuario, boolean pFueAtendido){
+    public boolean cambiarEstadoCita(Usuario usuario, boolean pFueAtendido){
+      boolean bandera = true;
       if (usuario instanceof Funcionario && pFueAtendido == false){
         estado = EstadoCita.CANCELADA_POR_CENTRO_MEDICO;
+        bandera = false;
       }
       
       else if (usuario instanceof Paciente && pFueAtendido == false){
         estado = EstadoCita.CANCELADA_POR_PACIENTE;
+        bandera = false;
       }
       
       else if (usuario instanceof Funcionario && pFueAtendido == true){
@@ -189,7 +192,7 @@ public class Cita {
       else if (estado.equals(EstadoCita.CANCELADA_POR_CENTRO_MEDICO)){
         estado = EstadoCita.ASIGNADA;
       }
-      return estado;
+      return bandera;
     }
 
     public boolean insertarCita(int pIdentificadorCita, Date pFecha, Date pHora, String pObservacion, EstadoCita pEstado){
