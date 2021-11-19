@@ -9,6 +9,8 @@ public class Doctor extends Funcionario {
   private int codigoDoctor;
   private Lista<String> especialidades;
   
+  private Cita citaPorAtender;
+  
   public Doctor(){
   }
   
@@ -18,6 +20,18 @@ public class Doctor extends Funcionario {
       
        super (pCedula, pNombre, pApellido1, pApellido2, pRol, pNombreUsuario, pContraseña,
            pIdentificadorFuncionario, pTipo, pFechaIngreso, pIndice);
+       
+       especialidades = new Lista<String>();
+       setCodigoDoctor(pCodigoDoctor);
+  }
+  
+  
+ public Doctor(String pCedula, String pNombre, String pApellido1, String pApellido2, String pRol, 
+      String pNombreUsuario, String pContraseña, int pIdentificadorFuncionario, TipoFuncionario pTipo,
+      Date pFechaIngreso, String pArea, int pCodigoDoctor){
+      
+       super (pCedula, pNombre, pApellido1, pApellido2, pRol, pNombreUsuario, pContraseña,
+           pIdentificadorFuncionario, pTipo, pFechaIngreso, pArea);
        
        especialidades = new Lista<String>();
        setCodigoDoctor(pCodigoDoctor);
@@ -45,6 +59,14 @@ public class Doctor extends Funcionario {
         especialidades = pEspecialidades;
     }
     
+    public void setCita(Cita pCita){
+      this.citaPorAtender = pCita;
+    }
+    
+    public Cita getCita(){
+      return this.citaPorAtender;
+    }
+   
     public String toString (){
        String mensaje=""; 
        mensaje="Código: "+getCodigoDoctor()+"\n";
@@ -54,10 +76,35 @@ public class Doctor extends Funcionario {
        }
        return mensaje;
     }
+
+    //REVISAR ESTE MÉTODO
+    public void atenderCita(Cita pCitaPorAtender){
+     
+      setCita(pCitaPorAtender);
+      getCita().cambiarEstadoCita(this, true);
+      getCita().modificarEstadoCita(getCita().getIdentificadorCita(), EstadoCita.REALIZADA);
+      System.out.println("BITACORA: " + getCita().getBitacora().toString());
+      getCita().getBitacora().añadirCambioEstadoCita();
+      getCita().getBitacora().insertarBitacoraCitaEstado(getCita().getIdentificadorCita(), EstadoCita.REALIZADA);
+
+    }
     
-     public boolean insertarDoctor(String pCedula, String pNombre, String pApellido1, String pApellido2, String pRol, 
+    public void añadirObservacionCita(Cita pCitaPorAtender, Diagnostico pDiagnostico,String pObservacion, Tratamiento pTratamiento){
+                pDiagnostico.añadirObservacion(pObservacion);
+                pDiagnostico.añadirTratamiento(pTratamiento);
+                pCitaPorAtender.asociarDiagnostico(pDiagnostico);       
+                pDiagnostico.insertarDiagnosticoObservaciones(pObservacion);
+                pCitaPorAtender.insertarCitaDiagnostico(pDiagnostico.getNombreDiagnostico());
+    }
+    
+    public void hospitalizar (int pIdetificadorHospitalizacion, Date pFechaFin, Cita pCitaPorAtender, CentroAtencion pCentro, String pObservacion, Tratamiento pTratamiento){
+      Hospitalizacion nuevaHospitalizacion = new Hospitalizacion(pIdetificadorHospitalizacion, pFechaFin, pCitaPorAtender, pCentro, pObservacion, pTratamiento);
+      nuevaHospitalizacion.insertarHospitalizacionBD();
+    }
+    
+    public boolean insertarDoctor(String pCedula, String pNombre, String pApellido1, String pApellido2, String pRol, 
         String pNombreUsuario, String pContraseña, int pIdentificadorFuncionario, TipoFuncionario pTipo,
-        Date pFechaIngreso, int pIndice, int pCodigoDoctor){
+        Date pFechaIngreso, String pArea, int pCodigoDoctor){
       boolean salida = true;
 
       Conexion nuevaConexion = new Conexion();
@@ -65,11 +112,12 @@ public class Doctor extends Funcionario {
       PreparedStatement insercionDoctor;
       PreparedStatement insercionEspecialidades;
       try{
-          super.insertarFuncionario(pCedula, pNombre, pApellido1, pApellido2, pRol, pNombreUsuario, pContraseña, pIdentificadorFuncionario, pTipo, pFechaIngreso, pIndice);
+          super.insertarFuncionario(pCedula, pNombre, pApellido1, pApellido2, pRol, pNombreUsuario, pContraseña, pIdentificadorFuncionario, pTipo, pFechaIngreso, pArea);
           
           insercionDoctor = conectar.prepareStatement("INSERT INTO doctor VALUES (?,?)");
           insercionDoctor.setInt(1, pCodigoDoctor);
           insercionDoctor.setInt(2, pIdentificadorFuncionario);
+          insercionDoctor.execute();
           
       }
       catch(Exception error){
@@ -78,7 +126,7 @@ public class Doctor extends Funcionario {
       return salida;
     }
      
-    public boolean insertarEspecialidad(String pEspecialidad){
+    public boolean insertarEspecialidad(int pCodigoDoctor, String pEspecialidad){
       boolean salida = true;
       añadirEspecialidad(pEspecialidad);
       
@@ -88,8 +136,9 @@ public class Doctor extends Funcionario {
         
       try{
           insercionEspecialidad = conectar.prepareStatement("INSERT INTO doctor_especialidades VALUES (?,?)");  
-          insercionEspecialidad.setInt(1, codigoDoctor);
+          insercionEspecialidad.setInt(1, pCodigoDoctor);
           insercionEspecialidad.setString(2, pEspecialidad);
+          insercionEspecialidad.execute();
       }
       catch(Exception error){
         salida = false;        

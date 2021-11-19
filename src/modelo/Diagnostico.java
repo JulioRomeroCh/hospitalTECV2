@@ -18,6 +18,7 @@ public class Diagnostico {
   
   public Diagnostico(String pNombreDiagnostico, NivelDiagnostico pNivel){
     observaciones = new Lista<String>();
+    tratamientos = new Lista<Tratamiento>();
     setNombreDiagnostico(pNombreDiagnostico);
     setNivel(pNivel);
   }
@@ -62,6 +63,7 @@ public class Diagnostico {
       tratamientos.add(pTratamiento);
     }
     
+    
     public String toString(){
         String mensaje="";
         mensaje="Nombre"+getNombreDiagnostico()+"\n";
@@ -82,6 +84,7 @@ public class Diagnostico {
           insercionDiagnostico = conectar.prepareStatement("INSERT INTO diagnostico VALUES (?,?)");
           insercionDiagnostico.setString(1, pNombreDiagnostico);
           insercionDiagnostico.setString(2, nivel);
+          insercionDiagnostico.execute();
 
       }
       catch(Exception error){
@@ -99,11 +102,15 @@ public class Diagnostico {
       try{
           insercionObservaciones = conectar.prepareStatement("INSERT INTO diagnostico_observaciones VALUES (?,?)");
           insercionObservaciones.setString(1, nombreDiagnostico);
+          System.err.println("B: " + nombreDiagnostico);
           insercionObservaciones.setString(2, pObservacion);   
+          insercionObservaciones.execute();
          
       }
       catch(Exception error){
-        salida = false;        
+        salida = false;      
+        System.out.println("ERROR: " + error);
+        error.printStackTrace();
       }
       return salida;
     }
@@ -118,6 +125,7 @@ public class Diagnostico {
           insercionTratamiento = conectar.prepareStatement("INSERT INTO diagnostico_contiene_tratamiento VALUES (?,?)");
           insercionTratamiento.setString(1, pTratamiento.getNombreTratamiento());
           insercionTratamiento.setString(2, nombreDiagnostico);   
+          insercionTratamiento.execute();
       }
       catch(Exception error){
         salida = false;        

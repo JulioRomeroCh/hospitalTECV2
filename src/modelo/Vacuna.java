@@ -101,6 +101,7 @@ public class Vacuna {
           insercionVacuna.setString(2, pNombre);
           insercionVacuna.setString(3, pFarmaceutica);
           insercionVacuna.setDate(4, (java.sql.Date) pFechaAplicacion);
+          insercionVacuna.execute();
       }
       catch(Exception error){
         salida = false;        

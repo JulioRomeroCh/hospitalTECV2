@@ -78,6 +78,7 @@ public class Tratamiento {
           insercion.setString(1, pNombreTratamiento);
           insercion.setString(2, pTipo);
           insercion.setInt(3, pDosis);
+          insercion.execute();
       }
       catch(Exception error){
         salida = false;        

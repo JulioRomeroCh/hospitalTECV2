@@ -3,7 +3,7 @@ package modelo;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 
-public class Usuario {
+public abstract class Usuario {
 
   protected String cedula;
   protected String nombre;
@@ -140,12 +140,15 @@ public class Usuario {
           insertar.setString(5, pRol);
           insertar.setString(6, pNombreUsuario);
           insertar.setString(7, pContraseña);
+          insertar.execute();
       }
       catch(Exception error){
         salida = false;        
       }
       return salida;
     }
+    
+    public abstract void cancelarCita(int pIdentificadorCita);
 
     public String toString(){
         String mensaje="Cédula: "+getCedula()+"\n";

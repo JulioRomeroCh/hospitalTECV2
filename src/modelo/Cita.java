@@ -11,6 +11,7 @@ public class Cita {
   private Date hora;
   private String area;
   private String observacion;
+  private Bitacora bitacora;
   private EstadoCita estado;
   
   private Funcionario encargadoCita;
@@ -22,10 +23,12 @@ public class Cita {
   public Cita(){
   }
   
-  public Cita(int pIdentificadorCita, Date pFecha, Date pHora, String pObservacion, EstadoCita pEstado){
+  public Cita(int pIdentificadorCita, Date pFecha, Date pHora, String pArea, String pObservacion, EstadoCita pEstado){
+    diagnosticos = new Lista<Diagnostico>();
     setIdentificadorCita(pIdentificadorCita);
     setFecha(pFecha);
     setHora(pHora);
+    setArea(pArea);
     setObservacion(pObservacion);
   }
 
@@ -72,6 +75,10 @@ public class Cita {
     public void setHora(Date pHora) {
         this.hora = pHora;
     }
+    
+    public Lista<Diagnostico> getDiagnosticos(){
+        return diagnosticos;
+    }
 
     /**
      * @return the area
@@ -101,11 +108,23 @@ public class Cita {
         this.observacion = pObservacion;
     }
     
-    public void añadirDiagnostico(String pNombreDiagnostico, NivelDiagnostico pNivel, 
-        Lista<String> pObservaciones){
+        /**
+     * @return the bitacora
+     */
+    public Bitacora getBitacora() {
+        return bitacora;
+    }
+
+    /**
+     * @param bitacora the bitacora to set
+     */
+    public void setBitacora(Bitacora pBitacora) {
+        this.bitacora = pBitacora;
+    }
     
+    //Admin
+    public void añadirDiagnostico(String pNombreDiagnostico, NivelDiagnostico pNivel){
      Diagnostico nuevoDiagnostico = new Diagnostico(pNombreDiagnostico, pNivel);
-     nuevoDiagnostico.reemplazarListaObservaciones(pObservaciones);
      diagnosticos.add(nuevoDiagnostico);
     }
     
@@ -117,12 +136,25 @@ public class Cita {
       return encargadoCita;
     }
     
-    public void registrarDiagnostico(String pNombre, NivelDiagnostico pNivel, Lista<String> pObservaciones){
-      Diagnostico nuevoDiagnostico = new Diagnostico(pNombre, pNivel);
-      nuevoDiagnostico.reemplazarListaObservaciones(pObservaciones);
-      diagnosticos.add(nuevoDiagnostico);
+    //Llamar en el botón de Módulo Doctor, el que está a la par de Observaciones
+    Lista<String> observaciones = new Lista<String>();
+    public void crearObservacionesDiagnostico(String pElemento){
+      observaciones.add(pElemento);
     }
     
+    //Doctor
+    public void registrarDiagnostico(String pNombre){
+      for (int indice = 0; indice != diagnosticos.getSize(); indice++){
+        if(pNombre.equals(diagnosticos.get(indice).getNombreDiagnostico())){
+          diagnosticos.get(indice).reemplazarListaObservaciones(observaciones);
+          break;
+        }
+      }
+    }
+    
+    public void asociarDiagnostico (Diagnostico pDiagnostico){
+      diagnosticos.add(pDiagnostico);
+    }
     
     public void registrarTratamientos(String pNombreDiagnostico, Tratamiento pTratamiento){
       
@@ -173,16 +205,16 @@ public class Cita {
       return this.paciente;
     }
   
-    public boolean cambiarEstadoCita(Usuario usuario, boolean pFueAtendido){
-      boolean bandera = true;
+    public EstadoCita cambiarEstadoCita(Usuario usuario, boolean pFueAtendido){
+      //boolean bandera = true;
       if (usuario instanceof Funcionario && pFueAtendido == false){
         estado = EstadoCita.CANCELADA_POR_CENTRO_MEDICO;
-        bandera = false;
+        //bandera = false;
       }
       
       else if (usuario instanceof Paciente && pFueAtendido == false){
         estado = EstadoCita.CANCELADA_POR_PACIENTE;
-        bandera = false;
+        //bandera = false;
       }
       
       else if (usuario instanceof Funcionario && pFueAtendido == true){
@@ -192,26 +224,59 @@ public class Cita {
       else if (estado.equals(EstadoCita.CANCELADA_POR_CENTRO_MEDICO)){
         estado = EstadoCita.ASIGNADA;
       }
-      return bandera;
+      return estado;
     }
 
-    public boolean insertarCita(int pIdentificadorCita, Date pFecha, Date pHora, String pObservacion, EstadoCita pEstado){
+    public boolean insertarCita(int pIdentificadorCita, Date pFecha, Date pHora, String pArea, String pObservacion, EstadoCita pEstado){
       boolean salida = true;
       String estado = pEstado.name();
       Conexion nuevaConexion = new Conexion();
       Connection conectar = nuevaConexion.conectar();
       PreparedStatement insercionCita;
       try{
-          insercionCita = conectar.prepareStatement("INSERT INTO cita VALUES (?,?,?,?,?)");
+          SimpleDateFormat formato= new SimpleDateFormat("yyy-mm-dd");
+          String fechaString = formato.format(pFecha);
+          Date fechaDate = formato.parse(fechaString);
+          java.sql.Date fechaSQL = new java.sql.Date(fechaDate.getTime());
+          
+          SimpleDateFormat formatoHora = new SimpleDateFormat("hh:mm:ss");
+          String horaString = formatoHora.format(pHora);
+          Date horaDate = formatoHora.parse(horaString);
+          java.sql.Time horaSQL = new java.sql.Time(horaDate.getTime());
+          insercionCita = conectar.prepareStatement("INSERT INTO cita VALUES (?,?,?,?,?,?)");
           insercionCita.setInt(1, pIdentificadorCita);
-          insercionCita.setDate(2, (java.sql.Date) pFecha);
-          insercionCita.setTime(3, (java.sql.Time) pHora);
-          insercionCita.setString(4, pObservacion);
-          insercionCita.setString(5, estado);
+          insercionCita.setDate(2, fechaSQL);
+          insercionCita.setTime(3, horaSQL);
+          insercionCita.setString(4, pArea);
+          insercionCita.setString(5, pObservacion);
+          insercionCita.setString(6, estado);
+          insercionCita.execute();
       }
       catch(Exception error){
+          System.err.println("Error: " + error);
+          error.printStackTrace();
         salida = false;        
       }
+      return salida;
+    }
+    
+    public boolean modificarEstadoCita(int pIdentificadorCita, EstadoCita pEstado){
+      boolean salida = true;  
+      Conexion nuevaConexion = new Conexion();
+      Connection conectar = nuevaConexion.conectar();
+      PreparedStatement actualizarEstado;
+      try{
+        actualizarEstado = conectar.prepareStatement("UPDATE cita SET estado = ? WHERE identificadorCita = ?");
+        actualizarEstado.setString(1, pEstado.name());
+        actualizarEstado.setInt(2, pIdentificadorCita);
+        actualizarEstado.executeUpdate();
+      }
+        
+      catch(Exception error){
+        error.printStackTrace();
+        salida = false;        
+      }
+      System.out.println("BANDERA: " + salida);
       return salida;
     }
     
@@ -224,10 +289,16 @@ public class Cita {
           insercionDiagnostico = conectar.prepareStatement("INSERT INTO cita_registra_diagnostico VALUES (?,?)");
           insercionDiagnostico.setString(1, pNombreDiagnostico);
           insercionDiagnostico.setInt(2, identificadorCita);
+          System.err.println("A: " + identificadorCita);
+          insercionDiagnostico.execute();
       }
       catch(Exception error){
-        salida = false;        
+        salida = false;      
+          System.out.println("ERROR: " + error);
+          error.printStackTrace();
       }
       return salida;
     }
+
+
 }

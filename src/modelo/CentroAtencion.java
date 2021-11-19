@@ -36,6 +36,21 @@ public class CentroAtencion {
     setTipo(pIndice);
    
 }
+  
+  public CentroAtencion(String pNombre, String pLugar, int pCapacidad){
+
+    tiposCentro.clear();
+    tiposCentro.add("Hospital");
+    tiposCentro.add("Clínica");
+    tiposCentro.add("EBAIS");
+
+    numeroCentros++;
+    setCodigo();
+    setNombre(pNombre);
+    setLugar(pLugar);
+    setCapacidad(pCapacidad);
+   
+}
 
     /**
      * @return the codigo
@@ -110,6 +125,10 @@ public class CentroAtencion {
             break;
           }
         }
+    }
+    
+    public void setTipo(String pTipo){
+      this.tipo = pTipo;
     }
     
     public void añadirDoctor (String pCedula, String pNombre, String pApellido1, String pApellido2, String pRol, 
@@ -197,10 +216,12 @@ public class CentroAtencion {
           insercionCentro.setString(2, pNombre);
           insercionCentro.setString(3,  pLugar);
           insercionCentro.setInt(4, pCapacidad);
+          insercionCentro.execute();
 
           insercionCentroTipo = conectar.prepareStatement("INSERT INTO centro_tipo VALUES (?,?)");
           insercionCentroTipo.setInt(1, getCodigo());
           insercionCentroTipo.setInt(2, pIndice);
+          insercionCentroTipo.execute();
 
       }
       catch(Exception error){
@@ -209,23 +230,24 @@ public class CentroAtencion {
       return salida;
     }
     
-    public boolean insertarTipoCentro(int pIndice){
+    public boolean insertarTipoCentro(int pIdentificador, String pTipo){
       boolean salida = true;
-      setTipo(pIndice);
-      String tipoCentro = getTipo();
       Conexion nuevaConexion = new Conexion();
       Connection conectar = nuevaConexion.conectar();
       PreparedStatement insercionTipoCentro;
 
       try{
           insercionTipoCentro = conectar.prepareStatement("INSERT INTO tipocentro VALUES (?,?)");
-          insercionTipoCentro.setString(pIndice, tipoCentro);
+          insercionTipoCentro.setInt(1, pIdentificador);
+          insercionTipoCentro.setString(2, pTipo);
+          insercionTipoCentro.execute();
       }
       catch(Exception error){
         salida = false;        
       }
       return salida;
     }
+    
         
     public boolean insertarUsuarioCentro(String pCedula){
       boolean salida = true;
@@ -237,6 +259,7 @@ public class CentroAtencion {
           insercionUsuario = conectar.prepareStatement("INSERT INTO centroatencion_tiene_usuario VALUES (?,?)");
           insercionUsuario.setString(1, pCedula);
           insercionUsuario.setInt(2, getCodigo());
+          insercionUsuario.execute();
       }
       catch(Exception error){
         salida = false;        

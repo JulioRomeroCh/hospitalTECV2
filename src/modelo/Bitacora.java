@@ -1,12 +1,15 @@
 package modelo;
 
+import com.sun.javafx.print.PrintHelper;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 public class Bitacora {
   
   private int identificador;
-  private Lista<Date> fechasYHorasModificacion;
+  private Lista<Date> fechasModificacion;
+  private Lista<Date>horasModificacion;
   private Lista<EstadoCita> estadosCita;
     
   private Cita cita;
@@ -18,7 +21,8 @@ public class Bitacora {
   
   public Bitacora(int pIdentificador){
       
-    fechasYHorasModificacion = new Lista<Date>();
+    fechasModificacion = new Lista<Date>();
+    horasModificacion = new Lista<Date>();
     estadosCita = new Lista<EstadoCita>();
     setIdentificador(pIdentificador);
   }
@@ -38,17 +42,17 @@ public class Bitacora {
     }
     
     public void registrarNuevaFecha(){
-      fechasYHorasModificacion.add(new Date());
+      fechasModificacion.add(new Date());
+    }
+    
+    public void registrarNuevaHora(){
+     horasModificacion.add(new Date());
     }
     
   @Override
     public String toString(){
         String mensaje="";
         mensaje="Indentificador: "+getIdentificador()+"\n";
-        for (int indice=0; indice!=fechasYHorasModificacion.getSize();indice++){
-          mensaje+=fechasYHorasModificacion.get(indice).getDay()+"/"+fechasYHorasModificacion.get(indice).getMonth()+"/"+fechasYHorasModificacion.get(indice).getYear()
-          +"\n";   
-        }
         return mensaje;
     }
     
@@ -71,24 +75,80 @@ public class Bitacora {
       PreparedStatement insercion;
       PreparedStatement insercionHora;
       PreparedStatement insercionFecha;
-      PreparedStatement insercionCita;
-      PreparedStatement insercionCitaEstado;
       try{
           insercion = conectar.prepareStatement("INSERT INTO bitacora VALUES (?)");
           insercion.setInt(1, pIdentificador);
+          insercion.execute();
           
-
+          SimpleDateFormat formatoFecha = new SimpleDateFormat("yyy-MM-dd hh:mm:ss");
+          SimpleDateFormat formatoHora = new SimpleDateFormat("hh:mm:ss");
+          Date hora = new Date();
+          String horaFormato = formatoHora.format(hora);
+          Date horaParaSQL = formatoHora.parse(horaFormato);
+          java.sql.Time horaSQL = new java.sql.Time(horaParaSQL.getTime());
+          
+          Date fecha = new Date();
+          String fechaFormato = formatoFecha.format(fecha);
+          Date fechaParaSQL = formatoFecha.parse(fechaFormato);
+          java.sql.Date fechaSQL = new java.sql.Date(fechaParaSQL.getTime());
+          
+          
           insercionHora = conectar.prepareStatement("INSERT INTO bitacora_horamodificacion VALUES (?,?)");
-          for (int indice = 0; indice != fechasYHorasModificacion.getSize(); indice++){
-            insercionHora.setInt(1, pIdentificador);
-            insercionHora.setTime(2, (java.sql.Time) fechasYHorasModificacion.get(indice));
-          }
+          insercionHora.setInt(1, pIdentificador);
+          insercionHora.setTime(2, horaSQL);
+          insercionHora.execute();
+          
           
           insercionFecha = conectar.prepareStatement("INSERT INTO bitacora_fechamodificacion VALUES (?,?)");
-          for (int indice = 0; indice != fechasYHorasModificacion.getSize(); indice++){
-            insercionFecha.setInt(1, pIdentificador);
-            insercionFecha.setDate(2, (java.sql.Date) fechasYHorasModificacion.get(indice));
-          }
+          insercionFecha.setInt(1, pIdentificador);
+          insercionFecha.setString(2, fechaFormato);
+          insercionFecha.execute();
+
+          fechasModificacion.add(fecha);
+          horasModificacion.add(hora);
+      }
+      catch(Exception error){
+        salida = false;  
+        System.out.println("ERROR: " + error);
+        error.printStackTrace();
+      }
+      return salida;
+    }
+    
+    public boolean insertarBitacoraFechayHora(int pIdentificador){
+      boolean salida = true;
+      Conexion nuevaConexion = new Conexion();
+      Connection conectar = nuevaConexion.conectar();
+
+      PreparedStatement insercionHora;
+      PreparedStatement insercionFecha;
+      try{
+          SimpleDateFormat formatoFecha = new SimpleDateFormat("yyy-MM-dd hh:mm:ss");
+          SimpleDateFormat formatoHora = new SimpleDateFormat("hh:mm:ss");
+          Date hora = new Date();
+          String horaFormato = formatoHora.format(hora);
+          Date horaParaSQL = formatoHora.parse(horaFormato);
+          java.sql.Time horaSQL = new java.sql.Time(horaParaSQL.getTime());
+          
+          Date fecha = new Date();
+          String fechaFormato = formatoFecha.format(fecha);
+          Date fechaParaSQL = formatoFecha.parse(fechaFormato);
+          java.sql.Date fechaSQL = new java.sql.Date(fechaParaSQL.getTime());
+          
+          
+          insercionHora = conectar.prepareStatement("INSERT INTO bitacora_horamodificacion VALUES (?,?)");
+          insercionHora.setInt(1, pIdentificador);
+          insercionHora.setTime(2, horaSQL);
+          insercionHora.execute();
+          
+          
+          insercionFecha = conectar.prepareStatement("INSERT INTO bitacora_fechamodificacion VALUES (?,?)");
+          insercionFecha.setInt(1, pIdentificador);
+          insercionFecha.setString(2, fechaFormato);
+          insercionFecha.execute();
+
+          fechasModificacion.add(fecha);
+          horasModificacion.add(hora);
 
       }
       catch(Exception error){
@@ -106,8 +166,9 @@ public class Bitacora {
       try{
           
           insercionCita = conectar.prepareStatement("INSERT INTO bitacora_cita VALUES (?,?)");
-          insercionCita.setInt(1, cita.getIdentificadorCita());
+          insercionCita.setInt(1, pIdentificador);
           insercionCita.setInt(2, pIdentificador);
+          insercionCita.execute();
 
       }
       catch(Exception error){
@@ -126,9 +187,11 @@ public class Bitacora {
           insercionCitaEstado = conectar.prepareStatement("INSERT INTO bitacora_cita_estado VALUES (?,?)");
           insercionCitaEstado.setInt(1, pIdentificador);
           insercionCitaEstado.setString(2, pEstado.name());
+          insercionCitaEstado.execute();
       }
-      catch(Exception error){
-        salida = false;        
+      catch(Exception error){ 
+        salida = false; 
+        error.printStackTrace();
       }
       return salida;
     }

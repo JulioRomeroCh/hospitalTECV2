@@ -1,9 +1,18 @@
 
 package modelo;
+import com.csvreader.CsvWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class Paciente extends Usuario{
   
@@ -29,6 +38,8 @@ public class Paciente extends Usuario{
     super (pCedula, pNombre, pApellido1, pApellido2, pRol,pNombreUsuario, pContraseña);
     
     telefonos = new Lista<String>();
+    citas = new Lista<Cita>();
+    listaVacunas = new Lista<Vacuna>();
     setIdentificadorPaciente(pIdentificadorPaciente);
     setNacionalidad(pNacionalidad);
     setResidencia(pResidencia);
@@ -144,6 +155,39 @@ public class Paciente extends Usuario{
         return mensaje;
     }
     
+
+  @Override
+    public void cancelarCita(int pIdentificadorCita){
+      for(int indice = 0; indice != citas.getSize(); indice++){
+        if(citas.get(indice).getIdentificadorCita() == pIdentificadorCita){
+          EstadoCita estado = citas.get(indice).cambiarEstadoCita(this, false);
+          citas.get(indice).modificarEstadoCita(pIdentificadorCita, estado);
+          citas.get(indice).getBitacora().añadirCambioEstadoCita();
+          citas.get(indice).getBitacora().insertarBitacoraCitaEstado(pIdentificadorCita, estado);
+          citas.get(indice).getBitacora().insertarBitacoraFechayHora(pIdentificadorCita);
+          break;
+        }    
+      }       
+    }
+    
+    public void solicitarCita(int pIdentificadorCita, Date pFecha, Date pHora, String pArea, String pObservacion, EstadoCita pEstado){
+      Cita nuevaCita = new Cita(pIdentificadorCita, pFecha, pHora, pArea, pObservacion, pEstado);
+      citas.add(nuevaCita);
+      nuevaCita.insertarCita(pIdentificadorCita, pFecha, pHora, pArea, pObservacion, pEstado);
+      this.insertarCita(nuevaCita);
+      Bitacora nuevaBitacora = new Bitacora(pIdentificadorCita);
+      nuevaCita.setBitacora(nuevaBitacora);
+      nuevaCita.setEstado(EstadoCita.REGISTRADA);
+      nuevaCita.getBitacora().insertarBitacora(pIdentificadorCita);
+      nuevaCita.getBitacora().insertarBitacoraCita(pIdentificadorCita);
+      nuevaCita.getBitacora().insertarBitacoraCitaEstado(pIdentificadorCita, EstadoCita.REGISTRADA);
+    }
+    
+    public void ejecutarReporteX(){
+        
+    }
+    
+    
       public boolean insertarPaciente(String pCedula, String pNombre, String pApellido1, String pApellido2, String pRol, 
           String pNombreUsuario, String pContraseña, int pIdentificadorPaciente, String pNacionalidad,
           String pResidencia, Date pFechaNacimiento, TipoSangre pTipoSangre){
@@ -156,17 +200,23 @@ public class Paciente extends Usuario{
       PreparedStatement insercion;
 
       try{
+          SimpleDateFormat formato= new SimpleDateFormat("yyy-mm-dd");
+          String fechaString = formato.format(pFechaNacimiento);
+          Date fechaDate = formato.parse(fechaString);
+          java.sql.Date fechaSQL = new java.sql.Date(fechaDate.getTime());
           super.insertarUsuario(pCedula, pNombre, pApellido1, pApellido2, pRol, pNombreUsuario, pContraseña);
           CallableStatement insertar = conectar.prepareCall("{CALL insertarPaciente(?,?,?,?,?)}");
           insertar.setInt(1, pIdentificadorPaciente);
           insertar.setString(2, pNacionalidad);
           insertar.setString(3, pResidencia);
-          insertar.setDate(4, (java.sql.Date) pFechaNacimiento);
+          insertar.setDate(4, fechaSQL);
           insertar.setString(5, tipoSangre);
+          insertar.execute();
           
           insercion = conectar.prepareStatement("INSERT INTO paciente_usuario VALUES (?,?)");
           insercion.setInt(1, pIdentificadorPaciente);
           insercion.setString(2, pCedula);
+          insercion.execute();
           
       }
       catch(Exception error){
@@ -186,6 +236,7 @@ public class Paciente extends Usuario{
           insercionTelefonos = conectar.prepareStatement("INSERT INTO paciente_telefono VALUES (?,?)"); 
           insercionTelefonos.setInt(1, identificadorPaciente);
           insercionTelefonos.setString(2, pTelefono); 
+          insercionTelefonos.execute();
       }
       catch(Exception error){
         salida = false;        
@@ -204,6 +255,7 @@ public class Paciente extends Usuario{
           insercionVacunas = conectar.prepareStatement("INSERT INTO paciente_tiene_vacuna VALUES (?,?)"); 
           insercionVacunas.setInt(1, pVacuna.getNumeroLote());
           insercionVacunas.setInt(2, identificadorPaciente); 
+          insercionVacunas.execute();
       }
       catch(Exception error){
         salida = false;        
@@ -222,11 +274,15 @@ public class Paciente extends Usuario{
           insercionCitaPaciente = conectar.prepareStatement("INSERT INTO citas_paciente VALUES (?,?)"); 
           insercionCitaPaciente.setInt(1, pCita.getIdentificadorCita());
           insercionCitaPaciente.setInt(2, identificadorPaciente); 
+          insercionCitaPaciente.execute();
       }
       catch(Exception error){
+          System.err.println("ERROR: " + error);
         salida = false;        
       }
       return salida;
     }
+    
+
   
 }

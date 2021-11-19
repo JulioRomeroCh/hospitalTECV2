@@ -119,7 +119,7 @@ public class Lista <T> {
   }
   
   public T get (int pPosicion){
-    Nodo nodoTemporal = getNodo(pPosicion);
+    Nodo nodoTemporal = getNodo(pPosicion-1);
     return (T) nodoTemporal.objeto;
   }
 }

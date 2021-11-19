@@ -32,11 +32,32 @@ public class Funcionario extends Usuario {
     areaTrabajo.add("Oncología");
     areaTrabajo.add("Dermatología");
     areaTrabajo.add("Ortopedia");
+    citasAgendadas = new Lista<Cita>();
     
     setIdentificadorFuncionario(pIdentificadorFuncionario);
     setTipo(pTipo);
     setFechaIngreso(pFechaIngreso);
     setArea(pIndice);
+  }
+  
+   public Funcionario (String pCedula, String pNombre, String pApellido1, String pApellido2, String pRol, 
+      String pNombreUsuario, String pContraseña, int pIdentificadorFuncionario, TipoFuncionario pTipo,
+      Date pFechaIngreso, String pArea){
+    
+    super (pCedula, pNombre, pApellido1, pApellido2, pRol, pNombreUsuario, pContraseña);
+    areaTrabajo.clear();
+    areaTrabajo.add("Administrativa");
+    areaTrabajo.add("Emergencias");
+    areaTrabajo.add("Ginecología");
+    areaTrabajo.add("Oncología");
+    areaTrabajo.add("Dermatología");
+    areaTrabajo.add("Ortopedia");
+    citasAgendadas = new Lista<Cita>();
+    
+    setIdentificadorFuncionario(pIdentificadorFuncionario);
+    setTipo(pTipo);
+    setFechaIngreso(pFechaIngreso);
+    area=pArea;
   }
 
     /**
@@ -136,28 +157,71 @@ public class Funcionario extends Usuario {
       return mensaje;
     }  
     
+    public void asignarCita(Cita pCita){
+      gestionarCita(pCita);
+      System.out.println("SIZE: " + citasAgendadas.getSize());
+      for(int indice = 0; indice != citasAgendadas.getSize(); indice++){  
+        System.out.println("IDCITA: " + citasAgendadas.get(indice).getIdentificadorCita());  
+        if(citasAgendadas.get(indice).getIdentificadorCita() == pCita.getIdentificadorCita()){
+          System.err.println("ENTRÉ A ASIGNARCITA");
+          citasAgendadas.get(indice).setEstado(EstadoCita.ASIGNADA);
+          citasAgendadas.get(indice).modificarEstadoCita(pCita.getIdentificadorCita(), EstadoCita.ASIGNADA);
+          citasAgendadas.get(indice).getBitacora().añadirCambioEstadoCita();
+          citasAgendadas.get(indice).getBitacora().insertarBitacoraCitaEstado(pCita.getIdentificadorCita(), EstadoCita.ASIGNADA);
+          citasAgendadas.get(indice).getBitacora().insertarBitacoraFechayHora(pCita.getIdentificadorCita());
+          break;
+        } 
+      }
+    }
+    
+    public void gestionarCita(Cita pCita){
+        añadirCita(pCita);
+        insertarFuncionarioGestionaCita(pCita.getIdentificadorCita(), getIdentificadorFuncionario());
+
+    }
+    
+  @Override
+    public void cancelarCita(int pIdentificadorCita){
+      for(int indice = 0; indice != citasAgendadas.getSize(); indice++){
+        if(citasAgendadas.get(indice).getIdentificadorCita() == pIdentificadorCita){
+          //EstadoCita estado = citasAgendadas.get(indice).cambiarEstadoCita(this, false);
+          citasAgendadas.get(indice).modificarEstadoCita(pIdentificadorCita, EstadoCita.CANCELADA_POR_CENTRO_MEDICO);
+          citasAgendadas.get(indice).getBitacora().añadirCambioEstadoCita();
+          citasAgendadas.get(indice).getBitacora().insertarBitacoraCitaEstado(pIdentificadorCita, EstadoCita.CANCELADA_POR_CENTRO_MEDICO);
+          break;
+        }    
+      }          
+    }
+    
     public boolean insertarFuncionario(String pCedula, String pNombre, String pApellido1, String pApellido2, String pRol, String pNombreUsuario, String pContraseña,
-        int pIdentificadorFuncionario, TipoFuncionario pTipo, Date pFechaIngreso, int pIndice){
+        int pIdentificadorFuncionario, TipoFuncionario pTipo, Date pFechaIngreso, String pArea){
         
       boolean salida = true;
-      setArea(pIndice);
-      String area = getArea();
+      //setArea(pIndice);
+      //String area = getArea();
       String tipo = pTipo.name();
       Conexion nuevaConexion = new Conexion();
       Connection conectar = nuevaConexion.conectar();
       PreparedStatement insercion;
       //PreparedStatement insercionCita;
       try{
+          
+          SimpleDateFormat formato= new SimpleDateFormat("yyy-mm-dd");
+          String fechaString = formato.format(pFechaIngreso);
+          Date fechaDate = formato.parse(fechaString);
+          java.sql.Date fechaSQL = new java.sql.Date(fechaDate.getTime());
           super.insertarUsuario(pCedula, pNombre, pApellido1, pApellido2, pRol, pNombreUsuario, pContraseña);
           CallableStatement insertar = conectar.prepareCall("{CALL insertarFuncionario(?,?,?,?)}");
           insertar.setInt(1, pIdentificadorFuncionario);
           insertar.setString(2, tipo);
-          insertar.setDate(3, (java.sql.Date) pFechaIngreso);
-          insertar.setString(4, area);
+          insertar.setDate(3, fechaSQL);
+          insertar.setString(4, pArea);
+          insertar.execute();
           
           insercion = conectar.prepareStatement("INSERT INTO funcionario_usuario VALUES (?,?)");
           insercion.setInt(1, pIdentificadorFuncionario);
           insercion.setString(2, pCedula);
+          insercion.execute();
           
           /*insercionCita = conectar.prepareStatement("INSERT INTO funcionario_gestiona_cita VALUES (?,?)");
           for (int indice = 0; indice != citasAgendadas.getSize(); indice++){
@@ -165,9 +229,31 @@ public class Funcionario extends Usuario {
             insercionCita.setInt(2, pIdentificadorFuncionario);
           }*/
       }
+      
       catch(Exception error){
+          //System.out.println("CATCH INSERTAR FUNCIONARIO");  
+          //error.printStackTrace();
         salida = false;        
       }
       return salida;
     }
+    
+     public boolean insertarFuncionarioGestionaCita(int pIdentificadorCita, int pIdentificadorFuncionario){    
+      boolean salida = true;
+      Conexion nuevaConexion = new Conexion();
+      Connection conectar = nuevaConexion.conectar();
+      PreparedStatement insertar;
+      //PreparedStatement insercionCita;
+      try{
+          insertar = conectar.prepareStatement("INSERT INTO funcionario_gestiona_cita VALUES (?,?)");
+          insertar.setInt(1, pIdentificadorCita);
+          insertar.setInt(2, pIdentificadorFuncionario);
+          insertar.execute();
+      }
+      catch(Exception error){
+        salida = false;        
+      }
+      return salida;
+     }
+      
 }

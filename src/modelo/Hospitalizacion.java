@@ -19,12 +19,26 @@ public class Hospitalizacion {
   public Hospitalizacion(){
   }
   
-  public Hospitalizacion(int pIdentificadorHospitalizacion, Date pFechaInicio, Date pFechaFin){
+  public Hospitalizacion(int pIdentificadorHospitalizacion, Date pFechaFin, Cita pCita, CentroAtencion pCentro, String pObservacion, Tratamiento pTratamiento){
     setIdentificadorHospitalizacion(pIdentificadorHospitalizacion);
-    setFechaInicio(pFechaInicio);
+    setFechaInicio(new Date());
     setFechaFin(pFechaFin);
+    motivo=pCita;
+   setCentroHospitalizacion(pCentro);
+   setSeguimiento(pIdentificadorHospitalizacion, pFechaFin, pObservacion, pTratamiento);
+    
   }
 
+    public void insertarHospitalizacionBD(){
+        insertarHospitalizacion(getIdentificadorHospitalizacion(), fechaInicio, fechaFin);
+        getSeguimiento().insertarSeguimiento(identificadorHospitalizacion);
+        getSeguimiento().insertarSeguimientoFecha(fechaFin);
+        getSeguimiento().insertarSeguimientoObservacion(getSeguimiento().getObservacion());
+        getSeguimiento().insertarSeguimientoTratamiento();
+        insertarHospitalizacionSeguimiento(getSeguimiento().getIdentificadorSeguimiento());
+        insertarCitaHospitalizacion(getMotivo().getIdentificadorCita());
+        insertarCentroHospitalizacion();
+    }
     /**
      * @return the identificadorHospitalizacion
      */
@@ -75,12 +89,11 @@ public class Hospitalizacion {
     }
 
     
-    public void setSeguimiento(int pIdentificadorSeguimiento, Lista<Date> pFechasSeguimiento,
-        Lista<String> observaciones){
+    public void setSeguimiento(int pIdentificadorSeguimiento, Date pFechaSeguimiento, String pObservacion, Tratamiento pTratamiento){
     
-      Seguimiento nuevoSeguimiento = new Seguimiento(pIdentificadorSeguimiento);
-      nuevoSeguimiento.reemplazarListaFechas(pFechasSeguimiento);
-      nuevoSeguimiento.reemplazarListaObservaciones(observaciones);
+      Seguimiento nuevoSeguimiento = new Seguimiento(pIdentificadorSeguimiento, pFechaSeguimiento, pObservacion);
+      nuevoSeguimiento.setTratamiento(pTratamiento);
+      nuevoSeguimiento.setObservacion(pObservacion);
       this.seguimiento = nuevoSeguimiento;
     }
     
@@ -114,6 +127,11 @@ public class Hospitalizacion {
       return mensaje;
     }    
     
+    
+    
+    
+    
+    
     public boolean insertarHospitalizacion(int pIdentificadorHospitalizacion, Date pFechaInicio, Date pFechaFin){
       boolean salida = true;
       Conexion nuevaConexion = new Conexion();
@@ -124,10 +142,21 @@ public class Hospitalizacion {
       PreparedStatement insercionHospitalización;
 
       try{
+          SimpleDateFormat formato= new SimpleDateFormat("yyy-mm-dd");
+          String fechaString1 = formato.format(pFechaInicio);
+          Date fechaDate1 = formato.parse(fechaString1);
+          java.sql.Date fechaSQL1 = new java.sql.Date(fechaDate1.getTime());
+          
+          String fechaString2 = formato.format(pFechaFin);
+          Date fechaDate2 = formato.parse(fechaString2);
+          java.sql.Date fechaSQL2 = new java.sql.Date(fechaDate2.getTime());
+          
+
           insercion = conectar.prepareStatement("INSERT INTO hospitalizacion VALUES (?,?,?)");
           insercion.setInt(1, pIdentificadorHospitalizacion);
-          insercion.setDate(2, (java.sql.Date) pFechaInicio);
-          insercion.setDate(3, (java.sql.Date) pFechaFin);
+          insercion.setDate(2, fechaSQL1);
+          insercion.setDate(3, fechaSQL2);
+          insercion.execute();
       }
       catch(Exception error){
         salida = false;        
@@ -145,6 +174,7 @@ public class Hospitalizacion {
           insercionSeguimiento = conectar.prepareStatement("INSERT INTO hospitalizacion_necesita_seguimiento VALUES (?,?)");
           insercionSeguimiento.setInt(1, pIdentificadorSeguimiento);
           insercionSeguimiento.setInt(2, identificadorHospitalizacion);
+          insercionSeguimiento.execute();
       }
       catch(Exception error){
         salida = false;        
@@ -162,6 +192,7 @@ public class Hospitalizacion {
           insercionCita = conectar.prepareStatement("INSERT INTO cita_hospitalizacion VALUES (?,?)");
           insercionCita.setInt(1, pIdentificadorCita);
           insercionCita.setInt(2, identificadorHospitalizacion);
+          insercionCita.execute();
       }
       catch(Exception error){
         salida = false;        
@@ -179,6 +210,7 @@ public class Hospitalizacion {
           insercionHospitalización = conectar.prepareStatement("INSERT INTO centroatencion_recibe_hospitalizacion VALUES (?,?)");
           insercionHospitalización.setInt(1, identificadorHospitalizacion);
           insercionHospitalización.setInt(2, centroHospitalizacion.getCodigo());
+          insercionHospitalización.execute();
       }
       catch(Exception error){
         salida = false;        
