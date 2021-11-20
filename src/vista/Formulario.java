@@ -299,22 +299,22 @@ public class Formulario extends javax.swing.JFrame {
         jSplitPane5 = new javax.swing.JSplitPane();
         jPanel30 = new javax.swing.JPanel();
         jButton20 = new javax.swing.JButton();
-        jButton21 = new javax.swing.JButton();
-        jButton22 = new javax.swing.JButton();
+        BotonSecretarioCancelarCita1 = new javax.swing.JButton();
+        BotonSecretarioAsignarCita1 = new javax.swing.JButton();
         PanelesModuloSecretario = new javax.swing.JPanel();
         CancelarCitaSecretario = new javax.swing.JPanel();
         jLabel76 = new javax.swing.JLabel();
         jLabel96 = new javax.swing.JLabel();
         jLabel97 = new javax.swing.JLabel();
-        jComboBox16 = new javax.swing.JComboBox<>();
-        jComboBox17 = new javax.swing.JComboBox<>();
-        jButton34 = new javax.swing.JButton();
-        jButton35 = new javax.swing.JButton();
+        ComboSecretarioDos = new javax.swing.JComboBox<>();
+        ComboSecretarioUno = new javax.swing.JComboBox<>();
+        BotonSecretarioCancelarCita2 = new javax.swing.JButton();
+        BotonSecretarioCargarCitas = new javax.swing.JButton();
         AsignarCitaSecretario = new javax.swing.JPanel();
         jLabel77 = new javax.swing.JLabel();
         jLabel95 = new javax.swing.JLabel();
-        jComboBox15 = new javax.swing.JComboBox<>();
-        jButton33 = new javax.swing.JButton();
+        ComboSecretarioTres = new javax.swing.JComboBox<>();
+        BotonSecretarioAsignarCita2 = new javax.swing.JButton();
         ReportesSecretario = new javax.swing.JPanel();
         jLabel78 = new javax.swing.JLabel();
         ModuloAdministrador = new javax.swing.JFrame();
@@ -2907,23 +2907,23 @@ public class Formulario extends javax.swing.JFrame {
             }
         });
 
-        jButton21.setBackground(new java.awt.Color(105, 183, 53));
-        jButton21.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
-        jButton21.setForeground(new java.awt.Color(255, 255, 255));
-        jButton21.setText("Cancelar cita");
-        jButton21.addActionListener(new java.awt.event.ActionListener() {
+        BotonSecretarioCancelarCita1.setBackground(new java.awt.Color(105, 183, 53));
+        BotonSecretarioCancelarCita1.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
+        BotonSecretarioCancelarCita1.setForeground(new java.awt.Color(255, 255, 255));
+        BotonSecretarioCancelarCita1.setText("Cancelar cita");
+        BotonSecretarioCancelarCita1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton21ActionPerformed(evt);
+                BotonSecretarioCancelarCita1ActionPerformed(evt);
             }
         });
 
-        jButton22.setBackground(new java.awt.Color(105, 183, 53));
-        jButton22.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
-        jButton22.setForeground(new java.awt.Color(255, 255, 255));
-        jButton22.setText("Asignar cita");
-        jButton22.addActionListener(new java.awt.event.ActionListener() {
+        BotonSecretarioAsignarCita1.setBackground(new java.awt.Color(105, 183, 53));
+        BotonSecretarioAsignarCita1.setFont(new java.awt.Font("Dialog", 0, 18)); // NOI18N
+        BotonSecretarioAsignarCita1.setForeground(new java.awt.Color(255, 255, 255));
+        BotonSecretarioAsignarCita1.setText("Asignar cita");
+        BotonSecretarioAsignarCita1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton22ActionPerformed(evt);
+                BotonSecretarioAsignarCita1ActionPerformed(evt);
             }
         });
 
@@ -2935,17 +2935,17 @@ public class Formulario extends javax.swing.JFrame {
                 .addGap(54, 54, 54)
                 .addGroup(jPanel30Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jButton20, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton22, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton21, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(BotonSecretarioAsignarCita1, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(BotonSecretarioCancelarCita1, javax.swing.GroupLayout.PREFERRED_SIZE, 175, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(71, Short.MAX_VALUE))
         );
         jPanel30Layout.setVerticalGroup(
             jPanel30Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel30Layout.createSequentialGroup()
                 .addGap(105, 105, 105)
-                .addComponent(jButton21, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(BotonSecretarioCancelarCita1, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(214, 214, 214)
-                .addComponent(jButton22, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(BotonSecretarioAsignarCita1, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 252, Short.MAX_VALUE)
                 .addComponent(jButton20, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(75, 75, 75))
@@ -2974,21 +2974,21 @@ public class Formulario extends javax.swing.JFrame {
         jLabel97.setForeground(new java.awt.Color(0, 0, 0));
         jLabel97.setText("Citas");
 
-        jComboBox16.setBackground(new java.awt.Color(255, 255, 255));
-        jComboBox16.setFont(new java.awt.Font("Trebuchet MS", 0, 18)); // NOI18N
+        ComboSecretarioDos.setBackground(new java.awt.Color(255, 255, 255));
+        ComboSecretarioDos.setFont(new java.awt.Font("Trebuchet MS", 0, 18)); // NOI18N
 
-        jComboBox17.setBackground(new java.awt.Color(255, 255, 255));
-        jComboBox17.setFont(new java.awt.Font("Trebuchet MS", 0, 18)); // NOI18N
+        ComboSecretarioUno.setBackground(new java.awt.Color(255, 255, 255));
+        ComboSecretarioUno.setFont(new java.awt.Font("Trebuchet MS", 0, 18)); // NOI18N
 
-        jButton34.setBackground(new java.awt.Color(245, 201, 94));
-        jButton34.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
-        jButton34.setForeground(new java.awt.Color(255, 255, 255));
-        jButton34.setText("Cancelar");
+        BotonSecretarioCancelarCita2.setBackground(new java.awt.Color(245, 201, 94));
+        BotonSecretarioCancelarCita2.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
+        BotonSecretarioCancelarCita2.setForeground(new java.awt.Color(255, 255, 255));
+        BotonSecretarioCancelarCita2.setText("Cancelar");
 
-        jButton35.setBackground(new java.awt.Color(245, 201, 94));
-        jButton35.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
-        jButton35.setForeground(new java.awt.Color(255, 255, 255));
-        jButton35.setText("Cargar citas");
+        BotonSecretarioCargarCitas.setBackground(new java.awt.Color(245, 201, 94));
+        BotonSecretarioCargarCitas.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
+        BotonSecretarioCargarCitas.setForeground(new java.awt.Color(255, 255, 255));
+        BotonSecretarioCargarCitas.setText("Cargar citas");
 
         javax.swing.GroupLayout CancelarCitaSecretarioLayout = new javax.swing.GroupLayout(CancelarCitaSecretario);
         CancelarCitaSecretario.setLayout(CancelarCitaSecretarioLayout);
@@ -3004,17 +3004,17 @@ public class Formulario extends javax.swing.JFrame {
                             .addGap(198, 198, 198)
                             .addComponent(jLabel97, javax.swing.GroupLayout.PREFERRED_SIZE, 79, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jComboBox16, javax.swing.GroupLayout.PREFERRED_SIZE, 296, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(ComboSecretarioDos, javax.swing.GroupLayout.PREFERRED_SIZE, 296, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGroup(javax.swing.GroupLayout.Alignment.LEADING, CancelarCitaSecretarioLayout.createSequentialGroup()
                             .addGap(190, 190, 190)
                             .addComponent(jLabel96, javax.swing.GroupLayout.PREFERRED_SIZE, 331, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGap(95, 95, 95)
-                            .addComponent(jComboBox17, javax.swing.GroupLayout.PREFERRED_SIZE, 296, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(ComboSecretarioUno, javax.swing.GroupLayout.PREFERRED_SIZE, 296, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(CancelarCitaSecretarioLayout.createSequentialGroup()
                         .addGap(446, 446, 446)
                         .addGroup(CancelarCitaSecretarioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jButton34, javax.swing.GroupLayout.PREFERRED_SIZE, 242, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jButton35, javax.swing.GroupLayout.PREFERRED_SIZE, 242, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(BotonSecretarioCancelarCita2, javax.swing.GroupLayout.PREFERRED_SIZE, 242, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(BotonSecretarioCargarCitas, javax.swing.GroupLayout.PREFERRED_SIZE, 242, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap(332, Short.MAX_VALUE))
         );
         CancelarCitaSecretarioLayout.setVerticalGroup(
@@ -3025,15 +3025,15 @@ public class Formulario extends javax.swing.JFrame {
                 .addGap(89, 89, 89)
                 .addGroup(CancelarCitaSecretarioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel96)
-                    .addComponent(jComboBox17, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(ComboSecretarioUno, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(35, 35, 35)
-                .addComponent(jButton35, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(BotonSecretarioCargarCitas, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(124, 124, 124)
                 .addGroup(CancelarCitaSecretarioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel97)
-                    .addComponent(jComboBox16, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(ComboSecretarioDos, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(51, 51, 51)
-                .addComponent(jButton34, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(BotonSecretarioCancelarCita2, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(275, Short.MAX_VALUE))
         );
 
@@ -3051,13 +3051,13 @@ public class Formulario extends javax.swing.JFrame {
         jLabel95.setForeground(new java.awt.Color(0, 0, 0));
         jLabel95.setText("Citas canceladas por Centro Médico");
 
-        jComboBox15.setBackground(new java.awt.Color(255, 255, 255));
-        jComboBox15.setFont(new java.awt.Font("Trebuchet MS", 0, 18)); // NOI18N
+        ComboSecretarioTres.setBackground(new java.awt.Color(255, 255, 255));
+        ComboSecretarioTres.setFont(new java.awt.Font("Trebuchet MS", 0, 18)); // NOI18N
 
-        jButton33.setBackground(new java.awt.Color(245, 201, 94));
-        jButton33.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
-        jButton33.setForeground(new java.awt.Color(255, 255, 255));
-        jButton33.setText("Asignar");
+        BotonSecretarioAsignarCita2.setBackground(new java.awt.Color(245, 201, 94));
+        BotonSecretarioAsignarCita2.setFont(new java.awt.Font("Dialog", 1, 24)); // NOI18N
+        BotonSecretarioAsignarCita2.setForeground(new java.awt.Color(255, 255, 255));
+        BotonSecretarioAsignarCita2.setText("Asignar");
 
         javax.swing.GroupLayout AsignarCitaSecretarioLayout = new javax.swing.GroupLayout(AsignarCitaSecretario);
         AsignarCitaSecretario.setLayout(AsignarCitaSecretarioLayout);
@@ -3072,10 +3072,10 @@ public class Formulario extends javax.swing.JFrame {
                         .addGap(178, 178, 178)
                         .addComponent(jLabel95)
                         .addGap(80, 80, 80)
-                        .addComponent(jComboBox15, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(ComboSecretarioTres, javax.swing.GroupLayout.PREFERRED_SIZE, 270, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(AsignarCitaSecretarioLayout.createSequentialGroup()
                         .addGap(487, 487, 487)
-                        .addComponent(jButton33, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(BotonSecretarioAsignarCita2, javax.swing.GroupLayout.PREFERRED_SIZE, 245, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(317, Short.MAX_VALUE))
         );
         AsignarCitaSecretarioLayout.setVerticalGroup(
@@ -3086,9 +3086,9 @@ public class Formulario extends javax.swing.JFrame {
                 .addGap(104, 104, 104)
                 .addGroup(AsignarCitaSecretarioLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel95)
-                    .addComponent(jComboBox15, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(ComboSecretarioTres, javax.swing.GroupLayout.PREFERRED_SIZE, 34, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(62, 62, 62)
-                .addComponent(jButton33, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(BotonSecretarioAsignarCita2, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(483, Short.MAX_VALUE))
         );
 
@@ -4290,13 +4290,13 @@ public class Formulario extends javax.swing.JFrame {
       cardLayoutSecretario.show(PanelesModuloSecretario, "ReportesSecretario");
     }//GEN-LAST:event_jButton20ActionPerformed
 
-    private void jButton21ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton21ActionPerformed
+    private void BotonSecretarioCancelarCita1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonSecretarioCancelarCita1ActionPerformed
       cardLayoutSecretario.show(PanelesModuloSecretario, "CancelarCitaSecretario");
-    }//GEN-LAST:event_jButton21ActionPerformed
+    }//GEN-LAST:event_BotonSecretarioCancelarCita1ActionPerformed
 
-    private void jButton22ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton22ActionPerformed
+    private void BotonSecretarioAsignarCita1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonSecretarioAsignarCita1ActionPerformed
       cardLayoutSecretario.show(PanelesModuloSecretario, "AsignarCitaSecretario");
-    }//GEN-LAST:event_jButton22ActionPerformed
+    }//GEN-LAST:event_BotonSecretarioAsignarCita1ActionPerformed
 
     private void TextPacienteEspecialidadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TextPacienteEspecialidadActionPerformed
         // TODO add your handling code here:
@@ -4488,6 +4488,11 @@ public class Formulario extends javax.swing.JFrame {
     public javax.swing.JButton BotonRegresarEnfermero;
     public javax.swing.JButton BotonRegresarPaciente;
     public javax.swing.JButton BotonReportePaciente1;
+    public javax.swing.JButton BotonSecretarioAsignarCita1;
+    public javax.swing.JButton BotonSecretarioAsignarCita2;
+    public javax.swing.JButton BotonSecretarioCancelarCita1;
+    public javax.swing.JButton BotonSecretarioCancelarCita2;
+    public javax.swing.JButton BotonSecretarioCargarCitas;
     public javax.swing.JButton BotonTelefonoPaciente;
     public javax.swing.JButton BotonTratamientoAdmin;
     public javax.swing.JButton BotonVacunar;
@@ -4523,6 +4528,9 @@ public class Formulario extends javax.swing.JFrame {
     public javax.swing.JComboBox<String> ComboPacienteVacunar;
     public javax.swing.JComboBox<String> ComboRolInicioSesion;
     public javax.swing.JTextField ComboSecretarioArea;
+    public javax.swing.JComboBox<String> ComboSecretarioDos;
+    public javax.swing.JComboBox<String> ComboSecretarioTres;
+    public javax.swing.JComboBox<String> ComboSecretarioUno;
     public javax.swing.JComboBox<String> ComboTratamientoHospitalizar;
     private javax.swing.JPanel ConsultarBitacora;
     public com.toedter.calendar.JDateChooser DateNacimientoPaciente;
@@ -4624,18 +4632,10 @@ public class Formulario extends javax.swing.JFrame {
     private javax.swing.JButton jButton16;
     private javax.swing.JButton jButton19;
     private javax.swing.JButton jButton20;
-    private javax.swing.JButton jButton21;
-    private javax.swing.JButton jButton22;
-    private javax.swing.JButton jButton33;
-    private javax.swing.JButton jButton34;
-    private javax.swing.JButton jButton35;
     private javax.swing.JButton jButton36;
     private javax.swing.JButton jButton38;
     private javax.swing.JButton jButton41;
     private javax.swing.JButton jButton5;
-    private javax.swing.JComboBox<String> jComboBox15;
-    private javax.swing.JComboBox<String> jComboBox16;
-    private javax.swing.JComboBox<String> jComboBox17;
     private com.toedter.calendar.JDateChooser jDateChooser1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;

@@ -107,11 +107,18 @@ public class controlador implements ActionListener{
     this.vista.BotonRegistrarPaciente.addActionListener(this);
     this.vista.BotonTelefonoPaciente.addActionListener(this);
     this.vista.BotonDoctorHospitalizarPositivo.addActionListener(this);
+    //Enfermero
     this.vista.BotonEnfermeroCancelarCita.addActionListener(this);
     this.vista.BotonEnfermeroCargarCitasPaciente.addActionListener(this);
     this.vista.BotonEnfermeroCancelarCita2.addActionListener(this);
     this.vista.BotonEnfermeroAsignarCita.addActionListener(this);
     this.vista.BotonEnfermeroAsignarCita2.addActionListener(this);
+    //Secretario
+    this.vista.BotonSecretarioCancelarCita1.addActionListener(this);
+    this.vista.BotonSecretarioCancelarCita2.addActionListener(this);
+    this.vista.BotonSecretarioCargarCitas.addActionListener(this);
+    this.vista.BotonSecretarioAsignarCita1.addActionListener(this);
+    this.vista.BotonSecretarioAsignarCita2.addActionListener(this);
     //LISTAS
     this.citas = new Lista<Cita>();
     this.centrosAtencion = new Lista<CentroAtencion>();
@@ -259,9 +266,9 @@ public class controlador implements ActionListener{
           String tipo = resultado.getObject(9).toString();
           TipoFuncionario pTipo = TipoFuncionario.valueOf(tipo);
           Date pFechaIngreso = (java.util.Date) resultado.getObject(10);
-          int pIndice = Integer.parseInt(resultado.getObject(11).toString());
+          String pArea = resultado.getObject(11).toString();;
           int pCodigoSecretario= Integer.parseInt(resultado.getObject(12).toString());   
-          secretarioActivo = new Secretario(pCedula, pNombre, pApellido1, pApellido2, pRol, pNombreUsuario, pContraseña, pIdentificadorFuncionario, pTipo, pFechaIngreso, pIndice, pCodigoSecretario);
+          secretarioActivo = new Secretario(pCedula, pNombre, pApellido1, pApellido2, pRol, pNombreUsuario, pContraseña, pIdentificadorFuncionario, pTipo, pFechaIngreso, pArea, pCodigoSecretario);
         }   
       }
       catch(Exception error){ 
@@ -289,8 +296,14 @@ public class controlador implements ActionListener{
     else if(evento.getSource() == vista.BotonEnfermeroCancelarCita){
         cargaEnfermeroCancelarComboBox(vista.ComboEnfermeroPacienteCitaAsignada);
     }
+    else if(evento.getSource() == vista.BotonSecretarioCancelarCita1){
+        cargaSecretarioCancelarComboBox(vista.ComboSecretarioUno);
+    }
     else if(evento.getSource() == vista.BotonEnfermeroAsignarCita){
         cargarEnfermeroAsignarComboBox(vista.ComboEnfermeroCitasAsignar);
+    }
+    else if(evento.getSource() == vista.BotonSecretarioAsignarCita1){
+        cargarSecretarioAsignarComboBox(vista.ComboSecretarioTres);
     }
 
     else if(evento.getSource() == vista.BotonAdminRegistrarSecretario){
@@ -310,6 +323,9 @@ public class controlador implements ActionListener{
     }
     else if(evento.getSource() == vista.BotonEnfermeroCargarCitasPaciente){
         cargarEnfermeroCitasRACancelar(vista.ComboEnfermeroCitaCancelar, Integer.parseInt(vista.ComboEnfermeroPacienteCitaAsignada.getSelectedItem().toString()));
+    }
+    else if(evento.getSource() == vista.BotonSecretarioCargarCitas){
+        cargarSecretarioCitasRACancelar(vista.ComboSecretarioDos, Integer.parseInt(vista.ComboSecretarioUno.getSelectedItem().toString()));
     }
     else if(evento.getSource() == vista.BotonRegistrarCentro){
       cargarTipoCentroComboBox(vista.ComboAdminTipoCentro);   
@@ -423,6 +439,9 @@ public class controlador implements ActionListener{
     else if(evento.getSource() == vista.BotonEnfermeroCancelarCita2){
       CancelarCitaEnfermero(Integer.parseInt(vista.ComboEnfermeroCitaCancelar.getSelectedItem().toString()));
     }
+    else if(evento.getSource() == vista.BotonSecretarioCancelarCita2){
+      CancelarCitaSecretario(Integer.parseInt(vista.ComboSecretarioDos.getSelectedItem().toString()));    
+    }
     else if(evento.getSource() == vista.BotonDoctorAsignarCita){
       doctorActivo.asignarCita(buscarCita(Integer.parseInt(vista.ComboDoctorCitasCanceladasCM.getSelectedItem().toString())));
       JOptionPane.showMessageDialog(null, "Cita asignada con éxito");
@@ -431,6 +450,11 @@ public class controlador implements ActionListener{
       enfermeroActivo.asignarCita(buscarCita(Integer.parseInt(vista.ComboEnfermeroCitasAsignar.getSelectedItem().toString())));
       JOptionPane.showMessageDialog(null, "Cita asignada con éxito");      
     }
+    else if(evento.getSource() == vista.BotonSecretarioAsignarCita2){
+      secretarioActivo.asignarCita(buscarCita(Integer.parseInt(vista.ComboSecretarioTres.getSelectedItem().toString())));
+      JOptionPane.showMessageDialog(null, "Cita asignada con éxito"); 
+    }
+
     else if(evento.getSource() == vista.BotonMPCancelarCita){
         cargarCitasPendientes(vista.ComboPacienteCitasPendientes, pacienteActivo.getNombreUsuario());
     }
@@ -505,6 +529,16 @@ public class controlador implements ActionListener{
     nuevaCita.getBitacora().insertarBitacoraCitaEstado(pIdentificadorCita, EstadoCita.CANCELADA_POR_CENTRO_MEDICO);
     nuevaCita.getBitacora().insertarBitacoraFechayHora(pIdentificadorCita);
     JOptionPane.showMessageDialog(null, enfermeroActivo.getNombre() + ": cita cancelada con éxito");
+  }
+  
+  public void CancelarCitaSecretario(int pIdentificadorCita){
+    secretarioActivo.cancelarCita(pIdentificadorCita);
+    Cita nuevaCita = buscarCita(pIdentificadorCita);
+    nuevaCita.setEstado(EstadoCita.CANCELADA_POR_CENTRO_MEDICO);
+    nuevaCita.modificarEstadoCita(pIdentificadorCita, EstadoCita.CANCELADA_POR_CENTRO_MEDICO);
+    nuevaCita.getBitacora().insertarBitacoraCitaEstado(pIdentificadorCita, EstadoCita.CANCELADA_POR_CENTRO_MEDICO);
+    nuevaCita.getBitacora().insertarBitacoraFechayHora(pIdentificadorCita);
+    JOptionPane.showMessageDialog(null, secretarioActivo.getNombre() + ": cita cancelada con éxito");
   }
   
  
@@ -703,6 +737,26 @@ public class controlador implements ActionListener{
     }     
   }
   
+  public void cargaSecretarioCancelarComboBox(JComboBox ComboSecretarioUno){
+    ResultSet resultadoDos;
+    PreparedStatement consultaDos;
+    Conexion nuevaConexion = new Conexion();
+    Connection conectar = nuevaConexion.conectar();
+    ComboSecretarioUno.removeAllItems();
+    try{
+      consultaDos = conectar.prepareStatement("SELECT DISTINCT paciente.identificadorPaciente FROM paciente JOIN citas_paciente ON paciente.identificadorPaciente = citas_paciente.identificadorPaciente JOIN cita ON citas_paciente.identificadorCita = cita.identificadorCita WHERE cita.estado = 'REGISTRADA' or cita.estado = 'ASIGNADA'");
+      resultadoDos = consultaDos.executeQuery();
+      while(resultadoDos.next()){ 
+        for(int indice = 1; indice<2; indice++){   
+          ComboSecretarioUno.addItem(resultadoDos.getObject(indice));        
+        }   
+      }     
+    }
+    catch(Exception error){ 
+      System.out.println(error);
+    }     
+  }
+  
    public void cargaEnfermeroCancelarComboBox(JComboBox ComboEnfermeroPacienteCitaAsignada){
     ResultSet resultadoDos;
     PreparedStatement consultaDos;
@@ -710,7 +764,7 @@ public class controlador implements ActionListener{
     Connection conectar = nuevaConexion.conectar();
     ComboEnfermeroPacienteCitaAsignada.removeAllItems();
     try{
-      consultaDos = conectar.prepareStatement("SELECT DISTINCT paciente.identificadorPaciente FROM paciente JOIN citas_paciente ON paciente.identificadorPaciente = citas_paciente.identificadorPaciente JOIN cita ON citas_paciente.identificadorCita = cita.identificadorCita WHERE cita.estado = 'REGISTRADA'");
+      consultaDos = conectar.prepareStatement("SELECT DISTINCT paciente.identificadorPaciente FROM paciente JOIN citas_paciente ON paciente.identificadorPaciente = citas_paciente.identificadorPaciente JOIN cita ON citas_paciente.identificadorCita = cita.identificadorCita WHERE cita.estado = 'REGISTRADA' or cita.estado = 'ASIGNADA'");
       resultadoDos = consultaDos.executeQuery();
       while(resultadoDos.next()){ 
         for(int indice = 1; indice<2; indice++){   
@@ -736,6 +790,27 @@ public class controlador implements ActionListener{
       while(resultadoUno.next()){ 
         for(int indice = 1; indice<2; indice++){   
           ComboEnfermeroCitasAsignar.addItem(resultadoUno.getObject(indice));        
+        }   
+      }     
+    }
+    catch(Exception error){ 
+      System.out.println(error);
+    }     
+  }
+   
+   public void cargarSecretarioAsignarComboBox(JComboBox ComboSecretarioTres){
+    ResultSet resultadoUno;
+    PreparedStatement consultaUno;
+    Conexion nuevaConexion = new Conexion();
+    Connection conectar = nuevaConexion.conectar();
+    ComboSecretarioTres.removeAllItems();
+
+    try{
+      consultaUno = conectar.prepareStatement("SELECT cita.identificadorCita  FROM cita JOIN citas_paciente ON cita.identificadorCita = citas_paciente.identificadorCita WHERE cita.estado = 'CANCELADA_POR_CENTRO_MEDICO'");
+      resultadoUno = consultaUno.executeQuery();
+      while(resultadoUno.next()){ 
+        for(int indice = 1; indice<2; indice++){   
+          ComboSecretarioTres.addItem(resultadoUno.getObject(indice));        
         }   
       }     
     }
@@ -819,6 +894,27 @@ public class controlador implements ActionListener{
       while(resultadoUno.next()){ 
         for(int indice = 1; indice<2; indice++){   
           ComboEnfermeroCitaCancelar.addItem(resultadoUno.getObject(indice));   
+        }   
+      }   
+    }
+    catch(Exception error){ 
+      System.out.println(error);
+    }     
+  }
+  
+  public void cargarSecretarioCitasRACancelar(JComboBox ComboSecretarioDos, int pIdentificador){
+    ResultSet resultadoUno;
+    PreparedStatement consultaUno;
+    Conexion nuevaConexion = new Conexion();
+    Connection conectar = nuevaConexion.conectar();
+    ComboSecretarioDos.removeAllItems();
+    try{
+      consultaUno = conectar.prepareStatement("SELECT citas_paciente.identificadorCita FROM cita JOIN citas_paciente ON cita.identificadorCita = citas_paciente.identificadorCita WHERE identificadorPaciente = ? AND (cita.estado = 'ASIGNADA' OR cita.estado = 'REGISTRADA')");
+      consultaUno.setInt(1, pIdentificador);
+      resultadoUno = consultaUno.executeQuery();
+      while(resultadoUno.next()){ 
+        for(int indice = 1; indice<2; indice++){   
+          ComboSecretarioDos.addItem(resultadoUno.getObject(indice));   
         }   
       }   
     }
