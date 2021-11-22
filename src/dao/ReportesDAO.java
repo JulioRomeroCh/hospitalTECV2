@@ -60,7 +60,7 @@ public class ReportesDAO implements Exportable{
     public void exportarPDF(ResultSet resultado) {
             
     try (PDDocument documento = new PDDocument ()) {
-    PDPage pagina = new PDPage(PDRectangle.LETTER);
+    PDPage pagina = new PDPage(PDRectangle.A0);
     documento.addPage(pagina);
     
     //Texto

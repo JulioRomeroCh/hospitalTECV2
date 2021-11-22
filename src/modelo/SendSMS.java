@@ -5,7 +5,7 @@ import java.util.Base64;
 import java.io.*;
 public class SendSMS {
     
-  public void enviarMensaje(String username, String password, String to, boolean pEstadoCita) throws Exception {
+  public void enviarMensaje(String pUsuario, String pContraseña, String pReceptor, boolean pEstadoCita) throws Exception {
     try{
       String message;
       if (pEstadoCita == true){
@@ -17,10 +17,10 @@ public class SendSMS {
       // This URL is used for sending messages
       String myURI = "https://api.bulksms.com/v1/messages";
       // change these values to match your own account
-      String myUsername = ""+username+"";
-      String myPassword = ""+password+"";
+      String myUsername = ""+pUsuario+"";
+      String myPassword = ""+pContraseña+"";
       // the details of the message we want to send
-      String myData = "{to: \""+to+"\", encoding: \"UNICODE\", body: \""+message+"\"}";
+      String myData = "{to: \""+pReceptor+"\", encoding: \"UNICODE\", body: \""+message+"\"}";
       //SendSMS mensaje = new SendSMS();
       //mensaje.enviarMensaje("hospitaltecjjk", "BulkSMSHospitalTEC*", "+50685184388", "Hola Kevin!");
       //mensaje.enviarMensaje("", "", "+50685184388", "Hola Kevin!");
