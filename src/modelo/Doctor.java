@@ -2,7 +2,9 @@ package modelo;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.Date;
+import javax.swing.JOptionPane;
 
 public class Doctor extends Funcionario {
   
@@ -83,7 +85,7 @@ public class Doctor extends Funcionario {
       setCita(pCitaPorAtender);
       getCita().cambiarEstadoCita(this, true);
       getCita().modificarEstadoCita(getCita().getIdentificadorCita(), EstadoCita.REALIZADA);
-      System.out.println("BITACORA: " + getCita().getBitacora().toString());
+      //System.out.println("BITACORA: " + getCita().getBitacora().toString());
       getCita().getBitacora().añadirCambioEstadoCita();
       getCita().getBitacora().insertarBitacoraCitaEstado(getCita().getIdentificadorCita(), EstadoCita.REALIZADA);
 
@@ -120,8 +122,12 @@ public class Doctor extends Funcionario {
           insercionDoctor.execute();
           
       }
+          catch(SQLException errorBaseDatos){
+      JOptionPane.showMessageDialog(null, "Favor verifique los datos");
+    }
       catch(Exception error){
-        salida = false;        
+        salida = false; 
+        JOptionPane.showMessageDialog(null, "Favor verifique los datos");
       }
       return salida;
     }
@@ -140,8 +146,12 @@ public class Doctor extends Funcionario {
           insercionEspecialidad.setString(2, pEspecialidad);
           insercionEspecialidad.execute();
       }
+          catch(SQLException errorBaseDatos){
+      JOptionPane.showMessageDialog(null, "Favor verifique los datos");
+    }
       catch(Exception error){
-        salida = false;        
+        salida = false;  
+        JOptionPane.showMessageDialog(null, "Favor verifique los datos");
       }
       return salida;
     }

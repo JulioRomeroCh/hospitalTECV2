@@ -4,9 +4,11 @@ package modelo;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Calendar;
+import javax.swing.JOptionPane;
 public class Funcionario extends Usuario {
  
   protected static Lista<String> areaTrabajo = new Lista<String>();
@@ -159,11 +161,11 @@ public class Funcionario extends Usuario {
     
     public void asignarCita(Cita pCita){
       gestionarCita(pCita);
-      System.out.println("SIZE: " + citasAgendadas.getSize());
+      //System.out.println("SIZE: " + citasAgendadas.getSize());
       for(int indice = 0; indice != citasAgendadas.getSize(); indice++){  
-        System.out.println("IDCITA: " + citasAgendadas.get(indice).getIdentificadorCita());  
+        //System.out.println("IDCITA: " + citasAgendadas.get(indice).getIdentificadorCita());  
         if(citasAgendadas.get(indice).getIdentificadorCita() == pCita.getIdentificadorCita()){
-          System.err.println("ENTRÉ A ASIGNARCITA");
+          //System.err.println("ENTRÉ A ASIGNARCITA");
           citasAgendadas.get(indice).setEstado(EstadoCita.ASIGNADA);
           citasAgendadas.get(indice).modificarEstadoCita(pCita.getIdentificadorCita(), EstadoCita.ASIGNADA);
           citasAgendadas.get(indice).getBitacora().añadirCambioEstadoCita();
@@ -229,11 +231,14 @@ public class Funcionario extends Usuario {
             insercionCita.setInt(2, pIdentificadorFuncionario);
           }*/
       }
-      
+          catch(SQLException errorBaseDatos){
+      JOptionPane.showMessageDialog(null, "Favor verifique los datos");
+    }
       catch(Exception error){
           //System.out.println("CATCH INSERTAR FUNCIONARIO");  
           //error.printStackTrace();
-        salida = false;        
+        salida = false;   
+        JOptionPane.showMessageDialog(null, "Favor verifique los datos");
       }
       return salida;
     }
@@ -250,8 +255,12 @@ public class Funcionario extends Usuario {
           insertar.setInt(2, pIdentificadorFuncionario);
           insertar.execute();
       }
+          catch(SQLException errorBaseDatos){
+      JOptionPane.showMessageDialog(null, "Favor verifique los datos");
+    }
       catch(Exception error){
-        salida = false;        
+        salida = false;  
+        JOptionPane.showMessageDialog(null, "Favor verifique los datos");
       }
       return salida;
      }

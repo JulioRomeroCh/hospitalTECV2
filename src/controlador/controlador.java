@@ -13,6 +13,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.mail.MessagingException;
 import javax.swing.JComboBox;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
@@ -36,6 +37,8 @@ public class controlador implements ActionListener{
   private Seguimiento seguimiento;
   private Tratamiento tratamiento;
   private Vacuna vacuna;
+  private Email email;
+  private SendSMS mensaje;
   private Formulario vista;
   private ReportesDAO reportes;
   private Lista<Cita> citas;
@@ -345,12 +348,8 @@ public class controlador implements ActionListener{
     //INICIO
     else if (evento.getSource() == vista.BotonIniciarSesion){
       usuarioActual(vista.TextoUsuario.getText(), vista.ComboRolInicioSesion.getSelectedItem().toString());
-      //DEBERÍA MOVER ESTO A OTRO BOTÓN
       cargarDoctorComboBox(vista.ComboDoctorCitasCanceladasCM, vista.ComboDoctorPacienteCitaAsignada, vista.ComboDoctorCitasRA);
       cargarDoctorCitasRAAtender(vista.ComboDoctorCitasRA);
-    }
-    else if(evento.getSource() == vista.BotonMDAsignarCita){
-      cargarDoctorComboBox(vista.ComboDoctorCitasCanceladasCM, vista.ComboDoctorPacienteCitaAsignada, vista.ComboDoctorCitasRA);   
     }
     else if(evento.getSource() == vista.BotonEnfermeroCancelarCita){
         cargaEnfermeroCancelarComboBox(vista.ComboEnfermeroPacienteCitaAsignada);
@@ -369,64 +368,122 @@ public class controlador implements ActionListener{
     }
 
     else if(evento.getSource() == vista.BotonAdminRegistrarSecretario){
-      Secretario nuevoSecretario = new Secretario(vista.TextSecretarioCedula.getText(), vista.TextSecretarioNombre.getText(), vista.TextSecretarioApellido1.getText(), vista.TextSecretarioApellido2.getText(), "Secretario", vista.TextSecretarioUsuario.getText(), vista.TextSecretarioContraseña.getText(), Integer.parseInt(vista.TextSecretarioIDFuncionario.getText()), TipoFuncionario.SECRETARIO, vista.DateSecretarioFechaIngreso.getDate(), vista.ComboSecretarioArea.getText(), Integer.parseInt(vista.TextSecretarioCodigo.getText()));
-      usuarios.add(nuevoSecretario);
-      funcionarios.add(nuevoSecretario);
-      secretarios.add(nuevoSecretario);
-      nuevoSecretario.insertarSecretario(vista.TextSecretarioCedula.getText(), vista.TextSecretarioNombre.getText(), vista.TextSecretarioApellido1.getText(), vista.TextSecretarioApellido2.getText(), "Secretario", vista.TextSecretarioUsuario.getText(), vista.TextSecretarioContraseña.getText(), Integer.parseInt(vista.TextSecretarioIDFuncionario.getText()), TipoFuncionario.SECRETARIO, vista.DateSecretarioFechaIngreso.getDate(), vista.ComboSecretarioArea.getText(), Integer.parseInt(vista.TextSecretarioCodigo.getText()));
-      JOptionPane.showMessageDialog(null, "Secretario registrado con éxito");
+      if(vista.TextSecretarioNombre.getText().equals("") || vista.TextSecretarioApellido1.getText().equals("") || vista.TextSecretarioApellido2.getText().equals("") ||
+          vista.TextSecretarioCedula.getText().equals("") || vista.TextSecretarioUsuario.getText().equals("") || vista.TextSecretarioCodigo.getText().equals("") ||
+          vista.TextSecretarioCodigo.getText().equals("") || vista.TextSecretarioContraseña.getText().equals("") || vista.TextSecretarioIDFuncionario.getText().equals("") ||
+          vista.ComboSecretarioArea.getText().equals("") || vista.DateSecretarioFechaIngreso.getDate() == null){
+        JOptionPane.showMessageDialog(null, "Verifique los datos");    
+      }
+      else{
+        Secretario nuevoSecretario = new Secretario(vista.TextSecretarioCedula.getText(), vista.TextSecretarioNombre.getText(), vista.TextSecretarioApellido1.getText(), vista.TextSecretarioApellido2.getText(), "Secretario", vista.TextSecretarioUsuario.getText(), vista.TextSecretarioContraseña.getText(), Integer.parseInt(vista.TextSecretarioIDFuncionario.getText()), TipoFuncionario.SECRETARIO, vista.DateSecretarioFechaIngreso.getDate(), vista.ComboSecretarioArea.getText(), Integer.parseInt(vista.TextSecretarioCodigo.getText()));
+        usuarios.add(nuevoSecretario);
+        funcionarios.add(nuevoSecretario);
+        secretarios.add(nuevoSecretario);
+        nuevoSecretario.insertarSecretario(vista.TextSecretarioCedula.getText(), vista.TextSecretarioNombre.getText(), vista.TextSecretarioApellido1.getText(), vista.TextSecretarioApellido2.getText(), "Secretario", vista.TextSecretarioUsuario.getText(), vista.TextSecretarioContraseña.getText(), Integer.parseInt(vista.TextSecretarioIDFuncionario.getText()), TipoFuncionario.SECRETARIO, vista.DateSecretarioFechaIngreso.getDate(), vista.ComboSecretarioArea.getText(), Integer.parseInt(vista.TextSecretarioCodigo.getText()));
+        JOptionPane.showMessageDialog(null, "Secretario registrado con éxito");
+      }
     }
     else if(evento.getSource() == vista.BotonAdminConsultaBitacora){
      cargarCitaComboBox(vista.ComboAdminCitaConsultarBitacora);   
     }
     else if(evento.getSource() == vista.BotonDoctorCargarCitas){
-        ////////////////////
-      cargarDoctorCitasRACancelar(vista.ComboDoctorCitas, Integer.parseInt(vista.ComboDoctorPacienteCitaAsignada.getSelectedItem().toString()));    
+      if(vista.ComboDoctorPacienteCitaAsignada.getSelectedItem().toString().equals("")){
+        JOptionPane.showMessageDialog(null, "Verifique los datos");    
+      }
+      else{
+        cargarDoctorCitasRACancelar(vista.ComboDoctorCitas, Integer.parseInt(vista.ComboDoctorPacienteCitaAsignada.getSelectedItem().toString()));   
+      }
     }
     else if(evento.getSource() == vista.BotonEnfermeroCargarCitasPaciente){
-        cargarEnfermeroCitasRACancelar(vista.ComboEnfermeroCitaCancelar, Integer.parseInt(vista.ComboEnfermeroPacienteCitaAsignada.getSelectedItem().toString()));
+      if(vista.ComboEnfermeroPacienteCitaAsignada.getSelectedItem().toString().equals("")){
+        JOptionPane.showMessageDialog(null, "Verifique los datos");    
+      }
+      else{
+        cargarEnfermeroCitasRACancelar(vista.ComboEnfermeroCitaCancelar, Integer.parseInt(vista.ComboEnfermeroPacienteCitaAsignada.getSelectedItem().toString()));    
+      }     
     }
 
     else if(evento.getSource() == vista.BotonSecretarioCargarCitas){
-        cargarSecretarioCitasRACancelar(vista.ComboSecretarioDos, Integer.parseInt(vista.ComboSecretarioUno.getSelectedItem().toString()));
+      if(vista.ComboSecretarioUno.getSelectedItem().toString().equals("")){
+        JOptionPane.showMessageDialog(null, "Verifique los datos");    
+      }
+      else{
+        cargarSecretarioCitasRACancelar(vista.ComboSecretarioDos, Integer.parseInt(vista.ComboSecretarioUno.getSelectedItem().toString()));   
+      }
+        
     }
     else if(evento.getSource() == vista.BotonRegistrarCentro){
       cargarTipoCentroComboBox(vista.ComboAdminTipoCentro);   
     }
     //*************************
     else if(evento.getSource() == vista.BotonRegistrarDoctor){
-      Doctor nuevoDoctor = new Doctor(vista.TextCedulaDoctor.getText(), vista.TextNombreDoctor.getText(), vista.TextApellido1Doctor.getText(), vista.TextApellido2Doctor.getText(), "Doctor", vista.TextUsuarioDoctor.getText(), vista.TextContraeñaDoctor.getText(), Integer.parseInt(vista.TextIDFuncionarioDoctor.getText()), TipoFuncionario.DOCTOR, vista.CalendarioDoctor.getDate(), vista.TextAreaDoctor.getText(), Integer.parseInt(vista.TextCodigoDoctor2.getText()));
-      usuarios.add(nuevoDoctor);
-      funcionarios.add(nuevoDoctor);
-      doctores.add(nuevoDoctor);
-      nuevoDoctor.insertarDoctor(vista.TextCedulaDoctor.getText(), vista.TextNombreDoctor.getText(), vista.TextApellido1Doctor.getText(), vista.TextApellido2Doctor.getText(), "Doctor", vista.TextUsuarioDoctor.getText(), vista.TextContraeñaDoctor.getText(), Integer.parseInt(vista.TextIDFuncionarioDoctor.getText()), TipoFuncionario.DOCTOR, vista.CalendarioDoctor.getDate(), vista.TextAreaDoctor.getText(), Integer.parseInt(vista.TextCodigoDoctor2.getText()));
-      JOptionPane.showMessageDialog(null, "Doctor registrado con éxito");
+      if (vista.TextNombreDoctor.getText().equals("") || vista.TextApellido1Doctor.getText().equals("") || vista.TextApellido2Doctor.getText().equals("") ||
+          vista.TextUsuarioDoctor.getText().equals("") || vista.TextContraeñaDoctor.getText().equals("") || vista.TextIDFuncionarioDoctor.getText().equals("") ||
+          vista.TextCedulaDoctor.getText().equals("") || vista.TextAreaDoctor.getText().equals("") || vista.TextCodigoDoctor2.getText().equals("") ||
+          vista.CalendarioDoctor.getDate() == null){
+        JOptionPane.showMessageDialog(null, "Verifique los datos");   
+      }
+      else{
+        Doctor nuevoDoctor = new Doctor(vista.TextCedulaDoctor.getText(), vista.TextNombreDoctor.getText(), vista.TextApellido1Doctor.getText(), vista.TextApellido2Doctor.getText(), "Doctor", vista.TextUsuarioDoctor.getText(), vista.TextContraeñaDoctor.getText(), Integer.parseInt(vista.TextIDFuncionarioDoctor.getText()), TipoFuncionario.DOCTOR, vista.CalendarioDoctor.getDate(), vista.TextAreaDoctor.getText(), Integer.parseInt(vista.TextCodigoDoctor2.getText()));
+        usuarios.add(nuevoDoctor);
+        funcionarios.add(nuevoDoctor);
+        doctores.add(nuevoDoctor);
+        nuevoDoctor.insertarDoctor(vista.TextCedulaDoctor.getText(), vista.TextNombreDoctor.getText(), vista.TextApellido1Doctor.getText(), vista.TextApellido2Doctor.getText(), "Doctor", vista.TextUsuarioDoctor.getText(), vista.TextContraeñaDoctor.getText(), Integer.parseInt(vista.TextIDFuncionarioDoctor.getText()), TipoFuncionario.DOCTOR, vista.CalendarioDoctor.getDate(), vista.TextAreaDoctor.getText(), Integer.parseInt(vista.TextCodigoDoctor2.getText()));
+        JOptionPane.showMessageDialog(null, "Doctor registrado con éxito");
+      }
     }
     else if(evento.getSource() == vista.BotonEspecialidadDoctor){
-      buscarDoctor(Integer.parseInt(vista.TextCodigoDoctor2.getText())).insertarEspecialidad(Integer.parseInt(vista.TextCodigoDoctor2.getText()), vista.TextEspecialidadDoctor.getText());
-      buscarDoctor(Integer.parseInt(vista.TextCodigoDoctor2.getText())).añadirEspecialidad(vista.TextEspecialidadDoctor.getText());
-      JOptionPane.showMessageDialog(null, "Especialidad asociada con éxito");
+      if(vista.TextEspecialidadDoctor.getText().equals("")){
+        JOptionPane.showMessageDialog(null, "Verifique los datos");    
+      }
+      else{
+        buscarDoctor(Integer.parseInt(vista.TextCodigoDoctor2.getText())).insertarEspecialidad(Integer.parseInt(vista.TextCodigoDoctor2.getText()), vista.TextEspecialidadDoctor.getText());
+        buscarDoctor(Integer.parseInt(vista.TextCodigoDoctor2.getText())).añadirEspecialidad(vista.TextEspecialidadDoctor.getText());
+        JOptionPane.showMessageDialog(null, "Especialidad asociada con éxito");
+      }
     }
     //***********************
     else if(evento.getSource() == vista.BotonRegistrarPaciente){
-      Paciente nuevoPaciente = new Paciente(vista.TextCedulaPaciente.getText(), vista.TextNombrePaciente.getText(), vista.TextApellido1Paciente.getText(), vista.TextApellido2Paciente.getText(), "Paciente", vista.TextUsuarioPaciente.getText(), vista.TextContraeñaPaciente.getText(), Integer.parseInt(vista.TextIDPaciente1.getText()), vista.TextNacionalidadPaciente.getText(), vista.TextResidenciaPaciente.getText(), vista.DateNacimientoPaciente.getDate(), TipoSangre.valueOf(vista.BoxSangrePaciente.getSelectedItem().toString()));
-      usuarios.add(nuevoPaciente);
-      pacientes.add(nuevoPaciente);
-      nuevoPaciente.insertarPaciente(vista.TextCedulaPaciente.getText(), vista.TextNombrePaciente.getText(), vista.TextApellido1Paciente.getText(), vista.TextApellido2Paciente.getText(), "Paciente", vista.TextUsuarioPaciente.getText(), vista.TextContraeñaPaciente.getText(), Integer.parseInt(vista.TextIDPaciente1.getText()), vista.TextNacionalidadPaciente.getText(), vista.TextResidenciaPaciente.getText(), vista.DateNacimientoPaciente.getDate(), TipoSangre.valueOf(vista.BoxSangrePaciente.getSelectedItem().toString()));
-      JOptionPane.showMessageDialog(null, "Paciente registrado con éxito");
+      if(vista.TextNacionalidadPaciente.getText().equals("") || vista.TextContraeñaPaciente.getText().equals("") || vista.TextUsuarioPaciente.getText().equals("") ||
+          vista.TextApellido1Paciente.getText().equals("") || vista.TextApellido2Paciente.getText().equals("") || vista.TextNombrePaciente.getText().equals("") ||
+          vista.TextCedulaPaciente.getText().equals("") || vista.TextIDPaciente1.getText().equals("") || vista.TextResidenciaPaciente.getText().equals("") ||
+          vista.DateNacimientoPaciente.getDate() == null){
+        JOptionPane.showMessageDialog(null, "Verifique los datos");    
+      }
+      else{
+        Paciente nuevoPaciente = new Paciente(vista.TextCedulaPaciente.getText(), vista.TextNombrePaciente.getText(), vista.TextApellido1Paciente.getText(), vista.TextApellido2Paciente.getText(), "Paciente", vista.TextUsuarioPaciente.getText(), vista.TextContraeñaPaciente.getText(), Integer.parseInt(vista.TextIDPaciente1.getText()), vista.TextNacionalidadPaciente.getText(), vista.TextResidenciaPaciente.getText(), vista.DateNacimientoPaciente.getDate(), TipoSangre.valueOf(vista.BoxSangrePaciente.getSelectedItem().toString()));
+        usuarios.add(nuevoPaciente);
+        pacientes.add(nuevoPaciente);
+        nuevoPaciente.insertarPaciente(vista.TextCedulaPaciente.getText(), vista.TextNombrePaciente.getText(), vista.TextApellido1Paciente.getText(), vista.TextApellido2Paciente.getText(), "Paciente", vista.TextUsuarioPaciente.getText(), vista.TextContraeñaPaciente.getText(), Integer.parseInt(vista.TextIDPaciente1.getText()), vista.TextNacionalidadPaciente.getText(), vista.TextResidenciaPaciente.getText(), vista.DateNacimientoPaciente.getDate(), TipoSangre.valueOf(vista.BoxSangrePaciente.getSelectedItem().toString()));
+        JOptionPane.showMessageDialog(null, "Paciente registrado con éxito");
+      }
     }
     else if(evento.getSource() == vista.BotonTelefonoPaciente){
-        buscarPaciente(Integer.parseInt(vista.TextIDPaciente1.getText())).insertarTelefono(vista.TextTelefonoPaciente.getText());
-        buscarPaciente(Integer.parseInt(vista.TextIDPaciente1.getText())).setTelefono(vista.TextTelefonoPaciente.getText());
-        JOptionPane.showMessageDialog(null, "Teléfono asociado con éxito");
+        if(vista.TextTelefonoPaciente.getText().equals("")){
+          JOptionPane.showMessageDialog(null, "Verifique los datos");   
+        }
+        else{
+          buscarPaciente(Integer.parseInt(vista.TextIDPaciente1.getText())).insertarTelefono(vista.TextTelefonoPaciente.getText());
+          buscarPaciente(Integer.parseInt(vista.TextIDPaciente1.getText())).setTelefono(vista.TextTelefonoPaciente.getText());
+          JOptionPane.showMessageDialog(null, "Teléfono asociado con éxito");           
+        }
+
     }
     else if(evento.getSource() == vista.BotonRegistrarEnfermero){
-      Enfermero nuevoEnfermero = new Enfermero(vista.TextCedulaEnfermero.getText(), vista.TextNombreEnfermero.getText(), vista.TextApellido1Enfermero.getText(), vista.TextApellido2Enfermero.getText(), "Enfermero", vista.TextUsuarioEnfermero.getText(), vista.TextContraeñaEnfermero.getText(), Integer.parseInt(vista.TextIDFuncionarioEnfermero.getText()), TipoFuncionario.ENFERMERO, vista.CalendarioEnfermero.getDate(), vista.TextAreaEnfermero.getText(), Integer.parseInt(vista.TextCodigoEnfermero.getText()));
-      usuarios.add(nuevoEnfermero);
-      funcionarios.add(nuevoEnfermero);
-      enfermeros.add(nuevoEnfermero);
-      nuevoEnfermero.insertarEnfermero(vista.TextCedulaEnfermero.getText(), vista.TextNombreEnfermero.getText(), vista.TextApellido1Enfermero.getText(), vista.TextApellido2Enfermero.getText(), "Enfermero", vista.TextUsuarioEnfermero.getText(), vista.TextContraeñaEnfermero.getText(), Integer.parseInt(vista.TextIDFuncionarioEnfermero.getText()), TipoFuncionario.ENFERMERO, vista.CalendarioEnfermero.getDate(), vista.TextAreaEnfermero.getText(), Integer.parseInt(vista.TextCodigoEnfermero.getText()), vista.BoxPersonasEnfermero.getSelectedItem().toString(), vista.BoxExperienciaEnfermero.getSelectedItem().toString());
-      JOptionPane.showMessageDialog(null, "Enfermero registrado con éxito");
+      if(vista.TextNombreEnfermero.getText().equals("") || vista.TextApellido1Enfermero.getText().equals("") || vista.TextApellido2Enfermero.getText().equals("") || 
+          vista.TextUsuarioEnfermero.getText().equals("") || vista.TextContraeñaEnfermero.getText().equals("") || vista.TextIDFuncionarioEnfermero.getText().equals("") || 
+          vista.TextCodigoEnfermero.getText().equals("") || vista.TextCedulaEnfermero.getText().equals("") || vista.TextAreaEnfermero.getText().equals("") || 
+          vista.CalendarioEnfermero.getDate() == null){
+        JOptionPane.showMessageDialog(null, "Verifique los datos");    
+      }
+      else{
+        Enfermero nuevoEnfermero = new Enfermero(vista.TextCedulaEnfermero.getText(), vista.TextNombreEnfermero.getText(), vista.TextApellido1Enfermero.getText(), vista.TextApellido2Enfermero.getText(), "Enfermero", vista.TextUsuarioEnfermero.getText(), vista.TextContraeñaEnfermero.getText(), Integer.parseInt(vista.TextIDFuncionarioEnfermero.getText()), TipoFuncionario.ENFERMERO, vista.CalendarioEnfermero.getDate(), vista.TextAreaEnfermero.getText(), Integer.parseInt(vista.TextCodigoEnfermero.getText()));
+        usuarios.add(nuevoEnfermero);
+        funcionarios.add(nuevoEnfermero);
+        enfermeros.add(nuevoEnfermero);
+        nuevoEnfermero.insertarEnfermero(vista.TextCedulaEnfermero.getText(), vista.TextNombreEnfermero.getText(), vista.TextApellido1Enfermero.getText(), vista.TextApellido2Enfermero.getText(), "Enfermero", vista.TextUsuarioEnfermero.getText(), vista.TextContraeñaEnfermero.getText(), Integer.parseInt(vista.TextIDFuncionarioEnfermero.getText()), TipoFuncionario.ENFERMERO, vista.CalendarioEnfermero.getDate(), vista.TextAreaEnfermero.getText(), Integer.parseInt(vista.TextCodigoEnfermero.getText()), vista.BoxPersonasEnfermero.getSelectedItem().toString(), vista.BoxExperienciaEnfermero.getSelectedItem().toString());
+        JOptionPane.showMessageDialog(null, "Enfermero registrado con éxito");
+      }
     }
     else if(evento.getSource() == vista.BotonAdminConsultarBitacora){
       consultaBitacora(vista.tablaConsultaBitacora, Integer.parseInt(vista.ComboAdminCitaConsultarBitacora.getSelectedItem().toString()));
@@ -435,29 +492,49 @@ public class controlador implements ActionListener{
         cargarHospitalizacionComboBox(vista.ComboTratamientoHospitalizar, vista.ComboCentroHospitalizar, vista.ComboDoctorDiagnostico.getSelectedItem().toString());
     }
     else if(evento.getSource() == vista.BotonRegistrarTipo){
-      CentroAtencion centroTemporal = new CentroAtencion();
-      centroTemporal.insertarTipoCentro(Integer.parseInt(vista.TextAdminIDTipo.getText()), vista.TextAdminTipo.getText());
-      JOptionPane.showMessageDialog(null, "Tipo centro registrado con éxito");
+      if(vista.TextAdminIDTipo.getText().equals("") && vista.TextAdminTipo.getText().equals("")){
+        JOptionPane.showMessageDialog(null, "Verifique los datos");   
+      }
+      else{
+        CentroAtencion centroTemporal = new CentroAtencion();
+        centroTemporal.insertarTipoCentro(Integer.parseInt(vista.TextAdminIDTipo.getText()), vista.TextAdminTipo.getText());
+        JOptionPane.showMessageDialog(null, "Tipo centro registrado con éxito");
+      }
     }
     else if(evento.getSource() == vista.BotonAdminRegistrarCentro){
-      CentroAtencion centroTemporal = new CentroAtencion();
-      centroTemporal.insertarCentro(vista.TextAdminNombreCentro.getText(), vista.TextAdminLugarCentro.getText(), Integer.parseInt(vista.TextAdminCapacidadCentro.getText()), Integer.parseInt(vista.ComboAdminTipoCentro.getSelectedItem().toString()));
-      JOptionPane.showMessageDialog(null, "Centro médico registrado con éxito");
+      if(vista.TextAdminNombreCentro.getText().equals("") && vista.TextAdminCapacidadCentro.getText().equals("") && vista.TextAdminLugarCentro.getText().equals("")){
+        JOptionPane.showMessageDialog(null, "Verifique los datos");    
+      }
+      else{
+        CentroAtencion centroTemporal = new CentroAtencion();
+        centroTemporal.insertarCentro(vista.TextAdminNombreCentro.getText(), vista.TextAdminLugarCentro.getText(), Integer.parseInt(vista.TextAdminCapacidadCentro.getText()), Integer.parseInt(vista.ComboAdminTipoCentro.getSelectedItem().toString()));
+        JOptionPane.showMessageDialog(null, "Centro médico registrado con éxito");
+      }
     }
     else if(evento.getSource() == vista.BotonAdminRegistrarTratamiento){
-      Tratamiento tratamientoTemporal = new Tratamiento(vista.TextAdminNombreTratamiento.getText(), vista.TextAdminTipoTratamiento.getText(), Integer.parseInt(vista.TextAdminDosisTratamiento.getText()));
-      tratamientoTemporal.insertarTratamiento(vista.TextAdminNombreTratamiento.getText(), vista.TextAdminTipoTratamiento.getText(), Integer.parseInt(vista.TextAdminDosisTratamiento.getText()));
-      Diagnostico diagnosticoTemporal = buscarDiagnostico(vista.ComboAdminDiagnostico.getSelectedItem().toString());
-      diagnosticoTemporal.insertarDiagnosticoTratamiento(tratamientoTemporal);
-      JOptionPane.showMessageDialog(null, "Tratamiento registrado y asociado con éxito");
+      if(vista.TextAdminNombreTratamiento.getText().equals("") && vista.TextAdminTipoTratamiento.getText().equals("") &&  vista.TextAdminDosisTratamiento.getText().equals("")){
+        JOptionPane.showMessageDialog(null, "Verifique los datos");   
+      }
+      else{
+        Tratamiento tratamientoTemporal = new Tratamiento(vista.TextAdminNombreTratamiento.getText(), vista.TextAdminTipoTratamiento.getText(), Integer.parseInt(vista.TextAdminDosisTratamiento.getText()));
+        tratamientoTemporal.insertarTratamiento(vista.TextAdminNombreTratamiento.getText(), vista.TextAdminTipoTratamiento.getText(), Integer.parseInt(vista.TextAdminDosisTratamiento.getText()));
+        Diagnostico diagnosticoTemporal = buscarDiagnostico(vista.ComboAdminDiagnostico.getSelectedItem().toString());
+        diagnosticoTemporal.insertarDiagnosticoTratamiento(tratamientoTemporal);
+        JOptionPane.showMessageDialog(null, "Tratamiento registrado y asociado con éxito");
+      }
     }
     else if(evento.getSource() == vista.BotonTratamientoAdmin){
         cargarNombreDiagnosticosComboBox(vista.ComboAdminDiagnostico);
     }
     else if(evento.getSource() == vista.BotonRegistrarDiagnostico){
-      Diagnostico diagnosticoTemporal = new Diagnostico();
-      diagnosticoTemporal.insertarDiagnostico(vista.TextAdminNombreDiagnostico.getText(), NivelDiagnostico.valueOf(vista.ComboAdminNivelDiagnostico.getSelectedItem().toString()));
-      JOptionPane.showMessageDialog(null, "Diagnóstico registrado con éxito");
+      if(vista.TextAdminNombreDiagnostico.getText().equals("")){
+        JOptionPane.showMessageDialog(null, "Verifique los datos");    
+      }
+      else{
+        Diagnostico diagnosticoTemporal = new Diagnostico();
+        diagnosticoTemporal.insertarDiagnostico(vista.TextAdminNombreDiagnostico.getText(), NivelDiagnostico.valueOf(vista.ComboAdminNivelDiagnostico.getSelectedItem().toString()));
+        JOptionPane.showMessageDialog(null, "Diagnóstico registrado con éxito");
+      }
     }
     else if(evento.getSource() == vista.BotonDoctorHospitalizarNegativo){
       JOptionPane.showMessageDialog(null, "El paciente no será hospitalizado");    
@@ -466,11 +543,16 @@ public class controlador implements ActionListener{
       cargarNombreDiagnostico(vista.ComboDoctorDiagnostico);
     }
     else if(evento.getSource() == vista.BotonVacunarEnfermero){
-      try {
-        enfermeroActivo.vacunar(buscarPaciente(Integer.parseInt(vista.ComboPacienteVacunar.getSelectedItem().toString())), buscarVacuna(Integer.parseInt(vista.ComboNumeroLoteVacunar.getSelectedItem().toString())));
-      } 
-      catch (ParseException ex) {
-        Logger.getLogger(controlador.class.getName()).log(Level.SEVERE, null, ex);
+      if(vista.ComboPacienteVacunar.getSelectedItem().toString().equals("") && vista.ComboNumeroLoteVacunar.getSelectedItem().toString().equals("")){
+        JOptionPane.showMessageDialog(null, "Verifique los datos");    
+      }
+      else{
+        try {
+          enfermeroActivo.vacunar(buscarPaciente(Integer.parseInt(vista.ComboPacienteVacunar.getSelectedItem().toString())), buscarVacuna(Integer.parseInt(vista.ComboNumeroLoteVacunar.getSelectedItem().toString())));
+        } 
+        catch (ParseException ex) {
+          Logger.getLogger(controlador.class.getName()).log(Level.SEVERE, null, ex);
+        }
       }
     }
     else if(evento.getSource() == vista.BotonVacunar){
@@ -478,87 +560,203 @@ public class controlador implements ActionListener{
       cargarNumerLoteComboBox(vista.ComboNumeroLoteVacunar);
     }
     else if(evento.getSource() == vista.BotonDoctorAtenderCita){
-      doctorActivo.atenderCita(buscarCita(Integer.parseInt(vista.ComboDoctorCitasRA.getSelectedItem().toString())));
-      //System.out.println("LO QUE BUSCA: " + buscarCita(Integer.parseInt(vista.ComboDoctorCitasRA.getSelectedItem().toString())).toString());
-      JOptionPane.showMessageDialog(null, "Paciente atentido con éxito");
+      if(vista.ComboDoctorTratamiento.getSelectedItem().toString().equals("")){
+        JOptionPane.showMessageDialog(null, "Verifique los datos");    
+      }
+      else{
+        doctorActivo.atenderCita(buscarCita(Integer.parseInt(vista.ComboDoctorCitasRA.getSelectedItem().toString())));
+        //System.out.println("LO QUE BUSCA: " + buscarCita(Integer.parseInt(vista.ComboDoctorCitasRA.getSelectedItem().toString())).toString());
+        JOptionPane.showMessageDialog(null, "Paciente atentido con éxito");
+      }
     }
     else if(evento.getSource() == vista.BotonDoctorHospitalizar){
-      doctorActivo.hospitalizar(Integer.parseInt(vista.TextIDHospitalizacion.getText()), vista.FechaHospitalizacion.getDate(), buscarCita(Integer.parseInt(vista.ComboDoctorCitasRA.getSelectedItem().toString())), buscarCentro(Integer.parseInt(vista.ComboCentroHospitalizar.getSelectedItem().toString())), vista.TextObservaciónHospitalizacion.getText(), buscarTratamiento(vista.ComboTratamientoHospitalizar.getSelectedItem().toString()));
-      JOptionPane.showMessageDialog(null, "El paciente será hospitalizado");
+      if(vista.TextObservaciónHospitalizacion.getText().equals("") && vista.TextIDHospitalizacion.getText().equals("") && vista.FechaHospitalizacion.getDate() == null){
+        JOptionPane.showMessageDialog(null, "Verifique los datos");    
+      }
+      else{
+        doctorActivo.hospitalizar(Integer.parseInt(vista.TextIDHospitalizacion.getText()), vista.FechaHospitalizacion.getDate(), buscarCita(Integer.parseInt(vista.ComboDoctorCitasRA.getSelectedItem().toString())), buscarCentro(Integer.parseInt(vista.ComboCentroHospitalizar.getSelectedItem().toString())), vista.TextObservaciónHospitalizacion.getText(), buscarTratamiento(vista.ComboTratamientoHospitalizar.getSelectedItem().toString()));
+        JOptionPane.showMessageDialog(null, "El paciente será hospitalizado");
+      }
     }
     else if(evento.getSource() == vista.BotonDoctorCargarPaciente){
+      if(vista.ComboDoctorCitasRA.getSelectedItem().toString().equals("")){
+        JOptionPane.showMessageDialog(null, "Verifique los datos");    
+      }
+      else{
         cargarIDPaciente(Integer.parseInt(vista.ComboDoctorCitasRA.getSelectedItem().toString()), vista.ComboDoctorIDPaciente);
+      }
     }
     else if(evento.getSource() == vista.BotonDoctorCargarTratamiento){
-      cargarTratamiento(vista.ComboDoctorDiagnostico.getSelectedItem().toString(), vista.ComboDoctorTratamiento);          
+      if(vista.ComboDoctorDiagnostico.getSelectedItem().toString().equals("")){
+        JOptionPane.showMessageDialog(null, "Verifique los datos");    
+      }
+      else{
+        cargarTratamiento(vista.ComboDoctorDiagnostico.getSelectedItem().toString(), vista.ComboDoctorTratamiento);   
+      }
     }
     else if(evento.getSource() == vista.BotonDoctorInsertarDiagnostico){
-      doctorActivo.añadirObservacionCita(buscarCita(Integer.parseInt(vista.ComboDoctorCitasRA.getSelectedItem().toString())),buscarDiagnostico(vista.ComboDoctorDiagnostico.getSelectedItem().toString()), vista.TextDoctorObservacion.getText(), buscarTratamiento(vista.ComboDoctorTratamiento.getSelectedItem().toString()));
-      JOptionPane.showMessageDialog(null, doctorActivo.getNombre() + ": diagnóstico registrado con éxito"); 
+      if(vista.TextDoctorObservacion.getText().equals("")){
+        JOptionPane.showMessageDialog(null, "Verifique los datos");   
+      }
+      else{
+        doctorActivo.añadirObservacionCita(buscarCita(Integer.parseInt(vista.ComboDoctorCitasRA.getSelectedItem().toString())),buscarDiagnostico(vista.ComboDoctorDiagnostico.getSelectedItem().toString()), vista.TextDoctorObservacion.getText(), buscarTratamiento(vista.ComboDoctorTratamiento.getSelectedItem().toString()));
+        JOptionPane.showMessageDialog(null, doctorActivo.getNombre() + ": diagnóstico registrado con éxito"); 
+      }
     }
     else if(evento.getSource() == vista.BotonDoctorCancelarCita){
-      CancelarCitaDoctor(Integer.parseInt(vista.ComboDoctorCitas.getSelectedItem().toString()));
+      if(vista.ComboDoctorCitas.getSelectedItem().toString().equals("")){
+        JOptionPane.showMessageDialog(null, "Verifique los datos");   
+      }
+      else{
+        CancelarCitaDoctor(Integer.parseInt(vista.ComboDoctorCitas.getSelectedItem().toString()));
+        try {
+          email.enviarCorreo(false);
+          mensaje.enviarMensaje("hospitaltecjjk", "BulkSMSHospitalTEC*",  "+50685184388", false);
+          JOptionPane.showMessageDialog(null, "Correo y mensaje enviado con éxito");
+        } 
+        catch (MessagingException ex) {
+          Logger.getLogger(controlador.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        catch (Exception ex) {
+          Logger.getLogger(controlador.class.getName()).log(Level.SEVERE, null, ex);
+        }
+      }
     }
     else if(evento.getSource() == vista.BotonEnfermeroCancelarCita2){
-      CancelarCitaEnfermero(Integer.parseInt(vista.ComboEnfermeroCitaCancelar.getSelectedItem().toString()));
+      if(vista.ComboEnfermeroCitaCancelar.getSelectedItem().toString().equals("")){
+        JOptionPane.showMessageDialog(null, "Verifique los datos");    
+      }
+      else{
+        CancelarCitaEnfermero(Integer.parseInt(vista.ComboEnfermeroCitaCancelar.getSelectedItem().toString()));
+        try {
+          email.enviarCorreo(false);
+          mensaje.enviarMensaje("hospitaltecjjk", "BulkSMSHospitalTEC*",  "+50685184388", false);
+          JOptionPane.showMessageDialog(null, "Correo y mensaje enviado con éxito");
+        } 
+        catch (MessagingException ex) {
+          Logger.getLogger(controlador.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        catch (Exception ex) {
+          Logger.getLogger(controlador.class.getName()).log(Level.SEVERE, null, ex);
+        }
+      }
     }
     else if(evento.getSource() == vista.BotonSecretarioCancelarCita2){
-      CancelarCitaSecretario(Integer.parseInt(vista.ComboSecretarioDos.getSelectedItem().toString()));    
+      if(vista.ComboSecretarioDos.getSelectedItem().toString().equals("")){
+        JOptionPane.showMessageDialog(null, "Verifique los datos");    
+      }
+      else{
+        CancelarCitaSecretario(Integer.parseInt(vista.ComboSecretarioDos.getSelectedItem().toString())); 
+        try {
+          email.enviarCorreo(false);
+          mensaje.enviarMensaje("hospitaltecjjk", "BulkSMSHospitalTEC*",  "+50685184388", false);
+          JOptionPane.showMessageDialog(null, "Correo y mensaje enviado con éxito");
+        } 
+        catch (MessagingException ex) {
+          Logger.getLogger(controlador.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        catch (Exception ex) {
+          Logger.getLogger(controlador.class.getName()).log(Level.SEVERE, null, ex);
+        }
+      }
     }
     else if(evento.getSource() == vista.BotonDoctorAsignarCita){
-      doctorActivo.asignarCita(buscarCita(Integer.parseInt(vista.ComboDoctorCitasCanceladasCM.getSelectedItem().toString())));
-      JOptionPane.showMessageDialog(null, "Cita asignada con éxito");
+      if(vista.ComboDoctorCitasCanceladasCM.getSelectedItem().toString().equals("")){
+         JOptionPane.showMessageDialog(null, "Verifique los datos");    
+      }
+      else{
+        doctorActivo.asignarCita(buscarCita(Integer.parseInt(vista.ComboDoctorCitasCanceladasCM.getSelectedItem().toString())));
+        JOptionPane.showMessageDialog(null, "Cita asignada con éxito");
+      }   
     }
     else if(evento.getSource() == vista.BotonEnfermeroAsignarCita2){
-      enfermeroActivo.asignarCita(buscarCita(Integer.parseInt(vista.ComboEnfermeroCitasAsignar.getSelectedItem().toString())));
-      JOptionPane.showMessageDialog(null, "Cita asignada con éxito");      
+      if(vista.ComboEnfermeroCitasAsignar.getSelectedItem().toString().equals("")){
+        JOptionPane.showMessageDialog(null, "Verifique los datos");    
+      }
+      else{
+        enfermeroActivo.asignarCita(buscarCita(Integer.parseInt(vista.ComboEnfermeroCitasAsignar.getSelectedItem().toString())));
+        JOptionPane.showMessageDialog(null, "Cita asignada con éxito");      
+      }
     }
     else if(evento.getSource() == vista.BotonSecretarioAsignarCita2){
-      secretarioActivo.asignarCita(buscarCita(Integer.parseInt(vista.ComboSecretarioTres.getSelectedItem().toString())));
-      JOptionPane.showMessageDialog(null, "Cita asignada con éxito"); 
+      if(vista.ComboSecretarioTres.getSelectedItem().toString().equals("")){
+        JOptionPane.showMessageDialog(null, "Verifique los datos");    
+      }
+      else{
+        secretarioActivo.asignarCita(buscarCita(Integer.parseInt(vista.ComboSecretarioTres.getSelectedItem().toString())));
+        JOptionPane.showMessageDialog(null, "Cita asignada con éxito"); 
+      }
     }
 
     else if(evento.getSource() == vista.BotonMPCancelarCita){
         cargarCitasPendientes(vista.ComboPacienteCitasPendientes, pacienteActivo.getNombreUsuario());
     }
     else if(evento.getSource() == vista.BotonPacienteCancelar){
-      //SELECT fecha, hora FROM cita WHERE identificadorCita = '1'
-      Lista<Date> fechayhora = ObtenerFechayHora(Integer.parseInt(vista.ComboPacienteCitasPendientes.getSelectedItem().toString()));
-      Date fechaCita = fechayhora.get(0);
-      Date horaCita = fechayhora.get(1);
-      System.err.println("????: " + new Date().before(fechaCita));
-      System.err.println("FECHA ACTUAL: " + new Date());
-      System.err.println("FECHA CITA: " + fechaCita);
-      System.err.println("HORA ACTUAL: " + new Date().getHours());
-      System.err.println("HORA CITA: " + horaCita.getHours());
-      System.err.println("MINUTO ACTUAL: " + new Date().getMinutes());
-      System.err.println("MINUTO CITA: " + horaCita.getMinutes());
-      if(new Date().before(fechaCita) == false){  
-        if(new Date().getHours() <= horaCita.getHours()){
-          if(new Date().getMinutes() != horaCita.getMinutes()){
-            pacienteActivo.cancelarCita(Integer.parseInt(vista.ComboPacienteCitasPendientes.getSelectedItem().toString()));
-            JOptionPane.showMessageDialog(null, "Cita cancelada con éxito");
-          }
-        }
+      if(vista.ComboPacienteCitasPendientes.getSelectedItem().toString().equals("")){
+        JOptionPane.showMessageDialog(null, "Verifique los datos");    
       }
       else{
-        JOptionPane.showMessageDialog(null, "Se presentó un error, la cita está programada para dentro de las próximas 24 horas");    
+        //SELECT fecha, hora FROM cita WHERE identificadorCita = '1'
+        Lista<Date> fechayhora = ObtenerFechayHora(Integer.parseInt(vista.ComboPacienteCitasPendientes.getSelectedItem().toString()));
+        Date fechaCita = fechayhora.get(0);
+        Date horaCita = fechayhora.get(1);
+        if(new Date().before(fechaCita) == false){  
+          if(new Date().getHours() <= horaCita.getHours()){
+            if(new Date().getMinutes() != horaCita.getMinutes()){
+              pacienteActivo.cancelarCita(Integer.parseInt(vista.ComboPacienteCitasPendientes.getSelectedItem().toString()));
+              JOptionPane.showMessageDialog(null, "Cita cancelada con éxito");
+              try {
+                email.enviarCorreo(false);
+                mensaje.enviarMensaje("hospitaltecjjk", "BulkSMSHospitalTEC*",  "+50685184388", false);
+                JOptionPane.showMessageDialog(null, "Correo y mensaje enviado con éxito");
+              } 
+              catch (MessagingException ex) {
+                Logger.getLogger(controlador.class.getName()).log(Level.SEVERE, null, ex);
+              }
+              catch (Exception ex) {
+                Logger.getLogger(controlador.class.getName()).log(Level.SEVERE, null, ex);
+              }
+            }
+          }
+        }
+        else{
+          JOptionPane.showMessageDialog(null, "Se presentó un error, la cita está programada para dentro de las próximas 24 horas");    
+        }
       }
-    
     }
     else if(evento.getSource() == vista.BotonPacienteSolicitar){
-      SimpleDateFormat formato = new SimpleDateFormat("hh:mm:ss");      
+      if(vista.TextPacienteEspecialidad.getText().equals("") || vista.DatePacienteFecha.getDate() == null || vista.TextPacienteObservacion.getText().equals("") &&
+          vista.TextPacienteIDCitaSolicitar.getText().equals("")){
+        JOptionPane.showMessageDialog(null, "Verifique los datos");    
+      }
+      else{
+        SimpleDateFormat formato = new SimpleDateFormat("hh:mm:ss");      
         try {
           pacienteActivo.solicitarCita(Integer.parseInt(vista.TextPacienteIDCitaSolicitar.getText()), vista.DatePacienteFecha.getDate(), formato.parse(vista.ComboDoctorHora.getSelectedItem().toString()), vista.TextPacienteEspecialidad.getText(),vista.TextPacienteObservacion.getText(), EstadoCita.REGISTRADA);
           Cita nuevaCita = new Cita(Integer.parseInt(vista.TextPacienteIDCitaSolicitar.getText()), vista.DatePacienteFecha.getDate(), formato.parse(vista.ComboDoctorHora.getSelectedItem().toString()), vista.TextPacienteEspecialidad.getText(),vista.TextPacienteObservacion.getText(), EstadoCita.REGISTRADA);
           Bitacora nuevaBitacora = new Bitacora(Integer.parseInt(vista.TextPacienteIDCitaSolicitar.getText()));
           nuevaCita.setBitacora(nuevaBitacora);
           citas.add(nuevaCita);
+          JOptionPane.showMessageDialog(null, pacienteActivo.getNombre() + ": Gracias por utilizar nuestros servicios, su cita ha sido registrada con éxito");
+          email.enviarCorreo(true);
+          mensaje.enviarMensaje("hospitaltecjjk", "BulkSMSHospitalTEC*",  "+50685184388", true);
+          JOptionPane.showMessageDialog(null, "Correo y mensaje enviado con éxito");
+          vista.TextPacienteIDCitaSolicitar.setText("");
+          vista.TextPacienteEspecialidad.setText("");
+          vista.TextPacienteObservacion.setText("");
+          vista.DatePacienteFecha.setCalendar(null);
         } 
         catch (ParseException ex) {
           Logger.getLogger(controlador.class.getName()).log(Level.SEVERE, null, ex);
+        } 
+        catch (MessagingException ex) {
+          Logger.getLogger(controlador.class.getName()).log(Level.SEVERE, null, ex);
+        } 
+        catch (Exception ex) {
+          Logger.getLogger(controlador.class.getName()).log(Level.SEVERE, null, ex);
         }
-      JOptionPane.showMessageDialog(null, pacienteActivo.getNombre() + ": Gracias por utilizar nuestros servicios, su cita ha sido registrada con éxito");
+      }
+      
     }
   }
   
@@ -604,7 +802,6 @@ public class controlador implements ActionListener{
     JOptionPane.showMessageDialog(null, secretarioActivo.getNombre() + ": cita cancelada con éxito");
   }
   
- 
    /**
    * ----------------------------------------------------------------CARGA JCOMBOBOX------------------------------------------------------------------------------------------
    * ----------------------------------------------------------------CARGA JCOMBOBOX------------------------------------------------------------------------------------------

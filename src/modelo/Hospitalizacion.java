@@ -2,8 +2,10 @@ package modelo;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import javax.swing.JOptionPane;
 
 public class Hospitalizacion {
    
@@ -158,8 +160,12 @@ public class Hospitalizacion {
           insercion.setDate(3, fechaSQL2);
           insercion.execute();
       }
+          catch(SQLException errorBaseDatos){
+      JOptionPane.showMessageDialog(null, "Favor verifique los datos");
+    }
       catch(Exception error){
-        salida = false;        
+        salida = false;    
+         JOptionPane.showMessageDialog(null, "Favor verifique los datos");
       }
       return salida;
     }
@@ -176,8 +182,12 @@ public class Hospitalizacion {
           insercionSeguimiento.setInt(2, identificadorHospitalizacion);
           insercionSeguimiento.execute();
       }
+          catch(SQLException errorBaseDatos){
+      JOptionPane.showMessageDialog(null, "Favor verifique los datos");
+    }
       catch(Exception error){
-        salida = false;        
+        salida = false;    
+         JOptionPane.showMessageDialog(null, "Favor verifique los datos");
       }
       return salida;
     }
@@ -194,8 +204,12 @@ public class Hospitalizacion {
           insercionCita.setInt(2, identificadorHospitalizacion);
           insercionCita.execute();
       }
+          catch(SQLException errorBaseDatos){
+      JOptionPane.showMessageDialog(null, "Favor verifique los datos");
+    }
       catch(Exception error){
-        salida = false;        
+        salida = false;   
+         JOptionPane.showMessageDialog(null, "Favor verifique los datos");
       }
       return salida;
     }
@@ -212,8 +226,12 @@ public class Hospitalizacion {
           insercionHospitalización.setInt(2, centroHospitalizacion.getCodigo());
           insercionHospitalización.execute();
       }
+          catch(SQLException errorBaseDatos){
+      JOptionPane.showMessageDialog(null, "Favor verifique los datos");
+    }
       catch(Exception error){
-        salida = false;        
+        salida = false;   
+         JOptionPane.showMessageDialog(null, "Favor verifique los datos");
       }
       return salida;
     }

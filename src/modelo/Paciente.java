@@ -13,6 +13,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 public class Paciente extends Usuario{
   
@@ -219,8 +220,12 @@ public class Paciente extends Usuario{
           insercion.execute();
           
       }
+          catch(SQLException errorBaseDatos){
+      JOptionPane.showMessageDialog(null, "Favor verifique los datos");
+    }
       catch(Exception error){
-        salida = false;        
+        salida = false; 
+        JOptionPane.showMessageDialog(null, "Favor verifique los datos");
       }
       return salida;
     }
@@ -238,8 +243,12 @@ public class Paciente extends Usuario{
           insercionTelefonos.setString(2, pTelefono); 
           insercionTelefonos.execute();
       }
+          catch(SQLException errorBaseDatos){
+      JOptionPane.showMessageDialog(null, "Favor verifique los datos");
+    }
       catch(Exception error){
-        salida = false;        
+        salida = false;  
+        JOptionPane.showMessageDialog(null, "Favor verifique los datos");
       }
       return salida;
     }
@@ -257,8 +266,12 @@ public class Paciente extends Usuario{
           insercionVacunas.setInt(2, identificadorPaciente); 
           insercionVacunas.execute();
       }
+          catch(SQLException errorBaseDatos){
+      JOptionPane.showMessageDialog(null, "Favor verifique los datos");
+    }
       catch(Exception error){
-        salida = false;        
+        salida = false; 
+        JOptionPane.showMessageDialog(null, "Favor verifique los datos");
       }
       return salida;
     }
@@ -276,9 +289,13 @@ public class Paciente extends Usuario{
           insercionCitaPaciente.setInt(2, identificadorPaciente); 
           insercionCitaPaciente.execute();
       }
+          catch(SQLException errorBaseDatos){
+      JOptionPane.showMessageDialog(null, "Favor verifique los datos");
+    }
       catch(Exception error){
-          System.err.println("ERROR: " + error);
-        salida = false;        
+          //System.err.println("ERROR: " + error);
+        salida = false; 
+        JOptionPane.showMessageDialog(null, "Favor verifique los datos");
       }
       return salida;
     }

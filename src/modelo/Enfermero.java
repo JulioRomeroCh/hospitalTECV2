@@ -2,9 +2,11 @@ package modelo;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import javax.swing.JOptionPane;
 
 public class Enfermero extends Funcionario {
    
@@ -118,9 +120,13 @@ public class Enfermero extends Funcionario {
           insercion.setInt(2, pIdentificadorFuncionario);
           insercion.execute();
       }
+          catch(SQLException errorBaseDatos){
+      JOptionPane.showMessageDialog(null, "Favor verifique los datos");
+    }
       catch(Exception error){
-        error.printStackTrace();
-        salida = false;        
+        //error.printStackTrace();
+        salida = false;    
+        JOptionPane.showMessageDialog(null, "Favor verifique los datos");
       }
       return salida;
     }

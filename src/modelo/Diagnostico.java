@@ -2,7 +2,9 @@ package modelo;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.Date;
+import javax.swing.JOptionPane;
 
 
 public class Diagnostico {
@@ -87,8 +89,12 @@ public class Diagnostico {
           insercionDiagnostico.execute();
 
       }
+          catch(SQLException errorBaseDatos){
+      JOptionPane.showMessageDialog(null, "Favor verifique los datos");
+    }
       catch(Exception error){
-        salida = false;        
+        salida = false; 
+        JOptionPane.showMessageDialog(null, "Favor verifique los datos");
       }
       return salida;
     }
@@ -107,10 +113,14 @@ public class Diagnostico {
           insercionObservaciones.execute();
          
       }
+          catch(SQLException errorBaseDatos){
+      JOptionPane.showMessageDialog(null, "Favor verifique los datos");
+    }
       catch(Exception error){
         salida = false;      
-        System.out.println("ERROR: " + error);
-        error.printStackTrace();
+        //System.out.println("ERROR: " + error);
+        //error.printStackTrace();
+        JOptionPane.showMessageDialog(null, "Favor verifique los datos");
       }
       return salida;
     }
@@ -127,8 +137,12 @@ public class Diagnostico {
           insercionTratamiento.setString(2, nombreDiagnostico);   
           insercionTratamiento.execute();
       }
+          catch(SQLException errorBaseDatos){
+      JOptionPane.showMessageDialog(null, "Favor verifique los datos");
+    }
       catch(Exception error){
-        salida = false;        
+        salida = false;    
+        JOptionPane.showMessageDialog(null, "Favor verifique los datos");
       }
       return salida;
     }

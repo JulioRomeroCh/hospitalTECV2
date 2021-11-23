@@ -2,6 +2,8 @@ package modelo;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;
+import java.sql.SQLException;
+import javax.swing.JOptionPane;
 
 public abstract class Usuario {
 
@@ -142,8 +144,12 @@ public abstract class Usuario {
           insertar.setString(7, pContraseña);
           insertar.execute();
       }
+          catch(SQLException errorBaseDatos){
+      JOptionPane.showMessageDialog(null, "Favor verifique los datos");
+    }
       catch(Exception error){
-        salida = false;        
+        salida = false;  
+        JOptionPane.showMessageDialog(null, "Favor verifique los datos");
       }
       return salida;
     }

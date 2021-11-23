@@ -5,9 +5,14 @@
  */
 package vista;
 
+import controlador.controlador;
 import java.awt.CardLayout;
 import java.awt.Color;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import javax.swing.JOptionPane;
+import modelo.*;
 import javax.swing.plaf.basic.BasicBorders;
 
 /**
@@ -24,6 +29,7 @@ public class Formulario extends javax.swing.JFrame {
     CardLayout cardLayoutEnfermero;
     CardLayout cardLayoutSecretario;
     CardLayout cardLayoutAdministrador;
+    private controlador controlado;
     public Formulario() {
         initComponents();
         //Prueba.setBorder(new BasicBorders.RolloverButtonBorder(Color.yellow, Color.black, Color.black, Color.black));
@@ -516,9 +522,9 @@ public class Formulario extends javax.swing.JFrame {
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         TextoUsuario = new javax.swing.JTextField();
-        TextContraseña = new javax.swing.JTextField();
         ComboRolInicioSesion = new javax.swing.JComboBox<>();
         BotonIniciarSesion = new javax.swing.JButton();
+        TextContraseña = new javax.swing.JPasswordField();
 
         jPanel3.setBackground(new java.awt.Color(255, 255, 255));
 
@@ -2096,7 +2102,7 @@ public class Formulario extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel19Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jPanel20, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(jSplitPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                    .addComponent(jSplitPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 1427, Short.MAX_VALUE))
                 .addContainerGap())
         );
         jPanel19Layout.setVerticalGroup(
@@ -5161,7 +5167,7 @@ public class Formulario extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(287, 287, 287)
                 .addComponent(jLabel1)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(322, Short.MAX_VALUE))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -5189,13 +5195,6 @@ public class Formulario extends javax.swing.JFrame {
 
         TextoUsuario.setBackground(new java.awt.Color(226, 232, 246));
 
-        TextContraseña.setBackground(new java.awt.Color(226, 232, 246));
-        TextContraseña.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                TextContraseñaActionPerformed(evt);
-            }
-        });
-
         ComboRolInicioSesion.setBackground(new java.awt.Color(255, 255, 255));
         ComboRolInicioSesion.setFont(new java.awt.Font("Trebuchet MS", 0, 18)); // NOI18N
         ComboRolInicioSesion.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Administrador", "Doctor", "Enfermero", "Secretario", "Paciente" }));
@@ -5209,6 +5208,8 @@ public class Formulario extends javax.swing.JFrame {
                 BotonIniciarSesionActionPerformed(evt);
             }
         });
+
+        TextContraseña.setBackground(new java.awt.Color(226, 232, 246));
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -5224,10 +5225,10 @@ public class Formulario extends javax.swing.JFrame {
                             .addComponent(jLabel4)
                             .addComponent(jLabel2))
                         .addGap(52, 52, 52)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(TextContraseña, javax.swing.GroupLayout.PREFERRED_SIZE, 248, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(TextoUsuario, javax.swing.GroupLayout.PREFERRED_SIZE, 248, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(ComboRolInicioSesion, javax.swing.GroupLayout.PREFERRED_SIZE, 248, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(TextoUsuario, javax.swing.GroupLayout.DEFAULT_SIZE, 248, Short.MAX_VALUE)
+                            .addComponent(ComboRolInicioSesion, 0, 248, Short.MAX_VALUE)
+                            .addComponent(TextContraseña)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(316, 316, 316)
                         .addComponent(BotonIniciarSesion, javax.swing.GroupLayout.PREFERRED_SIZE, 268, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -5249,8 +5250,8 @@ public class Formulario extends javax.swing.JFrame {
                 .addGap(54, 54, 54)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel5)
-                    .addComponent(TextContraseña, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(43, 43, 43)
+                    .addComponent(TextContraseña, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(44, 44, 44)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(ComboRolInicioSesion, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel2))
@@ -5277,10 +5278,6 @@ public class Formulario extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void TextContraseñaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TextContraseñaActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_TextContraseñaActionPerformed
 
     private void BotonRegistrarseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonRegistrarseActionPerformed
         ModuloAdministrador.setVisible(false);
@@ -5381,44 +5378,6 @@ public class Formulario extends javax.swing.JFrame {
       ModuloAdministrador.setLocationRelativeTo(null);
       ModuloAdministrador.setSize(1580,900);
     }//GEN-LAST:event_BotonRegresarPacienteActionPerformed
-
-    private void BotonIniciarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonIniciarSesionActionPerformed
-      if(ComboRolInicioSesion.getSelectedItem().equals("Administrador")){
-          this.setVisible(false);
-          ModuloAdministrador.setVisible(true);
-          ModuloAdministrador.pack();
-          ModuloAdministrador.setLocationRelativeTo(null);
-          ModuloAdministrador.setSize(1580,940);   
-      }
-      else if(ComboRolInicioSesion.getSelectedItem().equals("Paciente")){
-          this.setVisible(false);
-          ModuloPaciente.setVisible(true);
-          ModuloPaciente.pack();
-          ModuloPaciente.setLocationRelativeTo(null);
-          ModuloPaciente.setSize(1580,940);   
-      }
-      else if(ComboRolInicioSesion.getSelectedItem().equals("Doctor")){
-          this.setVisible(false);
-          ModuloDoctor.setVisible(true);
-          ModuloDoctor.pack();
-          ModuloDoctor.setLocationRelativeTo(null);
-          ModuloDoctor.setSize(1580,940);   
-      }
-      else if(ComboRolInicioSesion.getSelectedItem().equals("Enfermero")){
-          this.setVisible(false);
-          ModuloEnfermero.setVisible(true);
-          ModuloEnfermero.pack();
-          ModuloEnfermero.setLocationRelativeTo(null);
-          ModuloEnfermero.setSize(1580,940);   
-      }
-      else if(ComboRolInicioSesion.getSelectedItem().equals("Secretario")){
-          this.setVisible(false);
-          ModuloSecretario.setVisible(true);
-          ModuloSecretario.pack();
-          ModuloSecretario.setLocationRelativeTo(null);
-          ModuloSecretario.setSize(1580,940);   
-      }
-    }//GEN-LAST:event_BotonIniciarSesionActionPerformed
 
     private void BotonMDReportesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonMDReportesActionPerformed
       //cardLayout.show(PanelesModuloDoctor, "ReportesDoctor");
@@ -5711,6 +5670,77 @@ public class Formulario extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_RST8ActionPerformed
 
+    private void BotonIniciarSesionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BotonIniciarSesionActionPerformed
+      if(TextoUsuario.getText().equals("") || TextContraseña.getText().equals("")){
+        JOptionPane.showMessageDialog(null, "Favor verifique los datos");
+      }
+      String validar = validarSesion(TextoUsuario.getText(), TextContraseña.getText(), ComboRolInicioSesion.getSelectedItem().toString());
+      if("1".equals(validar)){     
+        if(ComboRolInicioSesion.getSelectedItem().equals("Administrador")){
+            this.setVisible(false);
+            ModuloAdministrador.setVisible(true);
+            ModuloAdministrador.pack();
+            ModuloAdministrador.setLocationRelativeTo(null);
+            ModuloAdministrador.setSize(1580,940);
+        }
+        else if(ComboRolInicioSesion.getSelectedItem().equals("Paciente")){
+            this.setVisible(false);
+            ModuloPaciente.setVisible(true);
+            ModuloPaciente.pack();
+            ModuloPaciente.setLocationRelativeTo(null);
+            ModuloPaciente.setSize(1580,940);
+        }
+        else if(ComboRolInicioSesion.getSelectedItem().equals("Doctor")){
+            this.setVisible(false);
+            ModuloDoctor.setVisible(true);
+            ModuloDoctor.pack();
+            ModuloDoctor.setLocationRelativeTo(null);
+            ModuloDoctor.setSize(1580,940);
+        }
+        else if(ComboRolInicioSesion.getSelectedItem().equals("Enfermero")){
+            this.setVisible(false);
+            ModuloEnfermero.setVisible(true);
+            ModuloEnfermero.pack();
+            ModuloEnfermero.setLocationRelativeTo(null);
+            ModuloEnfermero.setSize(1580,940);
+        }
+        else if(ComboRolInicioSesion.getSelectedItem().equals("Secretario")){
+            this.setVisible(false);
+            ModuloSecretario.setVisible(true);
+            ModuloSecretario.pack();
+            ModuloSecretario.setLocationRelativeTo(null);
+            ModuloSecretario.setSize(1580,940);
+        }     
+      }
+      else{
+        JOptionPane.showMessageDialog(null, "Usuario, contraseña o rol inválido");
+      }
+    }//GEN-LAST:event_BotonIniciarSesionActionPerformed
+  public String validarSesion(String pNombreUsuario, String pContraseña, String pRol){
+    ResultSet resultado;
+    PreparedStatement consulta;
+    Conexion nuevaConexion = new Conexion();
+    Connection conectar = nuevaConexion.conectar();
+
+    String resultadoConsulta = "";
+    
+    try{
+      consulta = conectar.prepareStatement("SELECT CASE WHEN EXISTS (SELECT nombreUsuario, contraseña, rol FROM usuario WHERE nombreUsuario= ? AND contraseña = ? AND rol=?) THEN 1 ELSE 0 END AS boolean");
+      consulta.setString(1, pNombreUsuario);
+      consulta.setString(2, pContraseña);
+      consulta.setString(3, pRol);
+      resultado = consulta.executeQuery();
+      while(resultado.next()){ 
+          resultadoConsulta = resultado.getString(1);
+      }  
+    return resultadoConsulta;
+    }
+       
+    catch(Exception error){ 
+      System.out.println(error);
+      return null;
+    }    
+  }
     /**
      * @param args the command line arguments
      */
@@ -5966,7 +5996,7 @@ public class Formulario extends javax.swing.JFrame {
     public javax.swing.JTextField TextContraeñaDoctor;
     public javax.swing.JTextField TextContraeñaEnfermero;
     public javax.swing.JTextField TextContraeñaPaciente;
-    public javax.swing.JTextField TextContraseña;
+    public javax.swing.JPasswordField TextContraseña;
     public javax.swing.JTextField TextDoctorObservacion;
     public javax.swing.JTextField TextEspecialidadDoctor;
     public javax.swing.JTextField TextIDFuncionarioDoctor;
