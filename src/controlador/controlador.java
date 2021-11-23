@@ -1,5 +1,6 @@
 package controlador;
 
+//Imports fundamentales
 import dao.ReportesDAO;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -24,6 +25,7 @@ import vista.Formulario;
 
 public class controlador implements ActionListener{
 
+  //Atributos de la clase
   private Bitacora bitacora;
   private CentroAtencion centroAtencion;
   private Cita cita;
@@ -56,8 +58,24 @@ public class controlador implements ActionListener{
   private Lista<Usuario> usuarios;
   private Lista<Vacuna> vacunas;
   
-  
-
+  /**
+  * Método controlador: constructor que inicializa los atributos del controlador. 
+  *  @param pBitacora: objeto de tipo Bitacora.
+  *  @param pCentroAtencion: objeto de tipo CentroAtencion.
+  *  @param pCita: objeto de tipo Cita.
+  *  @param pDiagnostico: objeto de tipo Diagnostico.
+  *  @param pDoctor: objeto de tipo Doctor.
+  *  @param pEnfermero: objeto de tipo Enfermero.
+  *  @param pFuncionario: objeto de tipo Funcionario.
+  *  @param pHospitalizacion: objeto de tipo Hospítalizacion.
+  *  @param pPaciente: objeto de tipo Paciente.
+  *  @param pSecretario: objeto de tipo Secretario.
+  *  @param pSeguimiento: objeto de tipo Seguimiento.
+  *  @param pTratamiento: objeto de tipo Tratamiento.
+  *  @param pVacuna: objeto de tipo Vacuna.
+  *  @param pReportes: objeto de tipo ReportesDAO.
+  *  @param pVista: objeto de tipo Formulario.
+  */
   public controlador(Bitacora pBitacora, CentroAtencion pCentroAtencion, Cita pCita, Diagnostico pDiagnostico, Doctor pDoctor, Enfermero pEnfermero, Funcionario pFuncionario,
       Hospitalizacion pHospitalizacion, Paciente pPaciente, Secretario pSecretario, Seguimiento pSeguimiento, Tratamiento pTratamiento, Vacuna pVacuna, ReportesDAO pReportes, Formulario pVista){
       
@@ -83,7 +101,7 @@ public class controlador implements ActionListener{
     this.vista.BotonDoctorAsignarCita.addActionListener(this);
     this.vista.BotonPacienteSolicitar.addActionListener(this);
     this.vista.BotonPacienteCancelar.addActionListener(this);
-    this.vista.BotonMPCancelarCita.addActionListener(this);//CHECK THIS
+    this.vista.BotonMPCancelarCita.addActionListener(this);
     this.vista.BotonDoctorCancelarCita.addActionListener(this);
     this.vista.BotonDoctorCargarPaciente.addActionListener(this);
     this.vista.BotonMDAtenderCita.addActionListener(this);
@@ -157,12 +175,18 @@ public class controlador implements ActionListener{
     this.vacunas = new Lista<Vacuna>();
   }
   
-  
+  /**
+  * Método iniciar: Método que inicia la ejecución del programa. 
+  */
   public void iniciar(){
       
   }
   
-  
+  /**
+  * Método usuarioActual: Método que realiza una consulta a la base de datos para obtener la información del usuario que inicia la sesión. 
+  *  @param nombreUsuario: String que representa el usuario actual.
+  *  @param rol: String que representa el rol del usuario actual.
+  */ 
   Paciente pacienteActivo;
   Doctor doctorActivo;
   Enfermero enfermeroActivo;
@@ -172,35 +196,30 @@ public class controlador implements ActionListener{
     PreparedStatement consulta;
     Conexion nuevaConexion = new Conexion();
     Connection conectar = nuevaConexion.conectar();
-    if(rol == "Paciente"){
-        
+    if(rol == "Paciente"){    
       try{
         consulta = conectar.prepareStatement("SELECT usuario.cedula, nombre, apellido1, apellido2, rol, nombreUsuario, contraseña, paciente.identificadorPaciente, nacionalidad, residencia, fechaNacimiento, tipoSangre FROM usuario JOIN paciente_usuario ON usuario.cedula = paciente_usuario.cedula JOIN paciente ON paciente_usuario.identificadorPaciente = paciente.identificadorPaciente WHERE usuario.nombreUsuario = ?");
         consulta.setString(1, nombreUsuario);
         resultado = consulta.executeQuery();
         while(resultado.next()){  
-          //for(int indice = 1; indice!= resultado.getMetaData().getColumnCount()+1; indice++){
-            //System.err.println("SALIDA: " + resultado.getObject(indice)); 
-            String pCedula = resultado.getObject(1).toString();
-            String pNombre = resultado.getObject(2).toString();
-            String pApellido1 = resultado.getObject(3).toString();
-            String pApellido2 = resultado.getObject(4).toString();
-            String pRol = resultado.getObject(5).toString();
-            String pNombreUsuario = resultado.getObject(6).toString();
-            String pContraseña = resultado.getObject(7).toString();
-            int pIdentificadorPaciente = Integer.parseInt(resultado.getObject(8).toString());
-            String pNacionalidad = resultado.getObject(9).toString();
-            String pResidencia = resultado.getObject(10).toString();
-            Date pFechaNacimiento = (java.util.Date) resultado.getObject(11);
-            String tipoSangre = resultado.getObject(12).toString();
-            TipoSangre pTipoSangre = TipoSangre.valueOf(tipoSangre);
-            pacienteActivo = new Paciente(pCedula, pNombre, pApellido1,  pApellido2,  pRol, pNombreUsuario,  pContraseña,  pIdentificadorPaciente,  pNacionalidad, pResidencia, pFechaNacimiento, pTipoSangre);
-          //}
-        }  
-        
+          String pCedula = resultado.getObject(1).toString();
+          String pNombre = resultado.getObject(2).toString();
+          String pApellido1 = resultado.getObject(3).toString();
+          String pApellido2 = resultado.getObject(4).toString();
+          String pRol = resultado.getObject(5).toString();
+          String pNombreUsuario = resultado.getObject(6).toString();
+          String pContraseña = resultado.getObject(7).toString();
+          int pIdentificadorPaciente = Integer.parseInt(resultado.getObject(8).toString());
+          String pNacionalidad = resultado.getObject(9).toString();
+          String pResidencia = resultado.getObject(10).toString();
+          Date pFechaNacimiento = (java.util.Date) resultado.getObject(11);
+          String tipoSangre = resultado.getObject(12).toString();
+          TipoSangre pTipoSangre = TipoSangre.valueOf(tipoSangre);
+          pacienteActivo = new Paciente(pCedula, pNombre, pApellido1,  pApellido2,  pRol, pNombreUsuario,  pContraseña,  pIdentificadorPaciente,  pNacionalidad, pResidencia, pFechaNacimiento, pTipoSangre);
+        }      
       }
-      catch(Exception error){ 
-        System.out.println(error);
+      catch(SQLException error){ 
+        JOptionPane.showMessageDialog(null, "Favor verifique los datos");
       } 
     }    
     else if(rol == "Doctor"){
@@ -209,20 +228,20 @@ public class controlador implements ActionListener{
         consulta.setString(1, nombreUsuario);
         resultado = consulta.executeQuery();
         while(resultado.next()){ 
-            String pCedula = resultado.getObject(1).toString();
-            String pNombre = resultado.getObject(2).toString();
-            String pApellido1 = resultado.getObject(3).toString();
-            String pApellido2 = resultado.getObject(4).toString();
-            String pRol = resultado.getObject(5).toString();
-            String pNombreUsuario = resultado.getObject(6).toString();
-            String pContraseña = resultado.getObject(7).toString();  
-            int pIdentificadorFuncionario = Integer.parseInt(resultado.getObject(8).toString());
-            String tipo = resultado.getObject(9).toString();
-            TipoFuncionario pTipo = TipoFuncionario.valueOf(tipo);
-            Date pFechaIngreso = (java.util.Date) resultado.getObject(10);
-            String pArea = resultado.getObject(11).toString();
-            int pCodigoDoctor = Integer.parseInt(resultado.getObject(12).toString());
-            doctorActivo = new Doctor( pCedula,  pNombre,  pApellido1,  pApellido2,  pRol,  pNombreUsuario,  pContraseña,  pIdentificadorFuncionario,  pTipo, pFechaIngreso,  pArea,  pCodigoDoctor);
+          String pCedula = resultado.getObject(1).toString();
+          String pNombre = resultado.getObject(2).toString();
+          String pApellido1 = resultado.getObject(3).toString();
+          String pApellido2 = resultado.getObject(4).toString();
+          String pRol = resultado.getObject(5).toString();
+          String pNombreUsuario = resultado.getObject(6).toString();
+          String pContraseña = resultado.getObject(7).toString();  
+          int pIdentificadorFuncionario = Integer.parseInt(resultado.getObject(8).toString());
+          String tipo = resultado.getObject(9).toString();
+          TipoFuncionario pTipo = TipoFuncionario.valueOf(tipo);
+          Date pFechaIngreso = (java.util.Date) resultado.getObject(10);
+          String pArea = resultado.getObject(11).toString();
+          int pCodigoDoctor = Integer.parseInt(resultado.getObject(12).toString());
+          doctorActivo = new Doctor( pCedula,  pNombre,  pApellido1,  pApellido2,  pRol,  pNombreUsuario,  pContraseña,  pIdentificadorFuncionario,  pTipo, pFechaIngreso,  pArea,  pCodigoDoctor);
         }   
       }
       catch(Exception error){ 
@@ -298,7 +317,9 @@ public class controlador implements ActionListener{
     }
   }
  
-  
+  /**
+  * Método actionPerformed: Ejecuta los eventos sobre los elementos en la interfaz gráfica. 
+  */
   @Override
   public void actionPerformed(ActionEvent evento){
     if(evento.getSource() == vista.BotonReportePaciente2){
@@ -315,7 +336,7 @@ public class controlador implements ActionListener{
     }
     //REPORTES DOCTOR
     else if(evento.getSource() == vista.BotonMDReportes){
-        cargarReporteDoctorComboBox(vista.RDC3, vista.RDC4, vista.RDC7, vista.RDC8, vista.RDC9, vista.RDC10, vista.RDC11);
+      cargarReporteDoctorComboBox(vista.RDC3, vista.RDC4, vista.RDC7, vista.RDC8, vista.RDC9, vista.RDC10, vista.RDC11);
     }
     else if(evento.getSource() == vista.RDB1){
       PrimerReporteDoctor();
@@ -352,7 +373,7 @@ public class controlador implements ActionListener{
       cargarDoctorCitasRAAtender(vista.ComboDoctorCitasRA);
     }
     else if(evento.getSource() == vista.BotonEnfermeroCancelarCita){
-        cargaEnfermeroCancelarComboBox(vista.ComboEnfermeroPacienteCitaAsignada);
+      cargaEnfermeroCancelarComboBox(vista.ComboEnfermeroPacienteCitaAsignada);
     }
     else if(evento.getSource() == vista.BotonSecretarioCancelarCita1){
       cargaSecretarioCancelarComboBox(vista.ComboSecretarioUno);
@@ -361,10 +382,10 @@ public class controlador implements ActionListener{
       cargarReportePacienteComboBox(vista.ReportesPacienteNombreDiagnostico1, vista.ReportesPacienteNombreTratamiento);
     }
     else if(evento.getSource() == vista.BotonEnfermeroAsignarCita){
-        cargarEnfermeroAsignarComboBox(vista.ComboEnfermeroCitasAsignar);
+      cargarEnfermeroAsignarComboBox(vista.ComboEnfermeroCitasAsignar);
     }
     else if(evento.getSource() == vista.BotonSecretarioAsignarCita1){
-        cargarSecretarioAsignarComboBox(vista.ComboSecretarioTres);
+      cargarSecretarioAsignarComboBox(vista.ComboSecretarioTres);
     }
 
     else if(evento.getSource() == vista.BotonAdminRegistrarSecretario){
@@ -384,7 +405,7 @@ public class controlador implements ActionListener{
       }
     }
     else if(evento.getSource() == vista.BotonAdminConsultaBitacora){
-     cargarCitaComboBox(vista.ComboAdminCitaConsultarBitacora);   
+      cargarCitaComboBox(vista.ComboAdminCitaConsultarBitacora);   
     }
     else if(evento.getSource() == vista.BotonDoctorCargarCitas){
       if(vista.ComboDoctorPacienteCitaAsignada.getSelectedItem().toString().equals("")){
@@ -415,7 +436,6 @@ public class controlador implements ActionListener{
     else if(evento.getSource() == vista.BotonRegistrarCentro){
       cargarTipoCentroComboBox(vista.ComboAdminTipoCentro);   
     }
-    //*************************
     else if(evento.getSource() == vista.BotonRegistrarDoctor){
       if (vista.TextNombreDoctor.getText().equals("") || vista.TextApellido1Doctor.getText().equals("") || vista.TextApellido2Doctor.getText().equals("") ||
           vista.TextUsuarioDoctor.getText().equals("") || vista.TextContraeñaDoctor.getText().equals("") || vista.TextIDFuncionarioDoctor.getText().equals("") ||
@@ -442,7 +462,6 @@ public class controlador implements ActionListener{
         JOptionPane.showMessageDialog(null, "Especialidad asociada con éxito");
       }
     }
-    //***********************
     else if(evento.getSource() == vista.BotonRegistrarPaciente){
       if(vista.TextNacionalidadPaciente.getText().equals("") || vista.TextContraeñaPaciente.getText().equals("") || vista.TextUsuarioPaciente.getText().equals("") ||
           vista.TextApellido1Paciente.getText().equals("") || vista.TextApellido2Paciente.getText().equals("") || vista.TextNombrePaciente.getText().equals("") ||
@@ -459,21 +478,20 @@ public class controlador implements ActionListener{
       }
     }
     else if(evento.getSource() == vista.BotonTelefonoPaciente){
-        if(vista.TextTelefonoPaciente.getText().equals("")){
-          JOptionPane.showMessageDialog(null, "Verifique los datos");   
-        }
-        else{
-          buscarPaciente(Integer.parseInt(vista.TextIDPaciente1.getText())).insertarTelefono(vista.TextTelefonoPaciente.getText());
-          buscarPaciente(Integer.parseInt(vista.TextIDPaciente1.getText())).setTelefono(vista.TextTelefonoPaciente.getText());
-          JOptionPane.showMessageDialog(null, "Teléfono asociado con éxito");           
-        }
-
+      if(vista.TextTelefonoPaciente.getText().equals("")){
+        JOptionPane.showMessageDialog(null, "Verifique los datos");   
+      }
+      else{
+        buscarPaciente(Integer.parseInt(vista.TextIDPaciente1.getText())).insertarTelefono(vista.TextTelefonoPaciente.getText());
+        buscarPaciente(Integer.parseInt(vista.TextIDPaciente1.getText())).setTelefono(vista.TextTelefonoPaciente.getText());
+        JOptionPane.showMessageDialog(null, "Teléfono asociado con éxito");           
+      }
     }
     else if(evento.getSource() == vista.BotonRegistrarEnfermero){
       if(vista.TextNombreEnfermero.getText().equals("") || vista.TextApellido1Enfermero.getText().equals("") || vista.TextApellido2Enfermero.getText().equals("") || 
-          vista.TextUsuarioEnfermero.getText().equals("") || vista.TextContraeñaEnfermero.getText().equals("") || vista.TextIDFuncionarioEnfermero.getText().equals("") || 
-          vista.TextCodigoEnfermero.getText().equals("") || vista.TextCedulaEnfermero.getText().equals("") || vista.TextAreaEnfermero.getText().equals("") || 
-          vista.CalendarioEnfermero.getDate() == null){
+        vista.TextUsuarioEnfermero.getText().equals("") || vista.TextContraeñaEnfermero.getText().equals("") || vista.TextIDFuncionarioEnfermero.getText().equals("") || 
+        vista.TextCodigoEnfermero.getText().equals("") || vista.TextCedulaEnfermero.getText().equals("") || vista.TextAreaEnfermero.getText().equals("") || 
+        vista.CalendarioEnfermero.getDate() == null){
         JOptionPane.showMessageDialog(null, "Verifique los datos");    
       }
       else{
@@ -489,7 +507,7 @@ public class controlador implements ActionListener{
       consultaBitacora(vista.tablaConsultaBitacora, Integer.parseInt(vista.ComboAdminCitaConsultarBitacora.getSelectedItem().toString()));
     }
     else if(evento.getSource() == vista.BotonDoctorHospitalizarPositivo){
-        cargarHospitalizacionComboBox(vista.ComboTratamientoHospitalizar, vista.ComboCentroHospitalizar, vista.ComboDoctorDiagnostico.getSelectedItem().toString());
+      cargarHospitalizacionComboBox(vista.ComboTratamientoHospitalizar, vista.ComboCentroHospitalizar, vista.ComboDoctorDiagnostico.getSelectedItem().toString());
     }
     else if(evento.getSource() == vista.BotonRegistrarTipo){
       if(vista.TextAdminIDTipo.getText().equals("") && vista.TextAdminTipo.getText().equals("")){
@@ -565,7 +583,6 @@ public class controlador implements ActionListener{
       }
       else{
         doctorActivo.atenderCita(buscarCita(Integer.parseInt(vista.ComboDoctorCitasRA.getSelectedItem().toString())));
-        //System.out.println("LO QUE BUSCA: " + buscarCita(Integer.parseInt(vista.ComboDoctorCitasRA.getSelectedItem().toString())).toString());
         JOptionPane.showMessageDialog(null, "Paciente atentido con éxito");
       }
     }
@@ -696,7 +713,6 @@ public class controlador implements ActionListener{
         JOptionPane.showMessageDialog(null, "Verifique los datos");    
       }
       else{
-        //SELECT fecha, hora FROM cita WHERE identificadorCita = '1'
         Lista<Date> fechayhora = ObtenerFechayHora(Integer.parseInt(vista.ComboPacienteCitasPendientes.getSelectedItem().toString()));
         Date fechaCita = fechayhora.get(0);
         Date horaCita = fechayhora.get(1);
@@ -772,6 +788,11 @@ public class controlador implements ActionListener{
    * ----------------------------------------------------------------MÉTODOS VARIOS------------------------------------------------------------------------------------------
    */
   
+  /**
+  * Método CancelarCitaDoctor: Método el cual lo ejecuta un doctor que cancela la cita de un paciente, 
+  * la pasa a estado "CanceladaPorCentroMedico" y la registra en la bitácora de la cita. 
+  * @param pIdentificadorCita: int que representa la cita que se desea cancelar.
+  */
   public void CancelarCitaDoctor(int pIdentificadorCita){
     doctorActivo.cancelarCita(pIdentificadorCita);
     Cita nuevaCita = buscarCita(pIdentificadorCita);
@@ -782,6 +803,11 @@ public class controlador implements ActionListener{
     JOptionPane.showMessageDialog(null, doctorActivo.getNombre() + ": cita cancelada con éxito");
   }
   
+  /**
+  * Método CancelarCitaEnfermero: Método el cual lo ejecuta un enfermero que cancela la cita de un paciente, 
+  * la pasa a estado "CanceladaPorCentroMedico" y la registra en la bitácora de la cita. 
+  * @param pIdentificadorCita: int que representa la cita que se desea cancelar.
+  */
   public void CancelarCitaEnfermero(int pIdentificadorCita){
     enfermeroActivo.cancelarCita(pIdentificadorCita);
     Cita nuevaCita = buscarCita(pIdentificadorCita);
@@ -792,6 +818,11 @@ public class controlador implements ActionListener{
     JOptionPane.showMessageDialog(null, enfermeroActivo.getNombre() + ": cita cancelada con éxito");
   }
   
+  /**
+  * Método CancelarCitaSecretario: Método el cual lo ejecuta un secretario que cancela la cita de un paciente, 
+  * la pasa a estado "CanceladaPorCentroMedico" y la registra en la bitácora de la cita. 
+  * @param pIdentificadorCita: int que representa la cita que se desea cancelar.
+  */
   public void CancelarCitaSecretario(int pIdentificadorCita){
     secretarioActivo.cancelarCita(pIdentificadorCita);
     Cita nuevaCita = buscarCita(pIdentificadorCita);
@@ -813,6 +844,10 @@ public class controlador implements ActionListener{
    * ----------------------------------------------------------------CARGA JCOMBOBOX------------------------------------------------------------------------------------------
    */
   
+  /**
+  * Método cargarPacienteVacunaComboBox: Método que carga la lista de pacientes en un JComboBox.
+  * @param ComboPacienteVacunar: JComboBox en el que se cargan los resultados de la consulta.
+  */
   public void cargarPacienteVacunaComboBox(JComboBox ComboPacienteVacunar){
     ResultSet resultadoUno;
     PreparedStatement consultaUno;
@@ -834,6 +869,11 @@ public class controlador implements ActionListener{
     }     
   }
   
+  /**
+  * Método cargarHospitalizacionComboBox: Método que carga los datos necesarios para una hospitalización dentro de dos JComboBox.
+  * @param ComboTratamientoHospitalizar: JComboBox en el que se cargan los tratamientos asociados al diagnostico.
+  * @param ComboCentroHospitalizar: JComboBox en el que se cargan los centros médicos disponibles para atender la hospitalización.
+  */
   public void cargarHospitalizacionComboBox(JComboBox ComboTratamientoHospitalizar, JComboBox ComboCentroHospitalizar, String pNombreDiagnostico){
     ResultSet resultadoUno;
     ResultSet resultadoDos;
@@ -870,6 +910,10 @@ public class controlador implements ActionListener{
     }     
   }
   
+  /**
+  * Método cargarTipoCentroComboBox: Método que carga los tipos de centro en un JComboBox.
+  * @param ComboAdminTipoCentro: JComboBox en el que se cargan los resultados de la consulta.
+  */
   public void cargarTipoCentroComboBox(JComboBox ComboAdminTipoCentro){
     ResultSet resultadoUno;
     PreparedStatement consultaUno;
@@ -891,6 +935,10 @@ public class controlador implements ActionListener{
     }     
   }
     
+  /**
+  * Método cargarCitaComboBox: Método que carga las citas existentes en un JComboBox. 
+  * @param ComboAdminCitaConsultarBitacora: JComboBox en el que se cargan los resultados de la consulta.
+  */
   public void cargarCitaComboBox(JComboBox ComboAdminCitaConsultarBitacora){
     ResultSet resultadoUno;
     PreparedStatement consultaUno;
@@ -912,6 +960,11 @@ public class controlador implements ActionListener{
     }     
   }
   
+  /**
+  * Método cargarReportePacienteComboBox: Método que carga el nombre de los diagnósticos y tramientos dentro de dos JComboBox.
+  * @param ReportesPacienteNombreDiagnostico1: JComboBox en el que se cargan el nombre de los diagnósticos registrados.
+  * @param ReportesPacienteNombreTratamiento: JComboBox en el que se cargan los nombres de los tratamientos registrados.
+  */
   public void cargarReportePacienteComboBox(JComboBox ReportesPacienteNombreDiagnostico1, JComboBox ReportesPacienteNombreTratamiento){
     ResultSet resultadoUno;
     ResultSet resultadoDos;
@@ -948,6 +1001,16 @@ public class controlador implements ActionListener{
     }     
   }
   
+  /**
+  * Método cargarReporteDoctorComboBox: Método que carga los JComboBox necesarios para los reportes del Doctor.
+  * @param RDC3: JComboBox en el que se cargan el nombre de los diagnósticos registrados.
+  * @param RDC4: JComboBox en el que se cargan los nombres de los tratamientos registrados.
+  * @param RDC7: JComboBox en el que se cargan los identificadores de los pacientes registrados.
+  * @param RDC8: JComboBox en el que se cargan los identificadores de los pacientes registrados.
+  * @param RDC9: JComboBox en el que se cargan los identificadores de los pacientes registrados.
+  * @param RDC10: JComboBox en el que se cargan los identificadores de los pacientes registrados.
+  * @param RDC11: JComboBox en el que se cargan los identificadores de los pacientes registrados.
+  */
   public void cargarReporteDoctorComboBox(JComboBox RDC3, JComboBox RDC4, JComboBox RDC7, JComboBox RDC8, JComboBox RDC9, JComboBox RDC10, JComboBox RDC11){
     ResultSet resultadoUno;
     ResultSet resultadoDos;
@@ -1011,6 +1074,10 @@ public class controlador implements ActionListener{
     }     
   }
   
+  /**
+  * Método cargarNombreDiagnosticosComboBox: Método que el nombre de los diagósticos registrados en un JComboBox. 
+  * @param ComboAdminDiagnostico: JComboBox en el que se cargan los resultados de la consulta.
+  */
   public void cargarNombreDiagnosticosComboBox(JComboBox ComboAdminDiagnostico){
     ResultSet resultadoUno;
     PreparedStatement consultaUno;
@@ -1032,6 +1099,10 @@ public class controlador implements ActionListener{
     }     
   }
 
+  /**
+  * Método cargarNumerLoteComboBox: Método que carga los números de los lotes de las vacunas en un JComboBox. 
+  * @param ComboNumeroLoteVacunar: JComboBox en el que se cargan los resultados de la consulta.
+  */
   public void cargarNumerLoteComboBox(JComboBox ComboNumeroLoteVacunar){
     ResultSet resultadoUno;
     PreparedStatement consultaUno;
@@ -1053,6 +1124,13 @@ public class controlador implements ActionListener{
     }     
   }
   
+  /**
+  * Método cargarDoctorComboBox: Método que carga los las citas canceladas por el centro médico, 
+  * los pacientes con cita registrada y las citas con estado registrada o asignada. 
+  * @param ComboDoctorCitasCanceladasCM: JComboBox en el que se cargan las citas canceladas por el centro médico.
+  * @param ComboDoctorPacienteCitaAsignada: JComboBox en el que se cargan pacientes con citas registradas.
+  * @param ComboDoctorCitasRA: JComboBox en el que se cargan las citas asignadas o registradas.
+  */
   public void cargarDoctorComboBox(JComboBox ComboDoctorCitasCanceladasCM, JComboBox ComboDoctorPacienteCitaAsignada, JComboBox ComboDoctorCitasRA){
     ResultSet resultadoUno;
     ResultSet resultadoDos;
@@ -1096,6 +1174,10 @@ public class controlador implements ActionListener{
     }     
   }
   
+  /**
+  * Método cargaSecretarioCancelarComboBox: Método que carga los pacientes con citas registradas o asignadas en un JComboBox. 
+  * @param ComboSecretarioUno: JComboBox en el que se cargan pacientes con citas registradas o asignadas.
+  */
   public void cargaSecretarioCancelarComboBox(JComboBox ComboSecretarioUno){
     ResultSet resultadoDos;
     PreparedStatement consultaDos;
@@ -1116,6 +1198,10 @@ public class controlador implements ActionListener{
     }     
   }
   
+  /**
+  * Método cargaEnfermeroCancelarComboBox: Método que carga los pacientes con citas registradas o asignadas en un JComboBox. 
+  * @param ComboEnfermeroPacienteCitaAsignada: JComboBox en el que se cargan pacientes con citas registradas o asignadas.
+  */
   public void cargaEnfermeroCancelarComboBox(JComboBox ComboEnfermeroPacienteCitaAsignada){
     ResultSet resultadoDos;
     PreparedStatement consultaDos;
@@ -1136,6 +1222,10 @@ public class controlador implements ActionListener{
     }     
   }
    
+  /**
+  * Método cargarEnfermeroAsignarComboBox: Método que carga las citas canceladas por el centro médico en un JComboBox. 
+  * @param ComboEnfermeroCitasAsignar: JComboBox en el que se cargan las citas con estado canceladas por el centro médico.
+  */
   public void cargarEnfermeroAsignarComboBox(JComboBox ComboEnfermeroCitasAsignar){
     ResultSet resultadoUno;
     PreparedStatement consultaUno;
@@ -1157,6 +1247,10 @@ public class controlador implements ActionListener{
     }     
   }
    
+  /**
+  * Método cargarSecretarioAsignarComboBox: Método que carga las citas canceladas por el centro médico en un JComboBox. 
+  * @param ComboSecretarioTres: JComboBox en el que se cargan las citas con estado canceladas por el centro médico.
+  */
   public void cargarSecretarioAsignarComboBox(JComboBox ComboSecretarioTres){
     ResultSet resultadoUno;
     PreparedStatement consultaUno;
@@ -1178,6 +1272,10 @@ public class controlador implements ActionListener{
     }     
   }
   
+  /**
+  * Método cargarDoctorCitasRAAtender: Método que carga los pacientes con citas registradas o asignadas en un JComboBox. 
+  * @param ComboDoctorCitasRA: JComboBox en el que se cargan los pacientes con citas registradas o asignadas.
+  */
   public void cargarDoctorCitasRAAtender(JComboBox ComboDoctorCitasRA){
     ResultSet resultadoUno;
     PreparedStatement consultaUno;
@@ -1198,6 +1296,11 @@ public class controlador implements ActionListener{
     }     
   }
   
+  /**
+  * Método cargarCitasPendientes: Método que carga las citas pendientes de un paciente específico. 
+  * @param ComboPacienteCitasPendientes: JComboBox en el que se cargan las citas registradas de un paciente.
+  * @param pUsuario: String que representa el paciente del que se requiere obtener las citas registradas.
+  */
   public void cargarCitasPendientes(JComboBox ComboPacienteCitasPendientes, String pUsuario){
     ResultSet resultadoUno;
     PreparedStatement consultaUno;
@@ -1219,6 +1322,11 @@ public class controlador implements ActionListener{
     }     
   }
   
+  /**
+  * Método cargarDoctorCitasRACancelar: Método que carga las citas asignadas o registradas de un paciente. 
+  * @param ComboDoctorCitas: JComboBox en el que se cargan las citas registradas o asignadas de un paciente.
+  * @param pIdentificador: String que representa el paciente del que se requiere obtener las citas registradas o asignadas.
+  */
   public void cargarDoctorCitasRACancelar(JComboBox ComboDoctorCitas, int pIdentificador){
     ResultSet resultadoUno;
     PreparedStatement consultaUno;
@@ -1240,6 +1348,11 @@ public class controlador implements ActionListener{
     }     
   }
   
+  /**
+  * Método cargarEnfermeroCitasRACancelar: Método que carga las citas asignadas o registradas de un paciente. 
+  * @param ComboEnfermeroCitaCancelar: JComboBox en el que se cargan las citas registradas o asignadas de un paciente.
+  * @param pIdentificador: String que representa el paciente del que se requiere obtener las citas registradas o asignadas.
+  */
   public void cargarEnfermeroCitasRACancelar(JComboBox ComboEnfermeroCitaCancelar, int pIdentificador){
     ResultSet resultadoUno;
     PreparedStatement consultaUno;
@@ -1261,6 +1374,11 @@ public class controlador implements ActionListener{
     }     
   }
   
+  /**
+  * Método cargarSecretarioCitasRACancelar: Método que carga las citas asignadas o registradas de un paciente. 
+  * @param ComboSecretarioDos: JComboBox en el que se cargan las citas registradas o asignadas de un paciente.
+  * @param pIdentificador: String que representa el paciente del que se requiere obtener las citas registradas o asignadas.
+  */
   public void cargarSecretarioCitasRACancelar(JComboBox ComboSecretarioDos, int pIdentificador){
     ResultSet resultadoUno;
     PreparedStatement consultaUno;
@@ -1282,6 +1400,10 @@ public class controlador implements ActionListener{
     }     
   }
   
+  /**
+  * Método cargarNombreDiagnostico: Método que carga los nombres de los diagnósticos registrados. 
+  * @param ComboDoctorDiagnostico: JComboBox en el que se cargan los nombres de los diagnósticos registrados.
+  */
   public void cargarNombreDiagnostico(JComboBox ComboDoctorDiagnostico){
     ResultSet resultadoUno;
     PreparedStatement consultaUno;
@@ -1302,6 +1424,11 @@ public class controlador implements ActionListener{
     }      
   }
   
+  /**
+  * Método cargarTratamiento: Método que carga los tratamientos de un diagnóstico registrado. 
+  * @param ComboDoctorTratamiento: JComboBox en el que se cargan los tratamientos de un diagnóstico registrado.
+  * @param pDiagnostico: String que representa el nombre del diagnóstico que contiene los tratamientos.
+  */
   public void cargarTratamiento(String pDiagnostico, JComboBox ComboDoctorTratamiento){
     ResultSet resultadoUno;
     PreparedStatement consultaUno;
@@ -1323,6 +1450,11 @@ public class controlador implements ActionListener{
     }      
   }
   
+  /**
+  * Método cargarIDPaciente: Método que carga el Id del paciente asociado a una cita específica. 
+  * @param ComboDoctorIDPaciente: JComboBox en el que se carga el paciente que solicitó la cita.
+  * @param pIdentificadorCita: int que representa la cita de la cual se desea conocer el paciente.
+  */
   public void cargarIDPaciente(int pIdentificadorCita, JComboBox ComboDoctorIDPaciente){
     ResultSet resultadoUno;
     PreparedStatement consultaUno;
@@ -1344,6 +1476,11 @@ public class controlador implements ActionListener{
     }  
   }
   
+  /**
+  * Método ObtenerFechayHora: Método que obtiene la fecha y hora de una cita. 
+  * @param pIdentificadorCita: int que representa la cita.
+  * @return listaFechaYHora: objeto de tipo  Lista<Date> que contiene la hora y fecha de la cita.
+  */
   public Lista<Date> ObtenerFechayHora(int pIdentificadorCita){
     ResultSet resultadoUno;
     PreparedStatement consultaUno;
@@ -1374,40 +1511,43 @@ public class controlador implements ActionListener{
     return listaFechaYHora;
   }
   
+  /**
+  * Método consultaBitacora: Método que la bitácora de una cita en una tabla. 
+  * @param tablaConsultaBitacora: tabla que carga los datos de la bitácora de  una cita.
+  * @param pIdentificadorCita: int que representa la cita.
+  */
   public void consultaBitacora(JTable tablaConsultaBitacora, int pIdentificadorCita){
-      DefaultTableModel modeloTabla = (DefaultTableModel) tablaConsultaBitacora.getModel();
-      modeloTabla.setRowCount(0);
-      PreparedStatement consultaInfo;
-      ResultSet resultado;
-      ResultSetMetaData datosResultado;
-      int columnas;
+    DefaultTableModel modeloTabla = (DefaultTableModel) tablaConsultaBitacora.getModel();
+    modeloTabla.setRowCount(0);
+    PreparedStatement consultaInfo;
+    ResultSet resultado;
+    ResultSetMetaData datosResultado;
+    int columnas;
 
-      try{
-        Conexion nuevaConexion = new Conexion();
-        Connection conectar = nuevaConexion.conectar();
-        consultaInfo = conectar.prepareStatement("SELECT bitacora.identificadorBitacora, cita.identificadorCita, bitacora_cita_estado.estado, fechaModificacion, bitacora_horamodificacion.horaModificacion FROM cita JOIN bitacora_cita ON cita.identificadorCita = bitacora_cita.identificadorCita JOIN bitacora_cita_estado ON bitacora_cita.identificadorCita = bitacora_cita_estado.identificadorCita JOIN bitacora ON bitacora_cita.identificadorBitacora = bitacora.identificadorBitacora JOIN bitacora_horamodificacion ON bitacora.identificadorBitacora = bitacora_horamodificacion.identificadorBitacora JOIN bitacora_fechamodificacion ON bitacora.identificadorBitacora = bitacora_fechamodificacion.identificadorBitacora WHERE cita.identificadorCita = ?");
-        consultaInfo.setInt(1, pIdentificadorCita);
+    try{
+      Conexion nuevaConexion = new Conexion();
+      Connection conectar = nuevaConexion.conectar();
+      consultaInfo = conectar.prepareStatement("SELECT bitacora.identificadorBitacora, cita.identificadorCita, bitacora_cita_estado.estado, fechaModificacion, bitacora_horamodificacion.horaModificacion FROM cita JOIN bitacora_cita ON cita.identificadorCita = bitacora_cita.identificadorCita JOIN bitacora_cita_estado ON bitacora_cita.identificadorCita = bitacora_cita_estado.identificadorCita JOIN bitacora ON bitacora_cita.identificadorBitacora = bitacora.identificadorBitacora JOIN bitacora_horamodificacion ON bitacora.identificadorBitacora = bitacora_horamodificacion.identificadorBitacora JOIN bitacora_fechamodificacion ON bitacora.identificadorBitacora = bitacora_fechamodificacion.identificadorBitacora WHERE cita.identificadorCita = ?");
+      consultaInfo.setInt(1, pIdentificadorCita);
         
-        resultado = consultaInfo.executeQuery();
-        datosResultado = resultado.getMetaData();
-        columnas = datosResultado.getColumnCount();
+      resultado = consultaInfo.executeQuery();
+      datosResultado = resultado.getMetaData();
+      columnas = datosResultado.getColumnCount();
 
-        while(resultado.next()){
-          Object [] fila = new Object[columnas];
-          for(int indice = 0; indice<columnas; indice++){
-            fila[indice] = resultado.getObject(indice +1);
-          }
-          modeloTabla.addRow(fila);
+      while(resultado.next()){
+        Object [] fila = new Object[columnas];
+        for(int indice = 0; indice<columnas; indice++){
+          fila[indice] = resultado.getObject(indice +1);
         }
+        modeloTabla.addRow(fila);
       }
-      catch(Exception error){
-        //System.out.println(error);    
-      }
-    
+    }
+    catch(Exception error){
+ 
+    }    
   }
   
-
-     /**
+   /**
    * ----------------------------------------------------------------MÉTODOS BUSCAR------------------------------------------------------------------------------------------
    * ----------------------------------------------------------------MÉTODOS BUSCAR------------------------------------------------------------------------------------------
    * ----------------------------------------------------------------MÉTODOS BUSCAR------------------------------------------------------------------------------------------
@@ -1417,6 +1557,12 @@ public class controlador implements ActionListener{
    * ----------------------------------------------------------------MÉTODOS BUSCAR------------------------------------------------------------------------------------------
    * ----------------------------------------------------------------MÉTODOS BUSCAR------------------------------------------------------------------------------------------
    */
+  
+  /**
+  * Método buscarCita: Método que busca una cita en la lista "citas" y la retorna. 
+  * @param pIdentificadorCita: int que representa la cita.
+  * @return cita: objeto de tipo Cita que es el resultado de la búsqueda.
+  */
   public Cita buscarCita(int pIdentificadorCita){
     Cita cita = new Cita();
     for(int contador = 0; contador != citas.getSize(); contador++){
@@ -1428,6 +1574,11 @@ public class controlador implements ActionListener{
     return cita;  
   } 
   
+  /**
+  * Método buscarVacuna: Método que busca una vacuna en la lista "vacunas" y la retorna. 
+  * @param pNumeroLote: int que representa el número de lote de una vacuna.
+  * @return vacuna: objeto de tipo vacuna que es el resultado de la búsqueda.
+  */
   public Vacuna buscarVacuna(int pNumeroLote){
     Vacuna vacuna = new Vacuna();
     for(int contador = 0; contador != vacunas.getSize(); contador++){
@@ -1439,17 +1590,27 @@ public class controlador implements ActionListener{
     return vacuna;  
   } 
   
+  /**
+  * Método buscarDoctor: Método que busca un doctor en la lista "doctores" y lo retorna. 
+  * @param pCodigo: int que representa el código del doctor.
+  * @return doctor: objeto de tipo doctor que es el resultado de la búsqueda.
+  */
   public Doctor buscarDoctor(int pCodigo){
-     Doctor doctor=new Doctor();
-     for (int indice=0;indice!=doctores.getSize();indice++){
-         if (doctores.get(indice).getCodigoDoctor()==pCodigo){
-            doctor=doctores.get(indice);
-            break;
-         }
-     }
-     return doctor;
+    Doctor doctor=new Doctor();
+    for (int indice=0;indice!=doctores.getSize();indice++){
+      if (doctores.get(indice).getCodigoDoctor()==pCodigo){
+        doctor=doctores.get(indice);
+        break;
+      }
+    }
+    return doctor;
   }
   
+  /**
+  * Método buscarCentro: Método que busca un centro en la lista "centrosAtencion" y lo retorna. 
+  * @param pIdentificador: int que representa el código del centro.
+  * @return centro: objeto de tipo CentroAtencion que es el resultado de la búsqueda.
+  */
   public CentroAtencion buscarCentro(int pIdentificador){
       CentroAtencion centro= new CentroAtencion();
       for (int indice=0;indice!=centrosAtencion.getSize();indice++){
@@ -1461,6 +1622,11 @@ public class controlador implements ActionListener{
       return centro;
   }
   
+  /**
+  * Método buscarPaciente: Método que busca un paciente en la lista "pacientes" y lo retorna. 
+  * @param pIdentificador: int que representa el ID del paciente.
+  * @return paciente: objeto de tipo Paciente que es el resultado de la búsqueda.
+  */
   public Paciente buscarPaciente (int pIdentificador){
     Paciente paciente = new Paciente();
     for (int indice = 0; indice != pacientes.getSize(); indice ++){
@@ -1472,6 +1638,11 @@ public class controlador implements ActionListener{
     return paciente;
   }
   
+  /**
+  * Método buscarTratamiento: Método que busca un tratamiento en la lista "tratamientos" y lo retorna. 
+  * @param pNombre: String que representa el nombre del tratamiento.
+  * @return tratamiento: objeto de tipo Tratamiento que es el resultado de la búsqueda.
+  */
   public Tratamiento buscarTratamiento (String pNombre){
     Tratamiento tratamiento= new Tratamiento();
     for (int indice = 0; indice != tratamientos.getSize(); indice ++){
@@ -1483,6 +1654,11 @@ public class controlador implements ActionListener{
     return tratamiento;
   }
   
+  /**
+  * Método buscarDiagnostico: Método que busca un diagnóstico en la lista "diagnosticos" y lo retorna. 
+  * @param pNombre: String que representa el nombre del diagnostico.
+  * @return diagnostico: objeto de tipo Diagnostico que es el resultado de la búsqueda.
+  */
   public Diagnostico buscarDiagnostico (String pNombre){
     Diagnostico diagnostico = new Diagnostico();
     for (int indice = 0; indice != diagnosticos.getSize(); indice ++){
@@ -1494,21 +1670,30 @@ public class controlador implements ActionListener{
     return diagnostico;
   }
    
+  /**
+  * Método buscarFuncionario: Método que busca un funcionario en la lista "funcionarios" y lo retorna. 
+  * @param pIdentificador: int que representa el Id del funcionario.
+  * @return funcionario: objeto de tipo Funcionario que es el resultado de la búsqueda.
+  */
   public Funcionario buscarFuncionario(int pIdentificador){
-     Funcionario funcionario = new Funcionario();
-     for (int indice = 0; indice != funcionarios.getSize(); indice++){
-       if (pIdentificador == funcionarios.get(indice).getIdentificadorFuncionario()){
-         funcionario = funcionarios.get(indice);
-         break;
-       }
+    Funcionario funcionario = new Funcionario();
+    for (int indice = 0; indice != funcionarios.getSize(); indice++){
+      if (pIdentificador == funcionarios.get(indice).getIdentificadorFuncionario()){
+       funcionario = funcionarios.get(indice);
+       break;
      }
-     return funcionario;
+   }
+   return funcionario;
    }
   
+  /**
+  * Método buscarBitacora: Método que busca una bitácora en la lista "bitacoras" y la retorna. 
+  * @param pIdentificador: int que representa el Id de la bitácora.
+  * @return bitacora: objeto de tipo Bitacora que es el resultado de la búsqueda.
+  */
   public Bitacora buscarBitacora (int pIdentificador){
     Bitacora bitacora = new Bitacora();
-     for (int indice = 0; indice != bitacoras.getSize(); indice++){
-         
+     for (int indice = 0; indice != bitacoras.getSize(); indice++){         
        if (pIdentificador == bitacoras.get(indice).getIdentificador()){
          bitacora = bitacoras.get(indice);
          break;
@@ -1527,6 +1712,11 @@ public class controlador implements ActionListener{
    * ----------------------------------------------------------------CARGA BASE DATOS------------------------------------------------------------------------------------------
    */
   
+  /**
+  * Método CargarBaseDatos: Método que carga los elementos de la base de datos y los convierte a objetos de Java. 
+  * @throws SQLException: Se declara una excepción en caso de algún error en SQL
+  * @throws ParseException: Se declara una excepción en caso de algún error en la conversión de los tipos de datos.
+  */
   public void CargarBaseDatos()throws SQLException, ParseException{
     cargarCitaBaseDatos();
     cargarDoctorBaseDatos();
@@ -1550,6 +1740,11 @@ public class controlador implements ActionListener{
     cargarVacunasPaciente();
   }
  
+  /**
+  * Método cargarBitacoraCita: Método que carga las bitácoras y las asocia a las citas correspondientes. 
+  * @throws SQLException: Se declara una excepción en caso de algún error en SQL
+  * @throws ParseException: Se declara una excepción en caso de algún error en la conversión de los tipos de datos.
+  */
   public void cargarBitacoraCita() throws SQLException, ParseException{
     ResultSet resultado;
     PreparedStatement consultarBitacora;
@@ -1571,6 +1766,11 @@ public class controlador implements ActionListener{
     } 
   }
   
+  /**
+  * Método cargarBitacora: Método que carga las bitácoras y los convierte a objetos de tipo Bitacora.
+  * @throws SQLException: Se declara una excepción en caso de algún error en SQL
+  * @throws ParseException: Se declara una excepción en caso de algún error en la conversión de los tipos de datos.
+  */
   public void cargarBitacora() throws SQLException, ParseException{
     ResultSet resultado;
     PreparedStatement consultarBitacora;
@@ -1586,6 +1786,11 @@ public class controlador implements ActionListener{
     }
   }
   
+  /**
+  * Método cargarCitaBaseDatos: Método que carga la información de las citas de la base de datos y lo convierte en objetos de tipo Cita.
+  * @throws SQLException: Se declara una excepción en caso de algún error en SQL
+  * @throws ParseException: Se declara una excepción en caso de algún error en la conversión de los tipos de datos.
+  */
   public void cargarCitaBaseDatos() throws SQLException, ParseException{
     ResultSet resultado;
     PreparedStatement consultarCitas;
@@ -1608,6 +1813,11 @@ public class controlador implements ActionListener{
     }
   }
   
+  /**
+  * Método cargarDoctorBaseDatos: Método que carga la información de los doctores de la base de datos y lo convierte en objetos de tipo Doctor.
+  * @throws SQLException: Se declara una excepción en caso de algún error en SQL
+  * @throws ParseException: Se declara una excepción en caso de algún error en la conversión de los tipos de datos.
+  */
   public void cargarDoctorBaseDatos() throws SQLException, ParseException{
     ResultSet resultado;
     
@@ -1660,6 +1870,11 @@ public class controlador implements ActionListener{
   }            
  }
     
+  /**
+  * Método cargarSecretarioBaseDatos: Método que carga la información de los secretarios de la base de datos y lo convierte en objetos de tipo Secretario.
+  * @throws SQLException: Se declara una excepción en caso de algún error en SQL
+  * @throws ParseException: Se declara una excepción en caso de algún error en la conversión de los tipos de datos.
+  */
   public void cargarSecretarioBaseDatos() throws SQLException, ParseException{
     ResultSet resultado;
     PreparedStatement consultarSecretario;
@@ -1711,6 +1926,11 @@ public class controlador implements ActionListener{
   }            
  }
   
+  /**
+  * Método cargarEnfermeroBaseDatos: Método que carga la información de los enfermeros de la base de datos y lo convierte en objetos de tipo Enfermero.
+  * @throws SQLException: Se declara una excepción en caso de algún error en SQL
+  * @throws ParseException: Se declara una excepción en caso de algún error en la conversión de los tipos de datos.
+  */
   public void cargarEnfermeroBaseDatos() throws SQLException, ParseException{
     ResultSet resultado;
     PreparedStatement consultarEnfermero;
@@ -1780,6 +2000,11 @@ public class controlador implements ActionListener{
   }            
  }
   
+  /**
+  * Método cargarPacienteBaseDatos: Método que carga la información de los paciente de la base de datos y lo convierte en objetos de tipo Paciente.
+  * @throws SQLException: Se declara una excepción en caso de algún error en SQL
+  * @throws ParseException: Se declara una excepción en caso de algún error en la conversión de los tipos de datos.
+  */
   public void cargarPacienteBaseDatos() throws SQLException, ParseException{
     ResultSet resultado;
     PreparedStatement consultarPaciente;
@@ -1827,6 +2052,11 @@ public class controlador implements ActionListener{
   }            
  }
   
+  /**
+  * Método cargarCentroAtencionBaseDatos: Método que carga la información de los centro de atención de la base de datos y lo convierte en objetos de tipo CentroAtencion.
+  * @throws SQLException: Se declara una excepción en caso de algún error en SQL
+  * @throws ParseException: Se declara una excepción en caso de algún error en la conversión de los tipos de datos.
+  */
   public void cargarCentroAtencionBaseDatos() throws SQLException, ParseException{
     ResultSet resultado;
     PreparedStatement consultarCentros;
@@ -1846,6 +2076,11 @@ public class controlador implements ActionListener{
     }
   }
    
+  /**
+  * Método cargarDiagnosticoBaseDatos: Método que carga la información de los diagnosticos de la base de datos y lo convierte en objetos de tipo Diagnostico.
+  * @throws SQLException: Se declara una excepción en caso de algún error en SQL
+  * @throws ParseException: Se declara una excepción en caso de algún error en la conversión de los tipos de datos.
+  */
   public void cargarDiagnosticoBaseDatos() throws SQLException, ParseException{
     ResultSet resultado;
     PreparedStatement consultarDiagnostico;
@@ -1863,6 +2098,11 @@ public class controlador implements ActionListener{
     }
   }
    
+  /**
+  * Método cargarTratamientoBaseDatos: Método que carga la información de los tratamientos de la base de datos y lo convierte en objetos de tipo Tratamiento.
+  * @throws SQLException: Se declara una excepción en caso de algún error en SQL
+  * @throws ParseException: Se declara una excepción en caso de algún error en la conversión de los tipos de datos.
+  */
   public void cargarTratamientoBaseDatos() throws SQLException, ParseException{
     ResultSet resultado;
     PreparedStatement consultarTratamiento;
@@ -1881,6 +2121,11 @@ public class controlador implements ActionListener{
     }
   }
    
+  /**
+  * Método cargarDoctorEspecialidades: Método que carga la información de las especialidades de la base de datos y se las asigna al doctor correspondiente.
+  * @throws SQLException: Se declara una excepción en caso de algún error en SQL
+  * @throws ParseException: Se declara una excepción en caso de algún error en la conversión de los tipos de datos.
+  */
   public void cargarDoctorEspecialidades() throws SQLException, ParseException{
     ResultSet resultado;
     PreparedStatement consultarDoctorEspecialidad;
@@ -1896,6 +2141,11 @@ public class controlador implements ActionListener{
     }
   }
   
+  /**
+  * Método cargarCentroTipo: Método que carga la información de los tipos de centro de la base de datos y se las asigna al centro correspondiente.
+  * @throws SQLException: Se declara una excepción en caso de algún error en SQL
+  * @throws ParseException: Se declara una excepción en caso de algún error en la conversión de los tipos de datos.
+  */
   public void cargarCentroTipo() throws SQLException, ParseException{
     ResultSet resultado;
     PreparedStatement consultarCentroTipo;
@@ -1905,12 +2155,17 @@ public class controlador implements ActionListener{
     resultado = consultarCentroTipo.executeQuery();   
     
     while (resultado.next()){
-        int codigoCentro=Integer.parseInt(String.valueOf(resultado.getObject(3)));
-        String nombreTipo=String.valueOf(resultado.getObject(2));
-        buscarCentro(codigoCentro).setTipo(nombreTipo);
-  }
+      int codigoCentro=Integer.parseInt(String.valueOf(resultado.getObject(3)));
+      String nombreTipo=String.valueOf(resultado.getObject(2));
+      buscarCentro(codigoCentro).setTipo(nombreTipo);
+    }
   }
     
+  /**
+  * Método cargarDiagnosticosCita: Método que carga la información de los diagnósticos de la base de datos y se las asigna a la cita correspondiente.
+  * @throws SQLException: Se declara una excepción en caso de algún error en SQL
+  * @throws ParseException: Se declara una excepción en caso de algún error en la conversión de los tipos de datos.
+  */
   public void cargarDiagnosticosCita() throws SQLException, ParseException{
      ResultSet resultado;
     PreparedStatement consultarDiagnosticosCita;
@@ -1920,13 +2175,18 @@ public class controlador implements ActionListener{
     resultado = consultarDiagnosticosCita.executeQuery();   
     
     while (resultado.next()){
-        NivelDiagnostico nivel = NivelDiagnostico.valueOf(String.valueOf(resultado.getObject(2)));
-        int identificadorCita=Integer.parseInt(String.valueOf(resultado.getObject(3)));
-        String nombreDiagnostico=String.valueOf(resultado.getObject(1));
-        buscarCita(identificadorCita).añadirDiagnostico(nombreDiagnostico, nivel);
-  }
-    } 
+      NivelDiagnostico nivel = NivelDiagnostico.valueOf(String.valueOf(resultado.getObject(2)));
+      int identificadorCita=Integer.parseInt(String.valueOf(resultado.getObject(3)));
+      String nombreDiagnostico=String.valueOf(resultado.getObject(1));
+      buscarCita(identificadorCita).añadirDiagnostico(nombreDiagnostico, nivel);
+    }
+  } 
     
+  /**
+  * Método cargarPacientesCitas: Método que asigna un paciente a la cita correspondiente.
+  * @throws SQLException: Se declara una excepción en caso de algún error en SQL
+  * @throws ParseException: Se declara una excepción en caso de algún error en la conversión de los tipos de datos.
+  */
   public void cargarPacientesCitas() throws SQLException, ParseException{
     ResultSet resultado;
     PreparedStatement consultarPacientesCitas;
@@ -1936,13 +2196,18 @@ public class controlador implements ActionListener{
     resultado = consultarPacientesCitas.executeQuery();   
     
     while (resultado.next()){
-        int identificadorCita=Integer.parseInt(String.valueOf(resultado.getObject(1)));
-        int identificadorPaciente=Integer.parseInt(String.valueOf(resultado.getObject(2)));
-        buscarPaciente(identificadorPaciente).añadirCita(buscarCita(identificadorCita));
-        buscarCita(identificadorCita).setPaciente(buscarPaciente(identificadorPaciente));
+      int identificadorCita=Integer.parseInt(String.valueOf(resultado.getObject(1)));
+      int identificadorPaciente=Integer.parseInt(String.valueOf(resultado.getObject(2)));
+      buscarPaciente(identificadorPaciente).añadirCita(buscarCita(identificadorCita));
+      buscarCita(identificadorCita).setPaciente(buscarPaciente(identificadorPaciente));
     }
   } 
   
+  /**
+  * Método cargarFuncionariosCitas: Método que asigna una cita al encargado de tipo Funcionario.
+  * @throws SQLException: Se declara una excepción en caso de algún error en SQL
+  * @throws ParseException: Se declara una excepción en caso de algún error en la conversión de los tipos de datos.
+  */
   public void cargarFuncionariosCitas() throws SQLException, ParseException{
     ResultSet resultado;
     PreparedStatement consultarFuncionariosCitas;
@@ -1959,6 +2224,11 @@ public class controlador implements ActionListener{
     }
   } 
     
+  /**
+  * Método cargarTratamientosDiagnostico: Método que asigna un tratamiento al diagnostico correspondiente.
+  * @throws SQLException: Se declara una excepción en caso de algún error en SQL
+  * @throws ParseException: Se declara una excepción en caso de algún error en la conversión de los tipos de datos.
+  */
   public void cargarTratamientosDiagnostico() throws SQLException, ParseException{
      ResultSet resultado;
     PreparedStatement consultarTratamientosDiagnostico;
@@ -1977,6 +2247,11 @@ public class controlador implements ActionListener{
   }
     } 
     
+  /**
+  * Método cargarObservacionesDiagnostico: Método que carga las observaciones y los asigna al diagnóstico correspondiente.
+  * @throws SQLException: Se declara una excepción en caso de algún error en SQL
+  * @throws ParseException: Se declara una excepción en caso de algún error en la conversión de los tipos de datos.
+  */
   public void cargarObservacionesDiagnostico() throws SQLException, ParseException{
      ResultSet resultado;
     PreparedStatement consultarObservacionesDiagnostico;
@@ -1988,12 +2263,15 @@ public class controlador implements ActionListener{
     while (resultado.next()){
         String nombreDiagnostico = String.valueOf(resultado.getObject(1));
         String observacion = String.valueOf(resultado.getObject(2));
-
-        buscarDiagnostico(nombreDiagnostico).añadirObservacion(observacion);
-        
-  }
-    } 
+        buscarDiagnostico(nombreDiagnostico).añadirObservacion(observacion);       
+    }
+  } 
     
+  /**
+  * Método cargarFuncionarioCitas: Método que asigna las cita al encargado  respectivo de tipo Funcionario.
+  * @throws SQLException: Se declara una excepción en caso de algún error en SQL
+  * @throws ParseException: Se declara una excepción en caso de algún error en la conversión de los tipos de datos.
+  */
   public void cargarFuncionarioCita()  throws SQLException, ParseException{
     ResultSet resultado;
     PreparedStatement consultarFuncionarioCita;
@@ -2003,15 +2281,18 @@ public class controlador implements ActionListener{
     resultado = consultarFuncionarioCita.executeQuery();   
     
     while (resultado.next()){
-        int identificadorCita = Integer.parseInt(String.valueOf(resultado.getObject(1)));
-        int identificadorFuncionario = Integer.parseInt(String.valueOf(resultado.getObject(2)));
-
-        buscarCita(identificadorCita).setEncargadoCita(buscarFuncionario(identificadorFuncionario));
-        buscarFuncionario(identificadorFuncionario).añadirCita(buscarCita(identificadorCita));
-        
-  }
+      int identificadorCita = Integer.parseInt(String.valueOf(resultado.getObject(1)));
+      int identificadorFuncionario = Integer.parseInt(String.valueOf(resultado.getObject(2)));
+      buscarCita(identificadorCita).setEncargadoCita(buscarFuncionario(identificadorFuncionario));
+      buscarFuncionario(identificadorFuncionario).añadirCita(buscarCita(identificadorCita));       
     }
+  }
     
+  /**
+  * Método cargarVacunas: Método que carga la información de las vacunas de la base de datos y lo convierte en objetos de tipo Vacuna.
+  * @throws SQLException: Se declara una excepción en caso de algún error en SQL
+  * @throws ParseException: Se declara una excepción en caso de algún error en la conversión de los tipos de datos.
+  */
   public void cargarVacunas() throws SQLException, ParseException{
     ResultSet resultado;
     PreparedStatement consultarVacuna;
@@ -2031,6 +2312,11 @@ public class controlador implements ActionListener{
     }
   }
   
+  /**
+  * Método cargarVacunasPaciente: Método que asigna las vacuna a cada paciente.
+  * @throws SQLException: Se declara una excepción en caso de algún error en SQL
+  * @throws ParseException: Se declara una excepción en caso de algún error en la conversión de los tipos de datos.
+  */
   public void cargarVacunasPaciente()  throws SQLException, ParseException{
     ResultSet resultado;
     PreparedStatement consultarVacunasPaciente;
@@ -2041,9 +2327,8 @@ public class controlador implements ActionListener{
     
     while (resultado.next()){
       int numeroLote = Integer.parseInt(String.valueOf(resultado.getObject(1)));
-      int identificadorPaciente = Integer.parseInt(String.valueOf(resultado.getObject(2)));
-      
-        buscarPaciente(identificadorPaciente).añadirVacuna(buscarVacuna(numeroLote));
+      int identificadorPaciente = Integer.parseInt(String.valueOf(resultado.getObject(2)));  
+      buscarPaciente(identificadorPaciente).añadirVacuna(buscarVacuna(numeroLote));
     }
     
    }
@@ -2058,9 +2343,11 @@ public class controlador implements ActionListener{
    * --------------------------------------------------------------------REPORTES---------------------------------------------------------------------------------------------
    * --------------------------------------------------------------------REPORTES---------------------------------------------------------------------------------------------
    */
-  
-  //int codigopaciente = 15;
-  
+
+  /**
+  * Método primerMetodo: Método que busca las citas asociadas a un paciente por rango de fechas.
+  * @return resultadoUno: Objeto de tipo ResultSet que contiene la consulta.
+  */
   public ResultSet primerMetodo(){
     ResultSet resultadoUno = null;   
     PreparedStatement consultaUno;
@@ -2092,6 +2379,10 @@ public class controlador implements ActionListener{
     return resultadoUno;
   }
   
+  /**
+  * Método SegundaMetodo: Método que busca las citas asociadas a un paciente por estado de la cita.
+  * @return resultadoDos: Objeto de tipo ResultSet que contiene la consulta.
+  */
   public ResultSet SegundoMetodo(){
     ResultSet resultadoDos = null;   
     PreparedStatement consultaDos;
@@ -2112,6 +2403,10 @@ public class controlador implements ActionListener{
     return resultadoDos;
   }
   
+  /**
+  * Método TercerMetodo: Método que busca las citas asociadas a un paciente por la especialidad.
+  * @return resultadoTres: Objeto de tipo ResultSet que contiene la consulta.
+  */
   public ResultSet TercerMetodo(){
     ResultSet resultadoTres = null;   
     PreparedStatement consultaTres;
@@ -2131,6 +2426,9 @@ public class controlador implements ActionListener{
     return resultadoTres;
   }
   
+  /**
+  * Método PrimerReportePaciente: Método que exporta el reporte de las citas asociadas a un paciente al formato indicado por el usuario.
+  */
   public void PrimerReportePaciente(){//Inicio PrimerReportePaciente
 
     if(vista.ReportesPacienteFormato.getSelectedItem().equals("CSV")){
@@ -2187,7 +2485,11 @@ public class controlador implements ActionListener{
       }      
     }
   }//Fin PrimerReportePaciente
-
+  
+  /**
+  * Método ConsultaCuatro: Método que busca los diagnósticos asociados a un paciente por rango de fechas.
+  * @return resultadoCuatro: Objeto de tipo ResultSet que contiene la consulta.
+  */
   public ResultSet ConsultaCuatro(){
     ResultSet resultadoCuatro = null;   
     PreparedStatement consultaUno;
@@ -2227,6 +2529,10 @@ public class controlador implements ActionListener{
     return resultadoCuatro;      
   }
   
+  /**
+  * Método ConsultaCinco: Método que busca los diagnósticos asociados a un paciente por el nivel del diagnóstico.
+  * @return resultadoCinco: Objeto de tipo ResultSet que contiene la consulta.
+  */
   public ResultSet ConsultaCinco(){
     ResultSet resultadoCinco = null;   
     PreparedStatement consultaDos;
@@ -2250,6 +2556,10 @@ public class controlador implements ActionListener{
     return resultadoCinco;    
   }
   
+  /**
+  * Método ConsultaSeis: Método que busca los diagnósticos asociados a un paciente por el nombre del diagnóstico.
+  * @return resultadoSeis: Objeto de tipo ResultSet que contiene la consulta.
+  */
   public ResultSet ConsultaSeis(){
     ResultSet resultadoSeis = null;   
     PreparedStatement consultaDos;
@@ -2274,6 +2584,9 @@ public class controlador implements ActionListener{
     return resultadoSeis;    
   }
   
+  /**
+  * Método SegundoReportePaciente: Método que exporta el reporte de los diagnósticos asociados a un paciente al formato indicado por el usuario.
+  */
   public void SegundoReportePaciente(){
    
     if(vista.ReportesPacienteFormato.getSelectedItem().equals("CSV")){
@@ -2331,6 +2644,10 @@ public class controlador implements ActionListener{
     }
   }
   
+  /**
+  * Método ConsultaSiete: Método que busca los tratamientos asociados a un paciente por el rango de fechas.
+  * @return resultadoSiete: Objeto de tipo ResultSet que contiene la consulta.
+  */
   public ResultSet ConsultaSiete(){
     ResultSet resultadoSiete = null;   
     PreparedStatement consultaUno;
@@ -2371,6 +2688,10 @@ public class controlador implements ActionListener{
     return resultadoSiete;      
   }
   
+  /**
+  * Método ConsultaOcho: Método que busca los tratamientos asociados a un paciente por el tipo del tratamiento.
+  * @return resultadoOcho: Objeto de tipo ResultSet que contiene la consulta.
+  */
   public ResultSet ConsultaOcho(){
     ResultSet resultadoOcho = null;   
     PreparedStatement consultaDos;
@@ -2395,6 +2716,10 @@ public class controlador implements ActionListener{
     return resultadoOcho;       
   }
   
+  /**
+  * Método ConsultaNueve: Método que busca los tratamientos asociados a un paciente por el nombre del tratamiento.
+  * @return resultadoNueve: Objeto de tipo ResultSet que contiene la consulta.
+  */
   public ResultSet ConsultaNueve(){
     ResultSet resultadoNueve = null;   
     PreparedStatement consultaDos;
@@ -2419,6 +2744,9 @@ public class controlador implements ActionListener{
     return resultadoNueve;       
   }
   
+  /**
+  * Método TercerReportePaciente: Método que exporta el reporte de los tratamientos asociados a un paciente al formato indicado por el usuario.
+  */
   public void TercerReportePaciente(){
     
     if(vista.ReportesPacienteFormato.getSelectedItem().equals("CSV")){
@@ -2477,6 +2805,10 @@ public class controlador implements ActionListener{
     
   }
   
+  /**
+  * Método ConsultaDiez: Método que busca las hospitalizaciones registradas por un paciente.
+  * @return resultadoDiez: Objeto de tipo ResultSet que contiene la consulta.
+  */
   public ResultSet ConsultaDiez(){
     ResultSet resultadoDiez = null;   
     PreparedStatement consultaDos;
@@ -2513,6 +2845,9 @@ public class controlador implements ActionListener{
     return resultadoDiez;
   }
   
+  /**
+  * Método CuartoReportePaciente: Método que exporta el reporte de las hospitalizaciones registradas por un paciente al formato indicado por el usuario.
+  */
   public void CuartoReportePaciente(){
     if(vista.ReportesPacienteFormato.getSelectedItem().equals("CSV")){
       reportes.exportarCSV(ConsultaDiez());
@@ -2530,6 +2865,10 @@ public class controlador implements ActionListener{
   
   //REPORTES DOCTOR Y ENFERMERO
   
+  /**
+  * Método ReporteDoctorUno: Método que busca las citas registradas en el sistema por el rango de fechas.
+  * @return resultadoUno: Objeto de tipo ResultSet que contiene la consulta.
+  */
   public ResultSet ReporteDoctorUno(){
     ResultSet resultadoUno = null;   
     PreparedStatement consultaUno;
@@ -2562,6 +2901,10 @@ public class controlador implements ActionListener{
     return resultadoUno;
   }
  
+  /**
+  * Método ReporteDoctorDos: Método que busca las citas registradas en el sistema por el estado de la cita.
+  * @return resultadoDos: Objeto de tipo ResultSet que contiene la consulta.
+  */
   public ResultSet ReporteDoctorDos(){
     ResultSet resultadoDos = null;   
     PreparedStatement consultaDos;
@@ -2582,6 +2925,10 @@ public class controlador implements ActionListener{
     return resultadoDos;       
   }
   
+  /**
+  * Método ReporteDoctorTres: Método que busca las citas registradas en el sistema por la especialidad.
+  * @return resultadoTres: Objeto de tipo ResultSet que contiene la consulta.
+  */
   public ResultSet ReporteDoctorTres(){
     ResultSet resultadoTres = null;   
     PreparedStatement consultaTres;
@@ -2601,7 +2948,11 @@ public class controlador implements ActionListener{
     }
     return resultadoTres;       
   }
-  
+ 
+  /**
+  * Método ReporteDoctorCuatro: Método que busca las citas registradas en el sistema por el nombre del paciente.
+  * @return resultadoCuatro: Objeto de tipo ResultSet que contiene la consulta.
+  */
   public ResultSet ReporteDoctorCuatro(){
     ResultSet resultadoCuatro = null;   
     PreparedStatement consultaCuatro;
@@ -2629,35 +2980,37 @@ public class controlador implements ActionListener{
     return resultadoCuatro;       
   }
   
+  /**
+  * Método PrimerReporteDoctor: Método que exporta el reporte de las citas registradas en el sistema al formato indicado por el usuario.
+  */
   public void PrimerReporteDoctor(){
     
     if(vista.ReportesPacienteFormato1.getSelectedItem().equals("CSV")){
       //REPORTE PARA FECHAS 
       if(vista.RDD1.getDate() != null && vista.RDD2.getDate() != null &&
-         vista.RDC1.getSelectedItem().toString().equals("") &&
-         vista.RDT1.getText().equals("") && vista.RDT2.getText().equals("") && vista.RDT3.getText().equals("") &&vista.RDT4.getText().equals("")){
-          
+        vista.RDC1.getSelectedItem().toString().equals("") &&
+        vista.RDT1.getText().equals("") && vista.RDT2.getText().equals("") && vista.RDT3.getText().equals("") &&vista.RDT4.getText().equals("")){         
         reportes.exportarCSV(ReporteDoctorUno());
         JOptionPane.showMessageDialog(null, "Reporte CSV creado con éxito");
       }
       //REPORTE PARA ESTADO
       else if(vista.RDD1.getDate() == null && vista.RDD2.getDate() == null &&
-         vista.RDC1.getSelectedItem().toString() != null &&
-         vista.RDT1.getText().equals("") && vista.RDT2.getText().equals("") && vista.RDT3.getText().equals("") &&vista.RDT4.getText().equals("")){
+        vista.RDC1.getSelectedItem().toString() != null &&
+        vista.RDT1.getText().equals("") && vista.RDT2.getText().equals("") && vista.RDT3.getText().equals("") &&vista.RDT4.getText().equals("")){
         reportes.exportarCSV(ReporteDoctorDos());
         JOptionPane.showMessageDialog(null, "Reporte CSV creado con éxito"); 
       }  
       //REPORTE PARA ESPECIALIDAD
       else if(vista.RDD1.getDate() == null && vista.RDD2.getDate() == null &&
-         vista.RDC1.getSelectedItem().toString().equals("") &&
-         vista.RDT1.getText().length()!=0 && vista.RDT2.getText().equals("") && vista.RDT3.getText().equals("") &&vista.RDT4.getText().equals("")){
+        vista.RDC1.getSelectedItem().toString().equals("") &&
+        vista.RDT1.getText().length()!=0 && vista.RDT2.getText().equals("") && vista.RDT3.getText().equals("") &&vista.RDT4.getText().equals("")){
         reportes.exportarCSV(ReporteDoctorTres());
         JOptionPane.showMessageDialog(null, "Reporte CSV creado con éxito"); 
       }    
       //REPORTE POR NOMBRE PACIENTE
       else if(vista.RDD1.getDate() == null && vista.RDD2.getDate() == null &&
-         vista.RDC1.getSelectedItem().toString().equals("") &&
-         vista.RDT1.getText().equals("") && vista.RDT2.getText().length()!=0 && vista.RDT3.getText().length()!=0 &&vista.RDT4.getText().length()!=0){
+        vista.RDC1.getSelectedItem().toString().equals("") &&
+        vista.RDT1.getText().equals("") && vista.RDT2.getText().length()!=0 && vista.RDT3.getText().length()!=0 &&vista.RDT4.getText().length()!=0){
         reportes.exportarCSV(ReporteDoctorCuatro());
         JOptionPane.showMessageDialog(null, "Reporte CSV creado con éxito"); 
       }  
@@ -2665,30 +3018,29 @@ public class controlador implements ActionListener{
     else if(vista.ReportesPacienteFormato1.getSelectedItem().equals("PDF")){
            //REPORTE PARA FECHAS 
       if(vista.RDD1.getDate() != null && vista.RDD2.getDate() != null &&
-         vista.RDC1.getSelectedItem().toString().equals("") &&
-         vista.RDT1.getText().equals("") && vista.RDT2.getText().equals("") && vista.RDT3.getText().equals("") &&vista.RDT4.getText().equals("")){
-          
+        vista.RDC1.getSelectedItem().toString().equals("") &&
+        vista.RDT1.getText().equals("") && vista.RDT2.getText().equals("") && vista.RDT3.getText().equals("") &&vista.RDT4.getText().equals("")){         
         reportes.exportarPDF(ReporteDoctorUno());
         JOptionPane.showMessageDialog(null, "Reporte PDF creado con éxito");
       }
       //REPORTE PARA ESTADO
       else if(vista.RDD1.getDate() == null && vista.RDD2.getDate() == null &&
-         vista.RDC1.getSelectedItem().toString() != null &&
-         vista.RDT1.getText().equals("") && vista.RDT2.getText().equals("") && vista.RDT3.getText().equals("") &&vista.RDT4.getText().equals("")){
+        vista.RDC1.getSelectedItem().toString() != null &&
+        vista.RDT1.getText().equals("") && vista.RDT2.getText().equals("") && vista.RDT3.getText().equals("") &&vista.RDT4.getText().equals("")){
         reportes.exportarPDF(ReporteDoctorDos());
         JOptionPane.showMessageDialog(null, "Reporte PDF creado con éxito"); 
       }  
       //REPORTE PARA ESPECIALIDAD
       else if(vista.RDD1.getDate() == null && vista.RDD2.getDate() == null &&
-         vista.RDC1.getSelectedItem().toString().equals("") &&
-         vista.RDT1.getText().length()!=0 && vista.RDT2.getText().equals("") && vista.RDT3.getText().equals("") &&vista.RDT4.getText().equals("")){
+        vista.RDC1.getSelectedItem().toString().equals("") &&
+        vista.RDT1.getText().length()!=0 && vista.RDT2.getText().equals("") && vista.RDT3.getText().equals("") &&vista.RDT4.getText().equals("")){
         reportes.exportarPDF(ReporteDoctorTres());
         JOptionPane.showMessageDialog(null, "Reporte PDF creado con éxito"); 
       }    
       //REPORTE POR NOMBRE PACIENTE
       else if(vista.RDD1.getDate() == null && vista.RDD2.getDate() == null &&
-         vista.RDC1.getSelectedItem().toString().equals("") &&
-         vista.RDT1.getText().equals("") && vista.RDT2.getText().length()!=0 && vista.RDT3.getText().length()!=0 &&vista.RDT4.getText().length()!=0){
+        vista.RDC1.getSelectedItem().toString().equals("") &&
+        vista.RDT1.getText().equals("") && vista.RDT2.getText().length()!=0 && vista.RDT3.getText().length()!=0 &&vista.RDT4.getText().length()!=0){
         reportes.exportarPDF(ReporteDoctorCuatro());
         JOptionPane.showMessageDialog(null, "Reporte PDF creado con éxito"); 
       }      
@@ -2697,36 +3049,39 @@ public class controlador implements ActionListener{
     else if(vista.ReportesPacienteFormato1.getSelectedItem().equals("HTML")){
            //REPORTE PARA FECHAS 
       if(vista.RDD1.getDate() != null && vista.RDD2.getDate() != null &&
-         vista.RDC1.getSelectedItem().toString().equals("") &&
-         vista.RDT1.getText().equals("") && vista.RDT2.getText().equals("") && vista.RDT3.getText().equals("") &&vista.RDT4.getText().equals("")){
-          
+        vista.RDC1.getSelectedItem().toString().equals("") &&
+        vista.RDT1.getText().equals("") && vista.RDT2.getText().equals("") && vista.RDT3.getText().equals("") &&vista.RDT4.getText().equals("")){          
         reportes.exportarHTML(ReporteDoctorUno());
         JOptionPane.showMessageDialog(null, "Reporte HTML creado con éxito");
       }
       //REPORTE PARA ESTADO
       else if(vista.RDD1.getDate() == null && vista.RDD2.getDate() == null &&
-         vista.RDC1.getSelectedItem().toString() != null &&
-         vista.RDT1.getText().equals("") && vista.RDT2.getText().equals("") && vista.RDT3.getText().equals("") &&vista.RDT4.getText().equals("")){
+        vista.RDC1.getSelectedItem().toString() != null &&
+        vista.RDT1.getText().equals("") && vista.RDT2.getText().equals("") && vista.RDT3.getText().equals("") &&vista.RDT4.getText().equals("")){
         reportes.exportarHTML(ReporteDoctorDos());
         JOptionPane.showMessageDialog(null, "Reporte HTML creado con éxito"); 
       }  
       //REPORTE PARA ESPECIALIDAD
       else if(vista.RDD1.getDate() == null && vista.RDD2.getDate() == null &&
-         vista.RDC1.getSelectedItem().toString().equals("") &&
-         vista.RDT1.getText().length()!=0 && vista.RDT2.getText().equals("") && vista.RDT3.getText().equals("") &&vista.RDT4.getText().equals("")){
+        vista.RDC1.getSelectedItem().toString().equals("") &&
+        vista.RDT1.getText().length()!=0 && vista.RDT2.getText().equals("") && vista.RDT3.getText().equals("") &&vista.RDT4.getText().equals("")){
         reportes.exportarHTML(ReporteDoctorTres());
         JOptionPane.showMessageDialog(null, "Reporte HTML creado con éxito"); 
       }    
       //REPORTE POR NOMBRE PACIENTE
       else if(vista.RDD1.getDate() == null && vista.RDD2.getDate() == null &&
-         vista.RDC1.getSelectedItem().toString().equals("") &&
-         vista.RDT1.getText().equals("") && vista.RDT2.getText().length()!=0 && vista.RDT3.getText().length()!=0 &&vista.RDT4.getText().length()!=0){
+        vista.RDC1.getSelectedItem().toString().equals("") &&
+        vista.RDT1.getText().equals("") && vista.RDT2.getText().length()!=0 && vista.RDT3.getText().length()!=0 &&vista.RDT4.getText().length()!=0){
         reportes.exportarHTML(ReporteDoctorCuatro());
         JOptionPane.showMessageDialog(null, "Reporte HTML creado con éxito"); 
       }      
     }
   }
     
+  /**
+  * Método ReporteDoctorCinco: Método que busca los diagnósticos asociados a un paciente por el rango de fechas.
+  * @return resultadoUno: Objeto de tipo ResultSet que contiene la consulta.
+  */
   public ResultSet ReporteDoctorCinco(){
     ResultSet resultadoUno = null;   
     PreparedStatement consultaUno;
@@ -2769,6 +3124,10 @@ public class controlador implements ActionListener{
     return resultadoUno;
   }
   
+  /**
+  * Método ReporteDoctorSeis: Método que busca los diagnósticos asociados a un paciente por el nivel del diagnóstico.
+  * @return resultado: Objeto de tipo ResultSet que contiene la consulta.
+  */
   public ResultSet ReporteDoctorSeis(){
     ResultSet resultado = null;   
     PreparedStatement consulta;
@@ -2793,6 +3152,10 @@ public class controlador implements ActionListener{
     return resultado;        
   }
   
+  /**
+  * Método ReporteDoctorSiete: Método que busca los diagnósticos asociados a un paciente por el nombre del diagnóstico.
+  * @return resultado: Objeto de tipo ResultSet que contiene la consulta.
+  */
   public ResultSet ReporteDoctorSiete(){
     ResultSet resultado = null;   
     PreparedStatement consulta;
@@ -2818,6 +3181,9 @@ public class controlador implements ActionListener{
     return resultado;        
   }
   
+  /**
+  * Método SegunReporteDoctor: Método que exporta el reporte de los diagnósticos asociados a un paciente al formato indicado por el usuario.
+  */
   public void SegunReporteDoctor(){
     if(vista.ReportesPacienteFormato1.getSelectedItem().equals("CSV")){
       //REPORTE PARA FECHAS 
@@ -2872,6 +3238,10 @@ public class controlador implements ActionListener{
     }  
   }
   
+  /**
+  * Método ReporteDoctorOcho: Método que busca los tratamiento asociados a un paciente por rango de fechas.
+  * @return resultadoUno: Objeto de tipo ResultSet que contiene la consulta.
+  */
   public ResultSet ReporteDoctorOcho(){
     ResultSet resultadoUno = null;   
     PreparedStatement consultaUno;
@@ -2915,6 +3285,10 @@ public class controlador implements ActionListener{
     return resultadoUno;    
   }
   
+  /**
+  * Método ReporteDoctorNueve: Método que busca los tratamiento asociados a un paciente por el tipo de tratamiento.
+  * @return resultado: Objeto de tipo ResultSet que contiene la consulta.
+  */
   public ResultSet ReporteDoctorNueve(){
     ResultSet resultado = null;   
     PreparedStatement consulta;
@@ -2940,6 +3314,10 @@ public class controlador implements ActionListener{
     return resultado;      
   }
   
+  /**
+  * Método ReporteDoctorDiez: Método que busca los tratamiento asociados a un paciente por el nombre del tratamiento.
+  * @return resultado: Objeto de tipo ResultSet que contiene la consulta.
+  */
   public ResultSet ReporteDoctorDiez(){
     ResultSet resultado = null;   
     PreparedStatement consulta;
@@ -2965,6 +3343,9 @@ public class controlador implements ActionListener{
     return resultado;     
   }
   
+  /**
+  * Método TercerReporteDoctor: Método que exporta el reporte de los tratamientos asociados a un paciente al formato indicado por el usuario.
+  */
   public void TercerReporteDoctor(){
     if(vista.ReportesPacienteFormato1.getSelectedItem().equals("CSV")){
       //REPORTE PARA FECHAS 
@@ -3019,6 +3400,10 @@ public class controlador implements ActionListener{
     } 
   }
   
+  /**
+  * Método ReporteDoctorOnce: Método que busca la cantidad de citas registradas en el sistema por rango de fechas.
+  * @return resultadoUno: Objeto de tipo ResultSet que contiene la consulta.
+  */
   public ResultSet ReporteDoctorOnce(){
     ResultSet resultadoUno = null;   
     PreparedStatement consultaUno;
@@ -3052,6 +3437,10 @@ public class controlador implements ActionListener{
     return resultadoUno;    
   }
   
+  /**
+  * Método ReporteDoctorDoce: Método que busca la cantidad de citas registradas en el sistema por la especialidad.
+  * @return resultado: Objeto de tipo ResultSet que contiene la consulta.
+  */
   public ResultSet ReporteDoctorDoce(){
     ResultSet resultado = null;   
     PreparedStatement consulta;
@@ -3073,6 +3462,10 @@ public class controlador implements ActionListener{
     return resultado;      
   }
   
+  /**
+  * Método ReporteDoctorTrece: Método que busca la cantidad de citas registradas en el sistema por el estado de la cita.
+  * @return resultado: Objeto de tipo ResultSet que contiene la consulta.
+  */
   public ResultSet ReporteDoctorTrece(){
     ResultSet resultado = null;   
     PreparedStatement consulta;
@@ -3093,6 +3486,9 @@ public class controlador implements ActionListener{
     return resultado;     
   }
   
+  /**
+  * Método CuartoReporteDoctor: Método que exporta el reporte de la cantidad de citas registradas en el sistema al formato indicado por el usuario.
+  */
   public void CuartoReporteDoctor(){
     if(vista.ReportesPacienteFormato1.getSelectedItem().equals("CSV")){
       //REPORTE PARA FECHAS 
@@ -3147,6 +3543,10 @@ public class controlador implements ActionListener{
     }  
   }
   
+  /**
+  * Método ReporteDoctorCatorce: Método que busca la cantidad de diagnósticos registrados en el sistema por el nivel.
+  * @return resultado: Objeto de tipo ResultSet que contiene la consulta.
+  */
   public ResultSet ReporteDoctorCatorce(){
     ResultSet resultado = null;   
     PreparedStatement consulta;
@@ -3166,6 +3566,10 @@ public class controlador implements ActionListener{
     return resultado;      
   }
   
+  /**
+  * Método ReporteDoctorQuince: Método que busca la cantidad de diagnósticos registrados en el sistema por la especialidad.
+  * @return resultado: Objeto de tipo ResultSet que contiene la consulta.
+  */
   public ResultSet ReporteDoctorQuince(){
     ResultSet resultado = null;   
     PreparedStatement consulta;
@@ -3188,6 +3592,10 @@ public class controlador implements ActionListener{
     return resultado;      
   }
   
+  /**
+  * Método ReporteDoctorDieciseis: Método que busca la cantidad de diagnósticos registrados en el sistema por el paciente.
+  * @return resultado: Objeto de tipo ResultSet que contiene la consulta.
+  */
   public ResultSet ReporteDoctorDieciseis(){
     ResultSet resultado = null;   
     PreparedStatement consulta;
@@ -3210,6 +3618,9 @@ public class controlador implements ActionListener{
     return resultado;     
   }
   
+  /**
+  * Método QuintoReporteDoctor: Método que exporta el reporte de la cantidad de diagnósticos registrados en el sistema al formato indicado por el usuario.
+  */
   public void QuintoReporteDoctor(){
     if(vista.ReportesPacienteFormato1.getSelectedItem().equals("CSV")){
       //REPORTE PARA NIVEL 
@@ -3277,6 +3688,10 @@ public class controlador implements ActionListener{
   
   }
   
+  /**
+  * Método ReporteDoctorDiecisiete: Método que busca la cantidad de tratamientos registrados en el sistema por el tipo.
+  * @return resultado: Objeto de tipo ResultSet que contiene la consulta.
+  */
   public ResultSet ReporteDoctorDiecisiete(){
     ResultSet resultado = null;   
     PreparedStatement consulta;
@@ -3296,6 +3711,10 @@ public class controlador implements ActionListener{
     return resultado;      
   }
   
+  /**
+  * Método ReporteDoctorDieciOcho: Método que busca la cantidad de tratamientos registrados en el sistema por la especialidad.
+  * @return resultado: Objeto de tipo ResultSet que contiene la consulta.
+  */
   public ResultSet ReporteDoctorDieciocho(){
     ResultSet resultado = null;   
     PreparedStatement consulta;
@@ -3320,6 +3739,10 @@ public class controlador implements ActionListener{
     return resultado;      
   }
   
+  /**
+  * Método ReporteDoctorDieciNueve: Método que busca la cantidad de tratamientos registrados en el sistema por el paciente
+  * @return resultado: Objeto de tipo ResultSet que contiene la consulta.
+  */
   public ResultSet ReporteDoctorDiecinueve(){
     ResultSet resultado = null;   
     PreparedStatement consulta;
@@ -3344,6 +3767,9 @@ public class controlador implements ActionListener{
     return resultado;     
   }
   
+  /**
+  * Método SextoReporteDoctor: Método que exporta el reporte de la cantidad de tratamientos registrados en el sistema al formato indicado por el usuario.
+  */
   public void SextoReporteDoctor(){
     if(vista.ReportesPacienteFormato1.getSelectedItem().equals("CSV")){
       //REPORTE PARA NIVEL 
@@ -3411,6 +3837,10 @@ public class controlador implements ActionListener{
   
   }
   
+  /**
+  * Método ReporteDoctorVeinte: Método que busca el detalle de la hospitalización de un paciente por el nombre.
+  * @return resultado: Objeto de tipo ResultSet que contiene la consulta.
+  */
   public ResultSet ReporteDoctorVeinte(){
     ResultSet resultado = null;   
     PreparedStatement consulta;
@@ -3457,6 +3887,9 @@ public class controlador implements ActionListener{
     return resultado;      
   }
   
+  /**
+  * Método SeptimoReporteDoctor: Método que exporta el reporte del detalle de la hospitalización de un paciente al formato indicado por el usuario.
+  */
   public void SeptimoReporteDoctor(){
     if(vista.ReportesPacienteFormato1.getSelectedItem().equals("CSV")){
       //REPORTE PARA NOMBRE PACIENTE 
@@ -3481,6 +3914,10 @@ public class controlador implements ActionListener{
     }
   }
 
+  /**
+  * Método ReporteDoctorVeintiuno: Método que busca la cantidad de diagnósticos en el sistema.
+  * @return resultado: Objeto de tipo ResultSet que contiene la consulta.
+  */
   public ResultSet ReporteDoctorVeintiuno(){
     ResultSet resultado = null;   
     PreparedStatement consulta;
@@ -3498,6 +3935,10 @@ public class controlador implements ActionListener{
     return resultado;      
   }
   
+  /**
+  * Método ReporteDoctorVeintidos: Método que busca la cantidad de tratamientos en el sistema.
+  * @return resultado: Objeto de tipo ResultSet que contiene la consulta.
+  */
   public ResultSet ReporteDoctorVeintidos(){
     ResultSet resultado = null;   
     PreparedStatement consulta;
@@ -3517,6 +3958,10 @@ public class controlador implements ActionListener{
   
   //REPORTES SECRETARIO
   
+  /**
+  * Método ReporteSecretarioUno: Método que busca las citas registradas en el sistema por rango de fechas.
+  * @return resultado: Objeto de tipo ResultSet que contiene la consulta.
+  */
   public ResultSet ReporteSecretarioUno(){
     ResultSet resultado = null;   
     PreparedStatement consulta;
@@ -3549,6 +3994,10 @@ public class controlador implements ActionListener{
     return resultado;   
   }
   
+  /**
+  * Método ReporteSecretarioDos: Método que busca las citas registradas en el sistema por el estado.
+  * @return resultado: Objeto de tipo ResultSet que contiene la consulta.
+  */
   public ResultSet ReporteSecretarioDos(){
     ResultSet resultado = null;   
     PreparedStatement consulta;
@@ -3569,6 +4018,10 @@ public class controlador implements ActionListener{
     return resultado;       
   }
   
+  /**
+  * Método ReporteSecretarioTres: Método que busca las citas registradas en el sistema por la especialidad.
+  * @return resultado: Objeto de tipo ResultSet que contiene la consulta.
+  */
   public ResultSet ReporteSecretarioTres(){
     ResultSet resultado = null;   
     PreparedStatement consulta;
@@ -3589,6 +4042,10 @@ public class controlador implements ActionListener{
     return resultado;       
   }
   
+  /**
+  * Método ReporteSecretarioCuatro: Método que busca las citas registradas en el sistema por el nombre del paciente.
+  * @return resultado: Objeto de tipo ResultSet que contiene la consulta.
+  */
   public ResultSet ReporteSecretarioCuatro(){
     ResultSet resultado = null;   
     PreparedStatement consulta;
@@ -3616,6 +4073,9 @@ public class controlador implements ActionListener{
     return resultado;       
   }
   
+  /**
+  * Método PrimerReporteSecretario: Método que exporta el reporte de las citas registradas en el sistema al formato indicado por el usuario.
+  */
   public void PrimerReporteSecretario(){
     if(vista.RSFormato.getSelectedItem().equals("CSV")){
       //REPORTE PARA FECHA 
@@ -3685,6 +4145,10 @@ public class controlador implements ActionListener{
     } 
   }
   
+  /**
+  * Método ReporteSecretarioCinco: Método que busca las hospitalizaciones registradas en el sistema por el rango de fechas.
+  * @return resultado: Objeto de tipo ResultSet que contiene la consulta.
+  */
   public ResultSet ReporteSecretarioCinco(){
     ResultSet resultado = null;   
     PreparedStatement consulta;
@@ -3742,6 +4206,10 @@ public class controlador implements ActionListener{
     return resultado;   
   }
   
+  /**
+  * Método ReporteSecretarioSeis: Método que busca las hospitalizaciones registradas en el sistema por la especialidad.
+  * @return resultado: Objeto de tipo ResultSet que contiene la consulta.
+  */
   public ResultSet ReporteSecretarioSeis(){
     ResultSet resultado = null;   
     PreparedStatement consulta;
@@ -3782,6 +4250,10 @@ public class controlador implements ActionListener{
     return resultado;       
   }
   
+  /**
+  * Método ReporteSecretarioSiete: Método que busca las hospitalizaciones registradas en el sistema por el nombre del paciente.
+  * @return resultado: Objeto de tipo ResultSet que contiene la consulta.
+  */
   public ResultSet ReporteSecretarioSiete(){
     ResultSet resultado = null;   
     PreparedStatement consulta;
@@ -3827,6 +4299,9 @@ public class controlador implements ActionListener{
     return resultado;       
   }
   
+  /**
+  * Método SegundoReporteSecretario: Método que exporta el reporte de las hospitalizaciones registradas en el sistema al formato indicado por el usuario.
+  */
   public void SegundoReporteSecretario(){
     if(vista.RSFormato.getSelectedItem().equals("CSV")){
       //REPORTE PARA FECHA 
